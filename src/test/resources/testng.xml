@@ -58,7 +58,7 @@
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-	
+<!--	
 	<test name="Test Google Search using Selenium RC with Chrome" preserve-order="true">
 		<parameter name="driverType" value="selenium" />
 		 <parameter name="browser" value="chrome" />
@@ -66,7 +66,6 @@
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-<!--	
 	<test name="Test Google Search using Selenium RC with Internet Explorer" preserve-order="true">
 		<parameter name="driverType" value="selenium" />
 		 <parameter name="browser" value="iexplorer" />
