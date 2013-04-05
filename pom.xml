@@ -4,7 +4,11 @@
 	<artifactId>stevia-core</artifactId>
 	<version>0.5.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
-
+ 	<parent>
+    		<groupId>org.sonatype.oss</groupId>
+    		<artifactId>oss-parent</artifactId>
+    		<version>7</version>
+  	</parent>
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
@@ -55,8 +59,8 @@
 	</issueManagement>
 	<scm>
 		<url>https://github.com/persado/stevia</url>
-		<connection>scm:git:git://github.com/persado/stevia.git</connection>
-		<developerConnection>scm:git:git://github.com/persado/stevia.git</developerConnection>
+		<connection>scm:git:git@github.com:persado/stevia.git</connection>
+		<developerConnection>scm:git:git@github.com:persado/stevia.git</developerConnection>
 	</scm>
 	<!-- -->
 	<distributionManagement>
