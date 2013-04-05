@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.5.1-SNAPSHOT</version>
+	<version>0.6.0</version>
 	<packaging>jar</packaging>
  	<parent>
     		<groupId>org.sonatype.oss</groupId>
@@ -114,6 +114,11 @@
 					<artifactId>maven-jar-plugin</artifactId>
 					<version>2.4</version>
 				</plugin>
+				<plugin>
+        				<groupId>org.apache.maven.plugins</groupId>
+        				<artifactId>maven-release-plugin</artifactId>
+        				<version>2.4.1</version>
+      				</plugin>
 			</plugins>
 		</pluginManagement>
 
