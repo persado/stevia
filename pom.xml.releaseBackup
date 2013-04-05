@@ -1,0 +1,317 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>com.persado.oss.quality.stevia</groupId>
+	<artifactId>stevia-core</artifactId>
+	<version>0.5.1-SNAPSHOT</version>
+	<packaging>jar</packaging>
+ 	<parent>
+    		<groupId>org.sonatype.oss</groupId>
+    		<artifactId>oss-parent</artifactId>
+    		<version>7</version>
+  	</parent>
+
+	<name>Stevia QA Framework - Core</name>
+	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
+	a common uniform API that handles all differences. Using Stevia allows the QA Engineer
+	to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
+	and other artifacts. By design both drivers play under Selenium Grid and support extended 
+	reporting functionality via ReportNG, including remote screenshots.</description>
+
+	<url>http://www.persado.com</url>
+	<licenses>
+		<license>
+			<name>BSD 3-clause New or Revised License</name>
+			<url>http://opensource.org/licenses/BSD-3-Clause</url>
+		</license>
+	</licenses>
+	<developers>
+		<developer>
+            		<name>Thanos Angelatos</name>
+            		<id>thanosa75</id>
+            		<email>thanos.angelatos@persado.com</email>
+            		<organization>Persado</organization>
+            		<roles>
+              			<role>Java Developer</role>
+            		</roles>
+        	</developer>
+		<developer>
+            		<name>George Kogketsof</name>
+            		<id>gkog</id>
+            		<email>george.kogketsof@persado.com</email>
+            		<organization>Persado</organization>
+            		<roles>
+              			<role>QA Engineer</role>
+            		</roles>
+        	</developer>
+		<developer>
+            		<name>Panayotis Tsiakos</name>
+            		<id>ptsiakos</id>
+            		<email>panayotis.tsiakos@persado.com</email>
+            		<organization>Persado</organization>
+            		<roles>
+              			<role>QA Engineer</role>
+            		</roles>
+        	</developer>
+	</developers>
+	<issueManagement>
+		<system>GitHub</system>
+		<url>https://github.com/persado/stevia/issues</url>
+	</issueManagement>
+	<scm>
+		<url>https://github.com/persado/stevia</url>
+		<connection>scm:git:git@github.com:persado/stevia.git</connection>
+		<developerConnection>scm:git:git@github.com:persado/stevia.git</developerConnection>
+	</scm>
+	<!-- -->
+	<distributionManagement>
+		<repository>
+			<id>sonatype-releases</id>
+			<name>OSS Sonatype Release Staging Repository</name>
+			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+		</repository>
+
+		<snapshotRepository>
+			<id>sonatype-snapshots</id>
+			<name>OSS Sonatype Snapshot Repository</name>
+			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+	</distributionManagement>
+
+	<build>
+		<pluginManagement>
+			<plugins>
+				<plugin>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.2</version>
+				</plugin>
+
+				<!-- Clean up after the build -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-clean-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
+				<!-- Compiles Java sources -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-compiler-plugin</artifactId>
+					<version>2.5.1</version>
+					<inherited>true</inherited>
+					<configuration>
+						<source>1.6</source>
+						<target>1.6</target>
+					</configuration>
+				</plugin>
+
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-deploy-plugin</artifactId>
+					<version>2.7</version>
+				</plugin>
+				<!-- Build a JAR from the current project -->
+				<plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-jar-plugin</artifactId>
+					<version>2.4</version>
+				</plugin>
+			</plugins>
+		</pluginManagement>
+
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>2.14</version>
+				<executions>
+					<execution>
+						<id>default-test</id>
+						<phase>test</phase>
+						<configuration>
+							<suiteXmlFiles>
+								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
+							</suiteXmlFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<dependencies>
+
+		<dependency>
+			<groupId>xml-apis</groupId>
+			<artifactId>xml-apis</artifactId>
+			<version>1.4.01</version>
+		</dependency>
+
+		<!-- Jetty HTTP Client -->
+		<dependency>
+			<groupId>org.eclipse.jetty</groupId>
+			<artifactId>jetty-client</artifactId>
+			<version>8.1.9.v20130131</version>
+		</dependency>
+
+		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
+			SSH secured VNC client, SFTP client and SSH Daemon -->
+		<dependency>
+			<groupId>sshtools</groupId>
+			<artifactId>j2ssh-core</artifactId>
+			<version>0.2.9</version>
+		</dependency>
+
+		<!-- TestNG framework -->
+		<dependency>
+			<groupId>org.testng</groupId>
+			<artifactId>testng</artifactId>
+			<version>6.4</version>
+		</dependency>
+
+		<!-- ReportNG, a simple HTML reporting plug-in for the TestNG unit-testing 
+			framework Usually in our project newer TestNG version is used, so that ReportNG 
+			dependency should be excluded -->
+		<dependency>
+			<groupId>org.uncommons</groupId>
+			<artifactId>reportng</artifactId>
+			<version>1.1.2</version>
+			<exclusions>
+				<exclusion>
+					<groupId>org.testng</groupId>
+					<artifactId>testng</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+
+		<dependency>
+			<groupId>velocity</groupId>
+			<artifactId>velocity</artifactId>
+			<version>1.5</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.google.inject</groupId>
+			<artifactId>guice</artifactId>
+			<version>3.0</version>
+		</dependency>
+
+		<!-- Selenium Server Standalone -->
+		<dependency>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-server</artifactId>
+			<version>${selenium.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.opera</groupId>
+			<artifactId>operadriver</artifactId>
+			<version>1.2</version>
+		</dependency>
+
+		<!-- OBTAINING SPRING RELEASES FROM MANEN CENTRAL -->
+
+		<!-- Core utilities used by other modules. -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-core</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Expression Language (depends on spring-core) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-expression</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Bean Factory and JavaBeans utilities (depends on spring-core) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-beans</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core, 
+			spring-beans) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-aop</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Application Context (depends on spring-core, spring-expression, spring-aop, 
+			spring-beans) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Various Application Context utilities, including EhCache, JavaMail, 
+			Quartz, and Freemarker integration -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans, 
+			spring-aop, spring-context) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-tx</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- JDBC Data Access Library (depends on spring-core, spring-beans, spring-context, 
+			spring-tx) -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-jdbc</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
+		<!-- AspectJ -->
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjrt</artifactId>
+			<version>1.6.11</version>
+		</dependency>
+		<dependency>
+			<groupId>org.aspectj</groupId>
+			<artifactId>aspectjweaver</artifactId>
+			<version>1.6.11</version>
+		</dependency>
+
+		<!-- Support for testing Spring applications with tools such as JUnit and 
+			TestNG This artifact is generally always defined with a 'test' scope for 
+			the integration testing framework and unit testing stubs -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>${org.springframework.version}</version>
+			<exclusions>
+				<exclusion>
+					<groupId>commons-logging</groupId>
+					<artifactId>commons-logging</artifactId>
+				</exclusion>
+			</exclusions>
+		</dependency>
+		
+		
+		<dependency>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-api</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+
+	</dependencies>
+
+
+	<!-- Shared version number properties -->
+	<properties>
+		<org.springframework.version>3.2.2.RELEASE</org.springframework.version>
+		<selenium.version>2.31.0</selenium.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+	</properties>
+
+</project>

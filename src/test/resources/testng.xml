@@ -30,20 +30,20 @@
 		</classes>
 	</test>
 	
-	<test name="Test Google Search using Internet Explorer Web Driver" preserve-order="true">
+<!--	<test name="Test Google Search using Internet Explorer Web Driver" preserve-order="true">
 	      <parameter name="browser" value="iexplorer" />
 		<classes>
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-	
+-->	
 	<test name="Test Google Search using Safari Web Driver" preserve-order="true">
 	  <parameter name="browser" value="safari" />
 		<classes>
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-	
+<!--	
 	<test name="Test Google Search using Opera Web Driver" preserve-order="true">
 	     <parameter name="browser" value="opera" />
 	     <parameter name="actionsLogging" value="false" />
@@ -51,7 +51,7 @@
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-
+-->
 	<test name="Test Google Search using Selenium RC with Firefox" preserve-order="true">
 		<parameter name="driverType" value="selenium" />
 		<classes>
@@ -66,7 +66,7 @@
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-	
+<!--	
 	<test name="Test Google Search using Selenium RC with Internet Explorer" preserve-order="true">
 		<parameter name="driverType" value="selenium" />
 		 <parameter name="browser" value="iexplorer" />
@@ -74,5 +74,5 @@
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-
+-->
 </suite>
