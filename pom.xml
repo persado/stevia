@@ -80,10 +80,6 @@
 	<build>
 		<pluginManagement>
 			<plugins>
-				<plugin>
-					<artifactId>maven-release-plugin</artifactId>
-					<version>2.2</version>
-				</plugin>
 
 				<!-- Clean up after the build -->
 				<plugin>
