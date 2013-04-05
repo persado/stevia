@@ -1,0 +1,78 @@
+<!DOCTYPE suite SYSTEM "http://testng.org/testng-1.0.dtd">
+
+<suite name="Stevia-Test-Suite">
+
+	<parameter name="rcHost" value="localhost" />
+	<parameter name="rcPort" value="4444" />
+	<parameter name="targetHostUrl" value="http://www.google.com" />
+	<parameter name="debugging" value="true" />
+	<parameter name="browser" value="firefox" />
+	<parameter name="profile" value="" />
+	<parameter name="driverType" value="webdriver" />
+	<parameter name="actionsLogging" value="true" />
+	<parameter name="tests.takeScreenshot" value="true" />
+
+	<listeners>
+		<listener class-name="org.uncommons.reportng.HTMLReporter" />
+	</listeners>
+
+
+	<test name="Test Google Search using Firefox Web Driver" preserve-order="true">
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Chrome Web Driver" preserve-order="true">
+	    <parameter name="browser" value="chrome" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Internet Explorer Web Driver" preserve-order="true">
+	      <parameter name="browser" value="iexplorer" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Safari Web Driver" preserve-order="true">
+	  <parameter name="browser" value="safari" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Opera Web Driver" preserve-order="true">
+	     <parameter name="browser" value="opera" />
+	     <parameter name="actionsLogging" value="false" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+
+	<test name="Test Google Search using Selenium RC with Firefox" preserve-order="true">
+		<parameter name="driverType" value="selenium" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Selenium RC with Chrome" preserve-order="true">
+		<parameter name="driverType" value="selenium" />
+		 <parameter name="browser" value="chrome" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+	
+	<test name="Test Google Search using Selenium RC with Internet Explorer" preserve-order="true">
+		<parameter name="driverType" value="selenium" />
+		 <parameter name="browser" value="iexplorer" />
+		<classes>
+			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
+		</classes>
+	</test>
+
+</suite>
