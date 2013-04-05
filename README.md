@@ -3,7 +3,7 @@ stevia
 
 Stevia is an Open Source QA Automation Testing Framework by Persado (www.persado.com). In Persado, we took the pain out of having to care about Selenium or Webdriver (or both) and unified them under a common API, with a sane and clear-cut design, ability to extend and expand (courtesy of Spring!) and a bit of sweetness. Stevia is what we got out of it: 
 
-<p align="center"><img src="http://upload.wikimedia.org/wikipedia/commons/1/1c/Steviol_structure.svg" width="140"> </p>
+<p align="center"><img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" width="200"> </p>
 
 ## Breaking news
 
