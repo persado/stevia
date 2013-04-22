@@ -66,6 +66,10 @@ public class SteviaContext {
 		/** The params registry. */
 		private Map<String,String> paramsRegistry;
 		
+		private int waitForPageToLoad = 120;
+		private int waitForElement = 10;
+		private int waitForElementInvisibility = 1;
+		
 		/**
 		 * Clear context.
 		 */
@@ -82,6 +86,30 @@ public class SteviaContext {
 			STEVIA_CONTEXT_LOG.info("Context closed, controller shutdown");
 
 			Thread.currentThread().setName("Stevia - context Inactive");
+		}
+
+		public int getWaitForPageToLoad() {
+			return waitForPageToLoad;
+		}
+
+		public void setWaitForPageToLoad(int waitForPageToLoad) {
+			this.waitForPageToLoad = waitForPageToLoad;
+		}
+
+		public int getWaitForElement() {
+			return waitForElement;
+		}
+
+		public void setWaitForElement(int waitForElement) {
+			this.waitForElement = waitForElement;
+		}
+
+		public int getWaitForElementInvisibility() {
+			return waitForElementInvisibility;
+		}
+
+		public void setWaitForElementInvisibility(int waitForElementInvisibility) {
+			this.waitForElementInvisibility = waitForElementInvisibility;
 		}
 	}
 	
@@ -191,5 +219,32 @@ public class SteviaContext {
 		innerContext.get().clear();
 		innerContext.remove();
 	}
+	
+	/////////////////////
+
+	public static int getWaitForPageToLoad() {
+		return innerContext.get().getWaitForPageToLoad();
+	}
+
+	public static void setWaitForPageToLoad(int waitForPageToLoad) {
+		innerContext.get().setWaitForPageToLoad(waitForPageToLoad);
+	}
+
+	public static int getWaitForElement() {
+		return innerContext.get().getWaitForElement();
+	}
+
+	public static void setWaitForElement(int waitForElement) {
+		innerContext.get().setWaitForElement(waitForElement);
+	}
+
+	public static int getWaitForElementInvisibility() {
+		return innerContext.get().getWaitForElementInvisibility();
+	}
+
+	public static void setWaitForElementInvisibility(int waitForElementInvisibility) {
+		innerContext.get().setWaitForElementInvisibility(waitForElementInvisibility);
+	}
+	
 	
 }

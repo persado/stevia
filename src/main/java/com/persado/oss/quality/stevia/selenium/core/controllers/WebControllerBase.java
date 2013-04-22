@@ -51,29 +51,6 @@ public abstract class WebControllerBase implements WebController {
 
 	/** The Constant LOG. */
 	private static final Logger WEB_CONTROLLER_BASE_LOG = LoggerFactory.getLogger(WebControllerBase.class);
-
-	/** The wait for element visibility time. */
-	protected static long waitForElement = 10;
-
-	/** The wait for element invisibility time. */
-	protected static long waitForElementInvisibility = 1;
-
-	public static long getWaitForElement() {
-		return waitForElement;
-	}
-
-	public static void setWaitForElement(long waitForElement) {
-		WebControllerBase.waitForElement = waitForElement;
-	}
-
-	public static long getWaitForElementInvisibility() {
-		return waitForElementInvisibility;
-	}
-
-	public static void setWaitForElementInvisibility(long waitForElementInvisibility) {
-		WebControllerBase.waitForElementInvisibility = waitForElementInvisibility;
-	}
-
 	/**
 	 * uses Reporter to log the screenshot of a failed log entry (error(...)) to
 	 * the logs

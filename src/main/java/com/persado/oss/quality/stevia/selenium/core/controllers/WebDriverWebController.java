@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -59,6 +60,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
 import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
@@ -158,7 +160,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void waitForCondition(String jscondition) {
-		waitForCondition(jscondition, waitForElement);
+		waitForCondition(jscondition, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -235,7 +237,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public WebElement waitForElement(String locator) {
-		return waitForElement(locator, waitForElement);
+		return waitForElement(locator, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -259,7 +261,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void waitForElementInvisibility(String locator) {
-		WebDriverWait wait = new WebDriverWait(driver, waitForElementInvisibility);
+		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElementInvisibility());
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(determineLocator(locator)));
 	}
 
@@ -283,7 +285,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 * waitForElementPresence(java.lang.String)
 	 */
 	public WebElement waitForElementPresence(String locator) {
-		return waitForElementPresence(locator, waitForElement);
+		return waitForElementPresence(locator, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -308,7 +310,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public List<WebElement> findElements(String locator) {
-		WebDriverWait wait = new WebDriverWait(driver, waitForElement);
+		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement());
 		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(determineLocator(locator)));
 	}
 
@@ -369,7 +371,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void pressAndWaitForElement(String pressLocator, String elementToWaitLocator) {
-		pressAndWaitForElement(pressLocator, elementToWaitLocator, waitForElement);
+		pressAndWaitForElement(pressLocator, elementToWaitLocator, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -970,7 +972,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 * @return the alert
 	 */
 	public Alert waitForAlert() {
-		WebDriverWait wait = new WebDriverWait(driver, waitForElement);
+		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement());
 		return wait.until(ExpectedConditions.alertIsPresent());
 	}
 
@@ -1264,7 +1266,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void pressLinkName(String linkName) {
-		(new WebDriverWait(driver, waitForElement)).until(ExpectedConditions.visibilityOfElementLocated((By.linkText(linkName)))).click();
+		(new WebDriverWait(driver, SteviaContext.getWaitForElement())).until(ExpectedConditions.visibilityOfElementLocated((By.linkText(linkName)))).click();
 
 	}
 

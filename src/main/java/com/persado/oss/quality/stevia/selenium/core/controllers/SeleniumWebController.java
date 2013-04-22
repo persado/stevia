@@ -45,6 +45,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
 import com.thoughtworks.selenium.Selenium;
@@ -61,9 +62,6 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 
 	/** The selenium. */
 	private Selenium selenium;
-
-	/** The wait for page to load. */
-	private static String waitForPageToLoad = "120000";
 	
 	/** The Constant TO_MILLIS. */
 	private static final int TO_MILLIS = 1000;
@@ -83,26 +81,6 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	/** The Constant LINK. */
 	private static final String LINK = "link";
 	
-	
-	
-	/**
-	 * Gets the wait for page to load.
-	 *
-	 * @return the wait for page to load
-	 */
-	public static String getWaitForPageToLoad() {
-		return waitForPageToLoad;
-	}
-
-	/**
-	 * Sets the wait for page to load.
-	 *
-	 * @param waitForPageToLoad the new wait for page to load
-	 */
-	public static void setWaitForPageToLoad(String waitForPageToLoad) {
-		SeleniumWebController.waitForPageToLoad = waitForPageToLoad;
-	}
-
 	/**
 	 * Gets the selenium.
 	 * 
@@ -152,8 +130,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 * waitForPageLoading(java.lang.String)
 	 */
 	public void waitForCondition(String jscondition) {
-		waitForCondition(jscondition, waitForElement);
-
+		waitForCondition(jscondition, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -177,7 +154,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 */
 	@Override
 	public WebElement waitForElement(String locator) {
-		return waitForElement(locator, waitForElement);
+		return waitForElement(locator, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -208,7 +185,6 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 		} while (true);
 		selenium.highlight(locator);
 		return null;
-
 	}
 
 	/*
@@ -220,8 +196,8 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	@Override
 	public void waitForElementInvisibility(String locator) {
 		for (int second = 0;; second++) {
-			if (second >= waitForElementInvisibility)
-				throw new SeleniumException("Timeout of " + waitForElementInvisibility + " seconds waiting for element " + locator + "invisibility");
+			if (second >= SteviaContext.getWaitForElementInvisibility())
+				throw new SeleniumException("Timeout of " + SteviaContext.getWaitForElementInvisibility() + " seconds waiting for element " + locator + "invisibility");
 			try {
 				if (!selenium.isVisible(locator))
 					break;
@@ -299,7 +275,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 */
 	@Override
 	public WebElement waitForElementPresence(String locator) {
-		return waitForElementPresence(locator, waitForElement);
+		return waitForElementPresence(locator, SteviaContext.getWaitForElement());
 	}
 
 	/**
@@ -350,7 +326,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	@Override
 	public void pressAndWaitForPageToLoad(String locator) {
 		press(locator);
-		selenium.waitForPageToLoad(waitForPageToLoad);
+		selenium.waitForPageToLoad(Integer.toString(SteviaContext.getWaitForPageToLoad()*1000));
 
 	}
 
@@ -374,7 +350,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 */
 	@Override
 	public void pressAndWaitForElement(String pressLocator, String elementToWaitLocator) {
-		pressAndWaitForElement(pressLocator, elementToWaitLocator, waitForElement);
+		pressAndWaitForElement(pressLocator, elementToWaitLocator, SteviaContext.getWaitForElement());
 	}
 
 	/*
@@ -387,7 +363,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	public void pressAndClickOkInAlert(String locator) {
 		clickOkInAlert();
 		press(locator);
-		selenium.waitForPageToLoad(waitForPageToLoad);
+		selenium.waitForPageToLoad(Integer.toString(SteviaContext.getWaitForPageToLoad()*1000));
 	}
 
 	/*
@@ -953,7 +929,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	@Override
 	public void pressLinkNameAndWaitForPageToLoad(String linkName) {
 		pressLinkName(linkName);
-		selenium.waitForPageToLoad(waitForPageToLoad);
+		selenium.waitForPageToLoad(Integer.toString(SteviaContext.getWaitForPageToLoad()*1000));
 
 	}
 
@@ -967,7 +943,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	public void pressLinkNameAndClickOkInAlert(String linkName) {
 		clickOkInAlert();
 		pressLinkName(linkName);
-		selenium.waitForPageToLoad(waitForPageToLoad);
+		selenium.waitForPageToLoad(Integer.toString(SteviaContext.getWaitForPageToLoad()*1000));
 	}
 
 	/*
