@@ -44,9 +44,9 @@
             		</roles>
         	</developer>
 		<developer>
-            		<name>Panayotis Tsiakos</name>
-            		<id>ptsiakos</id>
-            		<email>panayotis.tsiakos@persado.com</email>
+            		<name>Panagiotis Tsiakos</name>
+            		<id>tsak77</id>
+            		<email>panagiotis.tsiakos@persado.com</email>
             		<organization>Persado</organization>
             		<roles>
               			<role>QA Engineer</role>
@@ -211,6 +211,14 @@
 			<artifactId>operadriver</artifactId>
 			<version>1.2</version>
 		</dependency>
+		
+		
+		<dependency>
+			<groupId>joda-time</groupId>
+			<artifactId>joda-time</artifactId>
+			<version>2.1</version>
+		</dependency>
+		
 
 		<!-- OBTAINING SPRING RELEASES FROM MANEN CENTRAL -->
 

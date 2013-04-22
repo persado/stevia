@@ -528,14 +528,14 @@ public class Verify extends WebComponent {
 	 * @param locator the locator of the list
 	 * @param expectedOptions the expected available options to found in a list
 	 */
-	public void allListOptions(String locator,String[] expectedOptions){
+	public void allListOptions(String locator, List<String> expectedOptions){
 		try {
 			Assert.assertEquals(controller().getAllListOptions(locator), expectedOptions);
 			controller().highlight(locator,PASS_COLOR);
-			info(ELEMENT_LOCATOR + locator + FOUND_WITH_OPTIONS  + Arrays.toString(expectedOptions) + "'!");
+			info(ELEMENT_LOCATOR + locator + FOUND_WITH_OPTIONS  + expectedOptions  + "'!");
 		} catch (AssertionError e) {
 			controller().highlight(locator,FAIL_COLOR);
-			error(ELEMENT_LOCATOR + locator + NOT_FOUND_WITH_OPTIONS  + Arrays.toString(expectedOptions) + "'!");
+			error(ELEMENT_LOCATOR + locator + NOT_FOUND_WITH_OPTIONS  + expectedOptions  + "'!");
 			throw e;
 		}
 	}
@@ -546,14 +546,14 @@ public class Verify extends WebComponent {
 	 * @param locator the locator of the list
 	 * @param expectedOptions the expected options in the specified list
 	 */
-	public void selectedListOptions(String locator,String[] expectedOptions){
+	public void selectedListOptions(String locator,List<String> expectedOptions){
 		try {
 			Assert.assertEquals(controller().getSelectedOptions(locator), expectedOptions);
 			controller().highlight(locator,PASS_COLOR);
-			info(ELEMENT_LOCATOR + locator + FOUND_WITH_SELECTED_OPTIONS + Arrays.toString(expectedOptions) + "'!");
+			info(ELEMENT_LOCATOR + locator + FOUND_WITH_SELECTED_OPTIONS + expectedOptions + "'!");
 		} catch (AssertionError e) {
 			controller().highlight(locator,FAIL_COLOR);
-			error(ELEMENT_LOCATOR + locator + NOT_FOUND_WITH_SELECTED_OPTIONS + Arrays.toString(expectedOptions) + "'!");
+			error(ELEMENT_LOCATOR + locator + NOT_FOUND_WITH_SELECTED_OPTIONS + expectedOptions + "'!");
 			throw e;
 		}
 	}
