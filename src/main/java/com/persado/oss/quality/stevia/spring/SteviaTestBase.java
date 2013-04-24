@@ -159,14 +159,39 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	 * @throws Exception the exception
 	 */
 	@BeforeSuite(alwaysRun = true)
-	@Parameters({RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING})
-	protected void configureSuiteSettings(String rcHost, String rcPort,@Optional String targetHostUrl,String driverType,String debugging,ITestContext testContext) throws Exception{		
+	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
+	protected void configureSuiteSettings(@Optional String browser,
+			String rcHost, String rcPort, @Optional String targetHostUrl,
+			String driverType, String debugging, String actionsLogging,
+			@Optional String profile, ITestContext testContext)
+			throws Exception {		
+		//if the suite needs RC server, we start it here 
 		if (driverType.compareTo("webdriver") != 0 && debugging.compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
 		}
 		setSuiteOutputDir(testContext.getSuite().getOutputDirectory());
+		
+		//stevia context init
+
+		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
+		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase                                                    ***");
+		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
+		initializeDriver(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+		// user code
+		suiteInitialisation(testContext);
+		//stevia context clean
+		SteviaContext.clean();
 	}
 
+	/**
+	 * Suite-Level initialisation callback; this method should be overrriden to 
+	 * allow suite-level configuration to happen - preferrably at the Base class
+	 * of the tests (inher
+	 * @param context test context
+	 */
+	protected void suiteInitialisation(ITestContext context) {
+		STEVIA_TEST_BASE_LOG.warn("suiteInitialisation method not overriden; doing nothing at suite level.");
+	}
 
 	/**
 	 * Before test.
@@ -184,7 +209,11 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	 */
 	@BeforeTest(alwaysRun = true)
 	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
-	protected void beforeTest(@Optional String browser,String rcHost, String rcPort,@Optional String targetHostUrl,String driverType, String debugging, String actionsLogging,@Optional String profile,ITestContext testContext) throws Exception {
+	protected void beforeTest(@Optional String browser, String rcHost,
+			String rcPort, @Optional String targetHostUrl, String driverType,
+			String debugging, String actionsLogging, @Optional String profile,
+			ITestContext testContext) throws Exception {
+		// we check here **again** if the test needs the RC server and start it.
 		if (driverType.compareTo("webdriver") != 0 && debugging.compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
 		}
