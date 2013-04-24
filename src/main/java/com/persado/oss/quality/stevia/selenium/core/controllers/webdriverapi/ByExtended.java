@@ -32,6 +32,7 @@
  */
 package com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi;
 
+import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Pattern;
 import org.openqa.selenium.By;
@@ -43,6 +44,7 @@ import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.internal.FindsByXPath;
+import org.openqa.selenium.remote.RemoteWebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -98,11 +100,11 @@ public abstract class ByExtended extends By {
 							.findElementByCssSelector(ownSelector);
 				}
 			} catch (InvalidElementStateException e) {
-				return findElementBySizzleCss(ownSelector);
+				return findElementBySizzleCss(context, ownSelector);
 			} catch (WebDriverException e) {
 				if (e.getMessage().startsWith(
 						"An invalid or illegal string was specified")) {
-					return findElementBySizzleCss(ownSelector);
+					return findElementBySizzleCss(context, ownSelector);
 				}
 				throw e;
 			}
@@ -117,11 +119,11 @@ public abstract class ByExtended extends By {
 							.findElementsByCssSelector(ownSelector);
 				}
 			} catch (InvalidElementStateException e) {
-				return findElementsBySizzleCss(ownSelector);
+				return findElementsBySizzleCss(context, ownSelector);
 			} catch (WebDriverException e) {
 				if (e.getMessage().startsWith(
 						"An invalid or illegal string was specified")) {
-					return findElementsBySizzleCss(ownSelector);
+					return findElementsBySizzleCss(context, ownSelector);
 				}
 				throw e;
 			}
@@ -139,20 +141,38 @@ public abstract class ByExtended extends By {
 
 		/**
 		 * Find element by sizzle css.
+		 * @param context 
 		 * 
 		 * @param cssLocator
 		 *            the cssLocator
 		 * @return the web element
 		 */
 		@SuppressWarnings("unchecked")
-		public WebElement findElementBySizzleCss(String cssLocator) {
-			injectSizzleIfNeeded();
-			String javascriptExpression = createSizzleSelectorExpression(cssLocator);
-			List<WebElement> elements = (List<WebElement>) ((JavascriptExecutor) getDriver())
-					.executeScript(javascriptExpression);
-			if (elements.size() > 0)
-				return (WebElement) elements.get(0);
+		public WebElement findElementBySizzleCss(SearchContext context, String cssLocator) {
+			List<WebElement> elements = findElementsBySizzleCss(context, cssLocator);
+			if (elements != null && elements.size() > 0 ) {
+				return elements.get(0);
+			}
 			return null;
+		}
+
+		private void fixLocator(SearchContext context, String cssLocator,
+				WebElement element) {
+
+			if (element instanceof RemoteWebElement) {
+				try {
+					Class[] parameterTypes = new Class[] { SearchContext.class,
+							String.class, String.class };
+					Method m = element.getClass().getDeclaredMethod(
+							"setFoundBy", parameterTypes);
+					m.setAccessible(true);
+					Object[] parameters = new Object[] { context,
+							"css selector", cssLocator };
+					m.invoke(element, parameters);
+				} catch (Exception fail) {
+					//NOOP Would like to log here? 
+				}
+			}
 		}
 
 		private WebDriver getDriver() {
@@ -168,10 +188,17 @@ public abstract class ByExtended extends By {
 		 * @return the list of the web elements that match this locator
 		 */
 		@SuppressWarnings("unchecked")
-		public List<WebElement> findElementsBySizzleCss(String cssLocator) {
+		public List<WebElement> findElementsBySizzleCss(SearchContext context, String cssLocator) {
 			injectSizzleIfNeeded();
 			String javascriptExpression = createSizzleSelectorExpression(cssLocator);
-			return (List<WebElement>) ((JavascriptExecutor) getDriver()).executeScript(javascriptExpression);
+			List<WebElement> elements = (List<WebElement>) ((JavascriptExecutor) getDriver())
+					.executeScript(javascriptExpression);
+			if (elements.size() > 0) {
+				for (WebElement el : elements) { 
+					fixLocator(context, cssLocator, el);
+				}
+			}
+			return elements;
 		}
 
 		/**
