@@ -186,7 +186,10 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	/**
 	 * Suite-Level initialisation callback; this method should be overrriden to 
 	 * allow suite-level configuration to happen - preferrably at the Base class
-	 * of the tests (inher
+	 * of the tests (overriden versions of this method will be called from the class 
+	 * extending this Base, at Suite initialisation, best place for this method 
+         * to be overriden is at the class extending this Base class).
+	 * 
 	 * @param context test context
 	 */
 	protected void suiteInitialisation(ITestContext context) {
