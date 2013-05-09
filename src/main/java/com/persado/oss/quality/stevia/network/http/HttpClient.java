@@ -8,12 +8,13 @@ import java.util.ArrayList;
 import java.util.List;
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.io.ByteArrayBuffer;
+import org.springframework.util.Assert;
 
 
 /**
  * The Class HttpClient.
  */
-public class HttpClient {
+public class HttpClient implements HttpConstants {
 
 	/** The client. */
 	private static org.eclipse.jetty.client.HttpClient client = new org.eclipse.jetty.client.HttpClient();
@@ -33,7 +34,7 @@ public class HttpClient {
 	}
 
 	/**
-	 * Gets the.
+	 * Gets the content of the url given.
 	 *
 	 * @param url the URL the GET request is sent
 	 * @param numberOfTimes the number of GET requests
@@ -41,6 +42,22 @@ public class HttpClient {
 	 * @throws IOException, InterruptedException 
 	 */
 	public List<HttpResponse> get(String url, int numberOfTimes) throws IOException, InterruptedException {
+		return get(url,numberOfTimes,null);
+	}
+	
+	/**
+	 * Gets the content of the url given.
+	 *
+	 * @param url the URL the GET request is sent
+	 * @param numberOfTimes the number of GET requests
+	 * @param cookies the cookies to set on the request, optional - null is a valid value
+	 * @return the a list of HTTP Responses
+	 * @throws IOException, InterruptedException 
+	 */
+	public List<HttpResponse> get(String url, int numberOfTimes, List<HttpCookie> cookies) throws IOException, InterruptedException {
+		Assert.hasLength(url, "URL cannot be null");
+		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
+		
 		List<HttpResponse> responses = new ArrayList<HttpResponse>(numberOfTimes);
 		HttpResponse httpResponse;
 		ContentExchange exchange;
@@ -48,6 +65,7 @@ public class HttpClient {
 			exchange = new ContentExchange();
 			exchange.setURL(url);
 			exchange.setMethod("GET");
+			setCookies(exchange,cookies);
 			client.send(exchange);
 			exchange.waitForDone();
 			httpResponse = new HttpResponse(exchange);
@@ -57,7 +75,7 @@ public class HttpClient {
 	}
 
 	/**
-	 * Post.
+	 * Posts data to the url given.
 	 *
      * @param url the URL the POST request is sent
 	 * @param postData list of input data for the POST requests
@@ -66,6 +84,24 @@ public class HttpClient {
 	 * @throws IOException, InterruptedException 
 	 */
 	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes) throws IOException, InterruptedException{
+		return post(url,postData,numberOfTimes, null);
+	}
+	
+	/**
+	 * Posts data to the url given.
+	 *
+     * @param url the URL the POST request is sent
+	 * @param postData list of input data for the POST requests
+	 * @param numberOfTimes the number of POST requests
+	 * @param cookies the cookies to set on the request, optional - null is a valid value
+	 * @return the a list of HTTP Responses
+	 * @throws IOException, InterruptedException 
+	 */
+	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes, List<HttpCookie> cookies) throws IOException, InterruptedException{
+		Assert.hasLength(url, "URL cannot be null");
+		Assert.notEmpty(postData,"POST request cannot have empty post data");
+		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
+	
 		List<HttpResponse> responses = new ArrayList<HttpResponse>(numberOfTimes);
 		HttpResponse httpResponse;
 		ContentExchange exchange;
@@ -73,6 +109,7 @@ public class HttpClient {
 			exchange = new ContentExchange();
 			exchange.setURL(url);
 			exchange.setMethod("POST");
+			setCookies(exchange,cookies);
 			addParameters(exchange, postData);
 			client.send(exchange);
 			exchange.waitForDone();
@@ -113,6 +150,22 @@ public class HttpClient {
 		} catch (Exception exception) {
 			throw new RuntimeException("Failed to shutdown client", exception);
 		}
+	}
+
+	/**
+	 * sets the cookies on the exchange if present
+	 * @param exchange the exchange to work with
+	 * @param cookies the cookie list; if null nothing happens
+	 */
+	protected void setCookies(ContentExchange exchange, List<HttpCookie> cookies) {
+		if (cookies == null || cookies.size() == 0) {
+			return;
+		}
+		
+		for(HttpCookie aCookie : cookies) {
+			exchange.addRequestHeader(HTTP_HEADER_COOKIE, aCookie.getKey()+"="+aCookie.getValue());
+		}
+		
 	}
 
 }
