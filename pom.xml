@@ -202,8 +202,8 @@
 		<!-- Selenium Server Standalone -->
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-server</artifactId>
-			<version>${selenium.version}</version>
+			<artifactId>selenium-java</artifactId>
+			 <version>${selenium.version}</version>
 		</dependency>
 
 		<dependency>
@@ -330,7 +330,7 @@
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>3.2.2.RELEASE</org.springframework.version>
-		<selenium.version>2.31.0</selenium.version>
+		<selenium.version>2.32.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
