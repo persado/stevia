@@ -6,8 +6,11 @@ package com.persado.oss.quality.stevia.network.http;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
 import org.eclipse.jetty.client.ContentExchange;
 import org.eclipse.jetty.io.ByteArrayBuffer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
 
@@ -16,17 +19,27 @@ import org.springframework.util.Assert;
  */
 public class HttpClient implements HttpConstants {
 
+	Logger LOG = LoggerFactory.getLogger(HttpClient.class);
+	
 	/** The client. */
 	private static org.eclipse.jetty.client.HttpClient client = new org.eclipse.jetty.client.HttpClient();
 
 	{
 		try {
+			if (System.getProperty("httpclient.followredirects", null) != null) {
+				client.registerListener( SteviaJettyRedirectListener.class.getName() );
+				LOG.info("HttpClient will follow redirects for HTTP Codes: 301, 302 and 303");
+			} else {
+				LOG.warn("HttpClient DOES NOT FOLLOW REDIRECTS. To enable, set system property 'httpclient.followredirects' to 'true'");
+			}
 			client.start();
 		} catch (Exception e) {
 			throw new ExceptionInInitializerError(e);
 		}
 	}
 
+	
+	
 	/**
 	 * Instantiates a new http client.
 	 */
@@ -59,12 +72,15 @@ public class HttpClient implements HttpConstants {
 		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
 		
 		List<HttpResponse> responses = new ArrayList<HttpResponse>(numberOfTimes);
+		
+		
 		HttpResponse httpResponse;
 		ContentExchange exchange;
 		for (int i = 0; i < numberOfTimes; i++) {
 			exchange = new ContentExchange();
 			exchange.setURL(url);
 			exchange.setMethod("GET");
+			
 			setCookies(exchange,cookies);
 			client.send(exchange);
 			exchange.waitForDone();
