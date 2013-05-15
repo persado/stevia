@@ -10,6 +10,8 @@ public class HttpClientTest {
 	
 	@Test
 	public void testHttpClient() throws IOException, InterruptedException {
+		
+		// we enable redirects
 		System.setProperty("httpclient.followredirects", "true");
 
 		
