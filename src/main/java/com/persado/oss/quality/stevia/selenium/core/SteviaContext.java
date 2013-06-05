@@ -219,8 +219,7 @@ public class SteviaContext {
 		innerContext.get().clear();
 		innerContext.remove();
 	}
-	
-	/////////////////////
+
 
 	public static int getWaitForPageToLoad() {
 		return innerContext.get().getWaitForPageToLoad();

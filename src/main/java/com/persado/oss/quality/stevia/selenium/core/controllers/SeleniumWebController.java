@@ -45,6 +45,7 @@ import org.openqa.selenium.interactions.Actions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import com.persado.oss.quality.stevia.network.http.HttpCookie;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
@@ -88,7 +89,6 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 */
 	public Selenium getSelenium() {
 		return selenium;
-
 	}
 
 	/**
@@ -120,7 +120,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	 */
 	@Deprecated
 	public void disableActionsLogging() {
-
+         
 	}
 
 	/*
@@ -917,6 +917,7 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	public void pressLinkName(String linkName) {
 		highlight("link=" + linkName);
 		selenium.click("link=" + linkName);
+		selenium.getCookie();
 
 	}
 
@@ -1569,6 +1570,27 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 
 		return table;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getTableInfoAsList(java.lang.String)
+	 */
+	@Override
+	public List<List<String>> getTableInfoAsList(String locator) {
+		int numberOrRows = getNumberOfTotalRows(locator);
+		int numberOfColumns = getNumberOfTotalColumns(locator);
+		List<List<String>> tableInfo = new ArrayList<List<String>>();
+
+		for (int i = 0; i < numberOrRows; i++) {
+			List<String> rowText = new ArrayList<String>();
+			for (int j = 0; j < numberOfColumns; j++) {
+				rowText.add(getTableElementTextForRowAndColumn(locator, String.valueOf(i + 2), String.valueOf(j + 1)));
+			}
+			tableInfo.add(rowText);
+		}
+
+		return tableInfo;
+	}
+
 
 	/*
 	 * (non-Javadoc)
@@ -1642,5 +1664,26 @@ public class SeleniumWebController extends WebControllerBase implements WebContr
 	public String getPageSource() {
 		return selenium.getHtmlSource();
 	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getCookieByName(java.lang.String)
+	 */
+	@Override
+	public HttpCookie getCookieByName(String name) {
+		return new HttpCookie(name, selenium.getCookieByName(name));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getAllCookies()
+	 */
+	@Override
+	public List<HttpCookie> getAllCookies() {
+		List<HttpCookie> allCookies = new ArrayList<HttpCookie>();
+		String cookie = selenium.getCookie();
+		allCookies.add(new HttpCookie(cookie.substring(0, cookie.indexOf('=')),cookie.substring(cookie.indexOf('=')+1)));
+		return allCookies;
+	}
+	
+	
 
 }

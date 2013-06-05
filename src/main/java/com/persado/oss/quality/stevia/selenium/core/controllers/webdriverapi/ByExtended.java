@@ -223,7 +223,7 @@ public abstract class ByExtended extends By {
 				return; // sizzle is ready
 			}
 			
-			for (int i = 0; i<20; i++ ) {
+			for (int i = 0; i<40; i++ ) {
 				if(sizzleLoaded() ) {
 					return; // sizzle is loaded
 				}
@@ -233,7 +233,12 @@ public abstract class ByExtended extends By {
 					// FIX: nothing to print here
 				}
 			}
-			// sizzle is not loaded yet
+			
+			//Try on last time
+			if (!sizzleLoaded()) {
+				injectSizzle();
+			} 
+			// sizzle is not loaded yet 
 			throw new RuntimeException("Sizzle loading from ("+DEFAULT_SIZZLE_URL+") has failed - " +
 					"provide a better sizzle URL via -DsizzleUrl");
 		}
