@@ -24,6 +24,8 @@ public class HttpClientTest {
 		Assert.assertEquals(list.get(0).getStatus(), 200);
 		
 		System.out.println("\n\nStatus="+list.get(0).getStatus()+"\n\n"+list.get(0).getBody());
+		
+		
 	}
 
 }
