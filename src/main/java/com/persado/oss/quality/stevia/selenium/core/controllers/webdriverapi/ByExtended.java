@@ -85,6 +85,7 @@ public abstract class ByExtended extends By {
 
 	public static class ByCssSelectorExtended extends ByCssSelector {
 
+		private static final String DEFAULT_SIZZLE_URL = "https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js";
 		private String ownSelector;
 
 		public ByCssSelectorExtended(String selector) {
@@ -147,7 +148,6 @@ public abstract class ByExtended extends By {
 		 *            the cssLocator
 		 * @return the web element
 		 */
-		@SuppressWarnings("unchecked")
 		public WebElement findElementBySizzleCss(SearchContext context, String cssLocator) {
 			List<WebElement> elements = findElementsBySizzleCss(context, cssLocator);
 			if (elements != null && elements.size() > 0 ) {
@@ -161,6 +161,7 @@ public abstract class ByExtended extends By {
 
 			if (element instanceof RemoteWebElement) {
 				try {
+					@SuppressWarnings("rawtypes")
 					Class[] parameterTypes = new Class[] { SearchContext.class,
 							String.class, String.class };
 					Method m = element.getClass().getDeclaredMethod(
@@ -216,8 +217,30 @@ public abstract class ByExtended extends By {
 		 * Inject sizzle if needed.
 		 */
 		private void injectSizzleIfNeeded() {
-			if (!sizzleLoaded())
+			if (!sizzleLoaded()) {
 				injectSizzle();
+			} else {
+				return; // sizzle is ready
+			}
+			
+			for (int i = 0; i<40; i++ ) {
+				if(sizzleLoaded() ) {
+					return; // sizzle is loaded
+				}
+				try {
+					Thread.sleep(500);
+				} catch (InterruptedException e) {
+					// FIX: nothing to print here
+				}
+			}
+			
+			//Try on last time
+			if (!sizzleLoaded()) {
+				injectSizzle();
+			} 
+			// sizzle is not loaded yet 
+			throw new RuntimeException("Sizzle loading from ("+DEFAULT_SIZZLE_URL+") has failed - " +
+					"provide a better sizzle URL via -DsizzleUrl");
 		}
 
 		/**
@@ -240,11 +263,13 @@ public abstract class ByExtended extends By {
 		 * Inject sizzle 1.8.2
 		 */
 		public void injectSizzle() {
+			String sizzleUrl = System.getProperty("sizzleUrl",DEFAULT_SIZZLE_URL );
+			
 			((JavascriptExecutor) getDriver())
 					.executeScript(" var headID = document.getElementsByTagName(\"head\")[0];"
 							+ "var newScript = document.createElement('script');"
 							+ "newScript.type = 'text/javascript';"
-							+ "newScript.src = 'https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js';"
+							+ "newScript.src = '"+sizzleUrl+"';"
 							+ "headID.appendChild(newScript);");
 		}
 		/**

@@ -32,7 +32,10 @@
  */
 package com.persado.oss.quality.stevia.spring;
 
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
 import java.net.URL;
+
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
@@ -43,8 +46,6 @@ import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-import org.openqa.selenium.server.RemoteControlConfiguration;
-import org.openqa.selenium.server.SeleniumServer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -60,6 +61,7 @@ import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
+
 import com.opera.core.systems.OperaDriver;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
@@ -121,7 +123,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	private static final Logger STEVIA_TEST_BASE_LOG = LoggerFactory.getLogger(SteviaTestBase.class);
 	
 	/** The selenium server. */
-	private static SeleniumServer seleniumServer;
+	private static Object[] seleniumServer;
 	
 	/** Determined if RC server is started programmatically. */
 	private static boolean isRCStarted = false; 
@@ -473,8 +475,18 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	 */
 	@AfterSuite(alwaysRun = true)
 	protected void stopRCServer() {		
-		if (isRCStarted)
-			seleniumServer.stop();
+		if (isRCStarted) {
+			
+			Object server = seleniumServer[0];
+			Method stopMethod = (Method) seleniumServer[1];
+			try {
+				stopMethod.invoke(server);
+			} catch (Exception e) {
+				
+				STEVIA_TEST_BASE_LOG.warn("Failed to shutdown the Selenium Server",e);
+			}
+
+		}
 	}
 
 	/**
@@ -484,13 +496,48 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	 */
 	private void startRCServer() throws Exception{
 		STEVIA_TEST_BASE_LOG.info("Selenium RC mode run in local enviroment; First start Selenium RC Server");
-		RemoteControlConfiguration rc = new RemoteControlConfiguration();	
+		
+		if(seleniumServerInClassPath()) {
+			seleniumServerLoadAndStart();
+		} else {
+			STEVIA_TEST_BASE_LOG.error("Selenium server is not in the classpath, please modify and retry");
+		}
+		/*RemoteControlConfiguration rc = new RemoteControlConfiguration();	
 		seleniumServer = new SeleniumServer(rc);
 		seleniumServer.start();
-		isRCStarted=true;
+		isRCStarted=true;*/
 	}
 	
-	
+
+	@SuppressWarnings({"rawtypes","unchecked"})
+	private void seleniumServerLoadAndStart() {
+		try {
+			Class seleniumServerClazz = Class.forName("org.openqa.selenium.server.SeleniumServer");
+			Class remoteControlConfigurationClazz = Class.forName("org.openqa.selenium.server.RemoteControlConfiguration");
+			Object remoteControlConf = remoteControlConfigurationClazz.newInstance();
+			Constructor constructor = seleniumServerClazz.getConstructor(remoteControlConfigurationClazz);
+			constructor.setAccessible(true);
+			Object seleniumServerObj = constructor.newInstance(remoteControlConf);
+			Method startMethod = seleniumServerClazz.getMethod("start");
+			startMethod.invoke(seleniumServerObj);
+			SteviaTestBase.seleniumServer = new Object [] {seleniumServerObj, seleniumServerClazz.getMethod("stop")};
+			isRCStarted=true;
+		} catch (Exception e) {
+			STEVIA_TEST_BASE_LOG.error("Selenium Server cannot be started, the class path does not contain it. Modify your pom.xml to include it",e);
+		}
+	}
+
+
+	private boolean seleniumServerInClassPath() {
+		try {
+			Class.forName("org.openqa.selenium.server.SeleniumServer");
+			return true;
+		} catch (ClassNotFoundException e) {
+			return false;
+		}
+	}
+
+
 	/**
 	 * Gets the suite output dir.
 	 *

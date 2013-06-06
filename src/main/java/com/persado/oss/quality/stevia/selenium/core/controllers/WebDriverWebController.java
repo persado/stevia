@@ -42,6 +42,7 @@ import java.util.Set;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Cookie;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.Point;
@@ -60,6 +61,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
+import com.persado.oss.quality.stevia.network.http.HttpCookie;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
@@ -68,6 +70,7 @@ import com.persado.oss.quality.stevia.selenium.listeners.LogDriver;
 import com.thoughtworks.selenium.Selenium;
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Class WebDriverMethods.
  */
@@ -249,7 +252,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public WebElement waitForElement(String locator, long waitSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, waitSeconds);
+		WebDriverWait wait = new WebDriverWait(driver, waitSeconds,THREAD_SLEEP);
 		return wait.until(ExpectedConditions.visibilityOfElementLocated(determineLocator(locator)));
 	}
 
@@ -261,8 +264,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void waitForElementInvisibility(String locator) {
-		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElementInvisibility());
-		wait.until(ExpectedConditions.invisibilityOfElementLocated(determineLocator(locator)));
+		waitForElementInvisibility(locator, SteviaContext.getWaitForElementInvisibility());
 	}
 
 	/*
@@ -297,7 +299,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 
 	public WebElement waitForElementPresence(String locator, long waitSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, waitSeconds);
+		WebDriverWait wait = new WebDriverWait(driver, waitSeconds,THREAD_SLEEP);
 		return wait.until(ExpectedConditions.presenceOfElementLocated(determineLocator(locator)));
 	}
 
@@ -310,7 +312,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public List<WebElement> findElements(String locator) {
-		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement());
+		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement(),THREAD_SLEEP);
 		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(determineLocator(locator)));
 	}
 
@@ -1110,7 +1112,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	public String getTableElementTextUnderHeader(String locator, String elementName, String headerName) {
 		WebElement element = waitForElement(locator);
-		return element.findElement(By.cssSelector("tr:nth-child(" + getTableElementRowPosition(locator, elementName) + ") td:nth-child(" + getTableHeaderPosition(locator, headerName) + ")"))
+		return element.findElement(By.cssSelector("tbody tr:nth-child(" + getTableElementRowPosition(locator, elementName) + ") td:nth-child(" + getTableHeaderPosition(locator, headerName) + ")"))
 				.getText();
 
 	}
@@ -1124,7 +1126,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 		String headerPosition = getTableHeaderPosition(locator,headerName);	
 		List<WebElement> rows = element.findElements(By.cssSelector("tbody tr")); 
 		for(WebElement row:rows){
-			records.add(row.findElement(By.cssSelector(" th:nth-child("+ headerPosition + "),td:nth-child("+ headerPosition + ")")).getText());
+			records.add(row.findElement(By.cssSelector("th:nth-child("+ headerPosition + "),td:nth-child("+ headerPosition + ")")).getText());
 		}
         return records;
 		
@@ -1167,6 +1169,26 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 
 		return table;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getTableInfoAsList(java.lang.String)
+	 */
+	@Override
+	public List<List<String>> getTableInfoAsList(String locator) {
+		WebElement table = waitForElement(locator);
+		List<List<String>> tableInfo = new ArrayList<List<String>>();
+		List<WebElement> tableRows = table.findElements(By.cssSelector("tbody tr"));
+		for (WebElement row:tableRows){
+			List<String> rowText = new ArrayList<String>();
+			List<WebElement> columnsPerRow = row.findElements(By.cssSelector("td"));
+			for(WebElement column:columnsPerRow){
+				rowText.add(column.getText());
+			}
+			tableInfo.add(rowText);
+		}
+		return tableInfo;
+	}
+	
 
 	/*
 	 * (non-Javadoc)
@@ -1590,5 +1612,27 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	@Override
 	public int getNumberOfTotalColumns(String locator) {
 		return waitForElement(locator).findElements(By.cssSelector("tbody tr:nth-child(1) td")).size();
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getCookieByName(java.lang.String)
+	 */
+	@Override
+	public HttpCookie getCookieByName(String name) {
+		return new HttpCookie(name, driver.manage().getCookieNamed(name).getValue());
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getAllCookies()
+	 */
+	@Override
+	public List<HttpCookie> getAllCookies() {
+		List<HttpCookie> allCookies = new ArrayList<HttpCookie>();
+		Iterator<Cookie> it = driver.manage().getCookies().iterator();
+		while(it.hasNext()){
+			Cookie c = it.next();
+			allCookies.add(new HttpCookie(c.getName(), c.getValue()));			
+		}
+		return allCookies;
 	}
 }

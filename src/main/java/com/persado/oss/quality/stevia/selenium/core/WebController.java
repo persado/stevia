@@ -10,10 +10,12 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
 
+import com.persado.oss.quality.stevia.network.http.HttpCookie;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
 
 
 
+// TODO: Auto-generated Javadoc
 /**
  * The Interface WebController.
  */
@@ -81,6 +83,7 @@ public interface WebController {
 	 * Wait for element presence.
 	 *
 	 * @param locator the element locator
+	 * @return the web element
 	 */
 	WebElement waitForElementPresence(String locator);
 	
@@ -89,6 +92,7 @@ public interface WebController {
 	 *
 	 * @param locator the locator
 	 * @param waitSeconds time to wait in seconds, for element to become present
+	 * @return the web element
 	 */
 	WebElement waitForElementPresence(String locator,long waitSeconds);
 	
@@ -172,7 +176,7 @@ public interface WebController {
 	 * Select an option from a drop-down list.
 	 *
 	 * @param locator the drop-down list locator
-	 * @param value the value/option you want to select
+	 * @param option the option
 	 */
 	void select(String locator, String option);
 
@@ -180,8 +184,8 @@ public interface WebController {
 	/**
 	 * Select by value.
 	 *
-	 * @param locator the select locator 
-	 * @param option the value you want to select
+	 * @param locator the select locator
+	 * @param value the value
 	 */
 	void selectByValue(String locator, String value);
 	
@@ -317,6 +321,7 @@ public interface WebController {
 	 * Gets the focus. Move the focus to the specified element
 	 *
 	 * @param locator the locator of the element to focus
+	 * @return the focus
 	 */
 	void getFocus(String locator);
      
@@ -341,10 +346,9 @@ public interface WebController {
 	List<String> getSelectedOptions(String locator);
 
 	/**
-	 * Gets the value of an input field
-	 * 
+	 * Gets the value of an input field.
+	 *
 	 * @param locator of the input field
-	 *            
 	 * @return the value of an input field
 	 */
 	String getInputValue(String locator);
@@ -376,10 +380,9 @@ public interface WebController {
 	boolean isTextNotPresent(String value);
 
 	/**
-	 * Checks if the specified input element is editable
-	 * 
+	 * Checks if the specified input element is editable.
+	 *
 	 * @param locator  the locator of the element
-	 *           
 	 * @return true, if is component editable
 	 */
 	boolean isComponentEditable(String locator);
@@ -394,17 +397,16 @@ public interface WebController {
 	boolean isComponentDisabled(String locator);
 
 	/**
-	 * Checks if a component present in the page (meaning somewhere in the page)
-	 * 
+	 * Checks if a component present in the page (meaning somewhere in the page).
+	 *
 	 * @param locator the locator of the element you want to verify presence
-	 *             
 	 * @return true, if is component present
 	 */
 	boolean isComponentPresent(String locator);
 	
 	
 	/**
-	 * Checks if a component present in the page (meaning somewhere in the page) for at least a specified time
+	 * Checks if a component present in the page (meaning somewhere in the page) for at least a specified time.
 	 *
 	 * @param locator the locator of the element
 	 * @param seconds the time in seconds that element needs to be present
@@ -413,8 +415,8 @@ public interface WebController {
 	boolean isComponentPresent(String locator,long seconds);
 
 	/**
-	 * Checks if the component is not present in the page (meaning anywhere in the page)
-	 * 
+	 * Checks if the component is not present in the page (meaning anywhere in the page).
+	 *
 	 * @param locator the locator of the element
 	 * @return true, if the component is not present
 	 */
@@ -422,16 +424,15 @@ public interface WebController {
 	
 
 	/**
-	 * Determines if the specified element is visible
-	 * 
+	 * Determines if the specified element is visible.
+	 *
 	 * @param locator the locator of the element
-	 *           
 	 * @return true, if the component visible
 	 */
 	boolean isComponentVisible(String locator);
 	
 	/**
-	 * Determines if the specified element is visible
+	 * Determines if the specified element is visible.
 	 *
 	 * @param locator the locator of the element
 	 * @param seconds the time in seconds, where element needs to maintain visibility
@@ -451,7 +452,7 @@ public interface WebController {
 	
 	
 	/**
-	 * Checks if a component is not visible, for a specified time frame
+	 * Checks if a component is not visible, for a specified time frame.
 	 *
 	 * @param locator the locator of the element
 	 * @param seconds the time in seconds, where element needs to maintain invisibility
@@ -538,9 +539,6 @@ public interface WebController {
 	 * @param thekey the key to release
 	 */
 	void keyUp(String locator,KeyInfo thekey); 
-	
-	
-	
 	
 	
 	/**
@@ -651,6 +649,16 @@ public interface WebController {
 	Map<String, Map<String, String>> getTableInfo(String locator, int numberOfColumns);
 	
 
+	
+	/**
+	 * Gets the table info.
+	 *
+	 * @param locator the locator of the table
+	 * @return the a List of List of Strings of the table elements, for each row and column
+	 */
+	List<List<String>> getTableInfoAsList(String locator);
+
+	
 	/**
 	 * Gets the table element text for specific header.
 	 * 
@@ -734,7 +742,7 @@ public interface WebController {
 	String getTableElementSpecificRowAndColumnLocator(String locator, String row, String column);
 	
 	/**
-	 * Gets the value of an element attribute
+	 * Gets the value of an element attribute.
 	 *
 	 * @param locator the element locator
 	 * @param attribute the attribute value you want to retrieve
@@ -742,6 +750,25 @@ public interface WebController {
 	 */
 	String getAttributeValue(String locator,String attribute);
 	
+	
+	
+	/**
+	 * Gets the cookie by name.
+	 *
+	 * @param name the name
+	 * @return an HttpCookie
+	 */
+	HttpCookie getCookieByName(String name);
+	
+	
+	
+	
+	/**
+	 * Gets the all cookies.
+	 *
+	 * @return the all cookies
+	 */
+	List<HttpCookie> getAllCookies();
 
 	/**
 	 * Drag and drop.
@@ -846,6 +873,7 @@ public interface WebController {
 	 * @return the absolute url of the current page
 	 */
 	String getCurrentUrl();
+	
 
 	/**
 	 * Drag and drop.
@@ -864,8 +892,10 @@ public interface WebController {
 	 */
 	Point getElementPosition(String locator);
 
-	/** Get Page HTML Source Code
-	 * @return
+	/**
+	 * Get Page HTML Source Code.
+	 *
+	 * @return the page source
 	 */
 	String getPageSource() ;
 	
