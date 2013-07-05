@@ -25,7 +25,12 @@ A first release of our technical document is uploaded in the following link: htt
 * * *
 
 ### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://persado.com/images/site/lgo-header.svg"></p>
-Persado is the leader in marketing persuasion technology, a new category within digital marketing. Persado maps the genome of marketing language and generates the most effective marketing messages for any customer segment and any product, at any time. Developed over 5+ years of high-volume performance-driven digital marketing worldwide, Persado dramatically increases customer engagement, acquisition, retention, and conversion across all major digital marketing channels, including on-site and in-app messages and landing pages; email; search advertising; display advertising; mobile and SMS advertising; and social.
+Persado is the leader in Marketing Language Engineering: the use of math and big data to unlock the DNA of selling online. 
+
+Persado uses semantic and statistical algorithms to map marketing language and engineer the absolute best online marketing messages. It's proven. With our technology, you sell more. 
+
+Over the past 7 years, we've analyzed billions of consumers' online interactions to identify and map the key components of marketing language. Emotions, product features, calls-to-action, formatting, amongst others, are semantically mapped in our database. For any marketing message, we first model and then produce all possible variations (up to 16 million). Using our statistical algorithms, we identify the absolute best one.
+
 
 
 
