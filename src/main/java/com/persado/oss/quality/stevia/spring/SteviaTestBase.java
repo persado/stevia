@@ -34,18 +34,9 @@ package com.persado.oss.quality.stevia.spring;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.safari.SafariDriver;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.test.context.ContextConfiguration;
@@ -62,13 +53,11 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
-import com.opera.core.systems.OperaDriver;
+import com.persado.oss.quality.stevia.selenium.core.Constants;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
+import com.persado.oss.quality.stevia.selenium.core.SteviaContextSupport;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
-import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
-import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 
 
 
@@ -76,49 +65,8 @@ import com.thoughtworks.selenium.Selenium;
  * The Class SteviaTestBase.
  */
 @ContextConfiguration({ "classpath:META-INF/spring/stevia-boot-context.xml" })
-public class SteviaTestBase extends AbstractTestNGSpringContextTests {
+public class SteviaTestBase extends AbstractTestNGSpringContextTests implements Constants {
 
-	/** The Constant FIREFOX. */
-	private static final String FIREFOX = "*firefox";
-	
-	/** The Constant CHROME. */
-	private static final String CHROME = "*googlechrome";
-	
-	/** The Constant IEXPLORER. */
-	private static final String IEXPLORER = "*iexplore";
-	
-	/** The Constant SAFARI. */
-	private static final String SAFARI = "*safari";
-	
-	/** The Constant OPERA. */
-	private static final String OPERA = "*opera";
-	
-	/** The parameter that determines the browser type. */
-	private static final String BROWSER = "browser";
-	
-	/** The parameter that determines the Selenium RC host. */
-	private static final String RC_HOST = "rcHost";
-	
-	/** The parameter that determines the Selenium RC port. */
-	private static final String RC_PORT = "rcPort";
-	
-	/** The parameter that determines the application URL. */
-	private static final String TARGET_HOST_URL = "targetHostUrl";
-	
-	/** The parameter that determines the driver type (WebDriver or Selenium RC). */
-	private static final String DRIVER_TYPE = "driverType";
-	
-	/** The parameter that determines the test mode. */
-	private static final String DEBUGGING = "debugging";
-	
-	/** The parameter that determines if actions will be logged in TestNG report. */
-	private static final String ACTIONS_LOGGING = "actionsLogging";
-	
-	/** The parameter that determines the browser profile. */
-	private static final String PROFILE = "profile";
-	
-	private static final String WRONG_BROWSER_PARAMETER = "Wrong value for 'browser' parameter was defined";
-	
 	/** The Constant STEVIA_TEST_BASE_LOG. */
 	private static final Logger STEVIA_TEST_BASE_LOG = LoggerFactory.getLogger(SteviaTestBase.class);
 	
@@ -131,7 +79,6 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 	/** suite-global output directory. */
 	private static String suiteOutputDir;
 
-	private static final String TRUE = "true";
 	
 	
 	/**
@@ -344,131 +291,23 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests {
 		if (applicationContext == null) {
 			super.springTestContextPrepareTestInstance();
 		}
-		if (driverType.compareTo("webdriver") == 0) {
-			WebController controller = (WebController) applicationContext.getBean("webDriverController" );
-			WebDriverWebController wdController = (WebDriverWebController)controller;
-			WebDriver driver = null;
-			if (debugging.compareTo(TRUE)==0) {
-				
-				if(browser == null || browser.compareTo("firefox") == 0 || browser.isEmpty()){
-					if (profile == null || profile.isEmpty()) {
-						STEVIA_TEST_BASE_LOG.info("Debug enabled, using Firefox Driver");
-						driver = new FirefoxDriver();
-					} else {
-						STEVIA_TEST_BASE_LOG.info("Debug enabled, using a local Firefox profile with FirefoxDriver");
-						ProfilesIni allProfiles = new ProfilesIni();
-						FirefoxProfile ffProfile = allProfiles.getProfile(profile);
-						driver = new FirefoxDriver(ffProfile);
-					}
-				}
-				else if(browser.compareTo("chrome") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug enabled, using ChromeDriver");
-					driver = new ChromeDriver();
-				}
-				else if(browser.compareTo("iexplorer") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug enabled, using InternetExplorerDriver");
-					driver = new InternetExplorerDriver();
-				}
-				else if(browser.compareTo("safari") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug enabled, using SafariDriver");
-					driver = new SafariDriver();
-				}
-				else if(browser.compareTo("opera") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug enabled, using OperaDriver");
-				    driver = new OperaDriver();
-				}
-				else{
-					throw new Exception(WRONG_BROWSER_PARAMETER);
-				}
-				if (targetHostUrl != null){
-				driver.get(targetHostUrl);
-				}
-				//driver.manage().window().maximize();
-				wdController.setDriver(driver);
-				SteviaContext.setWebController(wdController);
-				if (actionsLogging.compareTo(TRUE) == 0) {
-					SteviaContext.getWebController().enableActionsLogging();
-				}
-
-			} else {
-				DesiredCapabilities capability = new DesiredCapabilities();
-				if(browser == null || browser.compareTo("firefox") == 0 || browser.isEmpty()){
-				   STEVIA_TEST_BASE_LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
-				   capability = DesiredCapabilities.firefox();
-				}
-				else if(browser.compareTo("chrome") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
-					capability = DesiredCapabilities.chrome();	
-				}
-				else if(browser.compareTo("iexplorer") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
-					capability = DesiredCapabilities.internetExplorer();
-				}
-				else if(browser.compareTo("safari") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug OFF, using a RemoteWebDriver with Safari capabilities");
-					capability = DesiredCapabilities.safari();
-				}
-				else if(browser.compareTo("opera") == 0){
-					STEVIA_TEST_BASE_LOG.info("Debug OFF, using a RemoteWebDriver with Opera capabilities");
-					capability = DesiredCapabilities.opera();
-				}
-				else{
-					throw new Exception(WRONG_BROWSER_PARAMETER);
-				}
-				Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default web driver.
-			    driver = augmenter.augment(new RemoteWebDriver(new URL("http://"+rcHost+":"+rcPort+"/wd/hub"),capability ) );
-				if (targetHostUrl != null){
-					driver.get(targetHostUrl);
-					}
-				//driver.manage().window().maximize();
-				wdController.setDriver(driver);
-				SteviaContext.setWebController(wdController);
-				if (actionsLogging.compareTo(TRUE) == 0){
-					SteviaContext.getWebController().enableActionsLogging();
-				}
-			}
-			
-			
-		} else if (driverType.compareTo("selenium") == 0){
-			STEVIA_TEST_BASE_LOG.info("Selenium RC mode; connecting to a Selenium RC host");
-			Selenium selenium = null;
-			if(browser == null || browser.compareTo("firefox") == 0 || browser.isEmpty()){
-			   STEVIA_TEST_BASE_LOG.info("Using Firefox with selenium RC");
-			   selenium = new DefaultSelenium(rcHost, Integer.parseInt(rcPort), FIREFOX, targetHostUrl);
-			}
-			else if(browser.compareTo("chrome") == 0){
-				STEVIA_TEST_BASE_LOG.info("Using Chrome with selenium RC");
-				selenium = new DefaultSelenium(rcHost, Integer.parseInt(rcPort), CHROME, targetHostUrl);
-			}
-			else if(browser.compareTo("iexplorer") == 0){
-				STEVIA_TEST_BASE_LOG.info("Using Chrome with selenium RC");
-				selenium = new DefaultSelenium(rcHost, Integer.parseInt(rcPort), IEXPLORER, targetHostUrl);
-			}
-			else if(browser.compareTo("safari") == 0){
-				STEVIA_TEST_BASE_LOG.info("Using Safari with selenium RC");
-				selenium = new DefaultSelenium(rcHost, Integer.parseInt(rcPort), SAFARI, targetHostUrl);
-			}
-			else if(browser.compareTo("opera") == 0){
-				STEVIA_TEST_BASE_LOG.info("Using Opera with selenium RC");
-				selenium = new DefaultSelenium(rcHost, Integer.parseInt(rcPort), OPERA, targetHostUrl);
-			}
-			else{
-				throw new Exception(WRONG_BROWSER_PARAMETER);
-			}
-			selenium.start();
-				//selenium.windowMaximize();
-				selenium.open("");
-				WebController controller = (WebController) applicationContext.getBean("seleniumController" );
-				SeleniumWebController selController = (SeleniumWebController)controller;
-				selController.setSelenium(selenium);
-				SteviaContext.setWebController(selController);
-		}
-		else{
-			throw new Exception("Wrong value for 'driverType' parameter was defined");
-		}
-	
+		Map<String, String> map = new HashMap<String,String>();
+		map.put("browser", browser);
+		map.put("rcHost", rcHost);
+		map.put("rcPort", rcPort);
+		map.put("targetHostUrl", targetHostUrl);
+		map.put("driverType", driverType);
+		map.put("debugging", debugging);
+		map.put("actionsLogging", actionsLogging);
+		map.put("profile", profile);
+		SteviaContext.registerParameters(SteviaContextSupport.getParameters( map ));
+		
+		WebController controller = SteviaWebControllerFactory.getWebController(applicationContext);
+		SteviaContext.setWebController(controller);
+		
 	}
-	
+
+
 	
 	/**
 	 * Stop RC server if it's running.
