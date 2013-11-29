@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.8.0-SNAPSHOT</version>
+	<version>0.8.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
  	<parent>
     		<groupId>org.sonatype.oss</groupId>
@@ -125,7 +125,7 @@
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.14</version>
 				<configuration>
-					<skipTests>true</skipTests>
+					<skipTests>false</skipTests>
 				</configuration>
 				<executions>
 					<execution>
@@ -287,12 +287,12 @@
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjrt</artifactId>
-			<version>1.6.11</version>
+			<version>1.7.4</version>
 		</dependency>
 		<dependency>
 			<groupId>org.aspectj</groupId>
 			<artifactId>aspectjweaver</artifactId>
-			<version>1.6.11</version>
+			<version>1.7.4</version>
 		</dependency>
 
 		<!-- Support for testing Spring applications with tools such as JUnit and 
@@ -310,7 +310,11 @@
 			</exclusions>
 		</dependency>
 		
-		
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-instrument</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
@@ -330,7 +334,7 @@
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>3.2.2.RELEASE</org.springframework.version>
-		<selenium.version>2.32.0</selenium.version>
+		<selenium.version>2.34.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

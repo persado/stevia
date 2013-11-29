@@ -1,11 +1,9 @@
 package com.persado.oss.quality.stevia.annotations;
 
+import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.aspectj.lang.ProceedingJoinPoint;
-import org.aspectj.lang.annotation.Around;
-import org.aspectj.lang.annotation.Aspect;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -19,9 +17,8 @@ import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 
 @Component
-@Aspect
-public class RunsWithControllerProcessor implements ApplicationContextAware {
-	public static Logger LOG = LoggerFactory.getLogger(RunsWithControllerProcessor.class);
+public class RunsWithControllerHelper implements ApplicationContextAware {
+	public static Logger LOG = LoggerFactory.getLogger(RunsWithControllerHelper.class);
 	
 	private static final ThreadLocal<Map<String,WebController>> controllerCache = new ThreadLocal<Map<String,WebController>>() {
 		@Override
@@ -29,17 +26,29 @@ public class RunsWithControllerProcessor implements ApplicationContextAware {
 			return new HashMap<String,WebController>();
 		};
 	};
+	
+	private static final Map<String, WebController> ownControllers = new HashMap<String, WebController>();
 
+	public static void tearDown() {
+		for (WebController controller : ownControllers.values()) {
+			LOG.info("Removing {} in teardown",controller);
+			controller.close();
+		}
+		ownControllers.clear();
+		controllerCache.get().clear();
+	}
+	
 	private ApplicationContext context;
-
-	@Around(value = "@within(com.persado.oss.quality.stevia.annotations.RunsWithController) || @annotation(com.persado.oss.quality.stevia.annotations.RunsWithController)")
-	public Object adviceOnWebController(ProceedingJoinPoint pjp) throws Throwable {
+	
+	
+	public void maskExistingController(Method m) throws Throwable {
 		StopWatch watch = new StopWatch();
-		
-		WebController masked = null;
-		Object retVal = null;
 		try {
-			RunsWithController rw = pjp.getTarget().getClass().getAnnotation(RunsWithController.class);
+			
+			RunsWithController rw = 
+					(m.getDeclaringClass().getAnnotation(RunsWithController.class) != null) ? 
+								m.getDeclaringClass().getAnnotation(RunsWithController.class) : 
+								m.getAnnotation(RunsWithController.class);
 			if (null != rw) {
 				watch.start("Controller masking");
 				Class<? extends WebController> requestedControllerClass = rw.controller();
@@ -59,38 +68,41 @@ public class RunsWithControllerProcessor implements ApplicationContextAware {
 				//check if requested controller is different from the currently running
 				if (!curControllerKey.startsWith(reqControllerKey)) {
 					WebController replacer = null;
-					masked = currentControllerObj;
 					if (cache.containsKey(reqControllerKey)) { // we have one
 						replacer = cache.get(reqControllerKey);
 					} else {
 						replacer = SteviaWebControllerFactory.getWebController(context, requestedControllerClass);
-						cache.put(reqControllerKey, replacer);						
+						cache.put(reqControllerKey, replacer);			
+						ownControllers.put(reqControllerKey, replacer);
 						LOG.debug("Controller {} not found in cache, creating new ", reqControllerKey);
 					}
 					SteviaContext.setWebController(replacer);
+					cache.put("masked", currentControllerObj); //save for later
 
 				} else {
 					LOG.trace("Controller requested is the currently used one. No action");
 				}
 				watch.stop();
+			} else {
+				throw new IllegalStateException("unable to find an entry for the annotation!");
 			}
-			watch.start("Executing method");
-		    retVal = pjp.proceed();
-		    watch.stop();
 		} finally {
 			if (watch.isRunning()) {
 				watch.stop();
 			}
-			watch.start("Controller unmasking");
-			if (masked !=null) {
-				SteviaContext.setWebController(masked);
-			}
-			watch.stop();
 			LOG.info(watch.prettyPrint());
 		}
-	    return retVal;
 	}
+	public void revertToOriginalController() throws Throwable {
+		Map<String, WebController> cache = controllerCache.get();
 
+		if (cache.containsKey("masked")) {
+			LOG.trace("Controller unmasked");
+			SteviaContext.setWebController(cache.remove("masked"));
+		}
+	}
+	
+	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext)
 			throws BeansException {

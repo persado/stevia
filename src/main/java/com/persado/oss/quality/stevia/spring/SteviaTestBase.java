@@ -50,6 +50,7 @@ import org.testng.annotations.BeforeClass;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
@@ -58,13 +59,18 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContextSupport;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
+import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListener;
 
 
 
 /**
  * The Class SteviaTestBase.
  */
-@ContextConfiguration({ "classpath:META-INF/spring/stevia-boot-context.xml" })
+@ContextConfiguration(locations = { 
+		"classpath:META-INF/spring/stevia-boot-context.xml", 
+		"classpath:META-INF/spring/*-controllers.xml",
+		"classpath:META-INF/spring/controllers-*-shared.xml" })
+@Listeners({ControllerMaskingListener.class})
 public class SteviaTestBase extends AbstractTestNGSpringContextTests implements Constants {
 
 	/** The Constant STEVIA_TEST_BASE_LOG. */
@@ -125,7 +131,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase                                                    ***");
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
-		initializeDriver(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+		initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
 		// user code
 		suiteInitialisation(testContext);
 		//stevia context clean
@@ -176,7 +182,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeTest            ***");
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			
-			initializeDriver(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
 		}
 	}
 	
@@ -203,7 +209,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeClass**************");
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			
-			initializeDriver(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
 		}
 	}
 	
@@ -230,7 +236,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeMethod[PANICMODE] ***");
 			STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
 			
-			initializeDriver(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
 		}
 	}
 	
@@ -287,7 +293,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param profile the profile
 	 * @throws Exception the exception
 	 */
-	public void initializeDriver(String browser, String rcHost, String rcPort, String targetHostUrl,String driverType, String debugging, String actionsLogging,String profile) throws Exception {
+	public void initializeStevia(String browser, String rcHost, String rcPort, String targetHostUrl,String driverType, String debugging, String actionsLogging,String profile) throws Exception {
 		if (applicationContext == null) {
 			super.springTestContextPrepareTestInstance();
 		}
@@ -301,6 +307,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		map.put("actionsLogging", actionsLogging);
 		map.put("profile", profile);
 		SteviaContext.registerParameters(SteviaContextSupport.getParameters( map ));
+		SteviaContext.attachSpringContext(applicationContext);
 		
 		WebController controller = SteviaWebControllerFactory.getWebController(applicationContext);
 		SteviaContext.setWebController(controller);

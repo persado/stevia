@@ -40,7 +40,7 @@ public class PersadoHomePage extends WebComponent{
 	
 	public enum PersadoHomePageLocators {
 		
-		TITLE_PERSADO_PAGE("css=a[title='Persado']");
+		TITLE_PERSADO_PAGE("css=a[title='twitter']");
 		
 		
 	private String myLocator;
@@ -61,7 +61,7 @@ public class PersadoHomePage extends WebComponent{
 	 * Verify Persado title in home page
 	 */
 	public void checkPersadoTitle(){
-		SteviaContext.verify().text(PersadoHomePageLocators.TITLE_PERSADO_PAGE.get(), "Persado");
+		SteviaContext.verify().text(PersadoHomePageLocators.TITLE_PERSADO_PAGE.get(), "twitter");
 	}
 
 }

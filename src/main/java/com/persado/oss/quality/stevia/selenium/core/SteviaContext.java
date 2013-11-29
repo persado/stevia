@@ -36,7 +36,9 @@ import java.util.HashMap;
 import java.util.Map;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.context.ApplicationContext;
 
+import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
 import com.persado.oss.quality.stevia.testng.Verify;
 
@@ -69,6 +71,7 @@ public class SteviaContext {
 		private int waitForPageToLoad = 120;
 		private int waitForElement = 10;
 		private int waitForElementInvisibility = 1;
+		private ApplicationContext context;
 		
 		/**
 		 * Clear context.
@@ -83,8 +86,9 @@ public class SteviaContext {
 			if (paramsRegistry != null) {
 				paramsRegistry.clear();
 			}
+			context = null;
 			STEVIA_CONTEXT_LOG.info("Context closed, controller shutdown");
-
+			RunsWithControllerHelper.tearDown();
 			Thread.currentThread().setName("Stevia - context Inactive");
 		}
 
@@ -110,6 +114,14 @@ public class SteviaContext {
 
 		public void setWaitForElementInvisibility(int waitForElementInvisibility) {
 			this.waitForElementInvisibility = waitForElementInvisibility;
+		}
+
+		public ApplicationContext getContext() {
+			return context;
+		}
+
+		public void setContext(ApplicationContext context) {
+			this.context = context;
 		}
 	}
 	
@@ -243,6 +255,15 @@ public class SteviaContext {
 
 	public static void setWaitForElementInvisibility(int waitForElementInvisibility) {
 		innerContext.get().setWaitForElementInvisibility(waitForElementInvisibility);
+	}
+
+
+	public static void attachSpringContext(ApplicationContext applicationContext) {
+		innerContext.get().setContext(applicationContext);
+	}
+	
+	public static ApplicationContext getSpringContext() {
+		return innerContext.get().getContext();
 	}
 	
 	

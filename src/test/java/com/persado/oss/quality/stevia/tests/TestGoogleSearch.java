@@ -33,26 +33,30 @@
 package com.persado.oss.quality.stevia.tests;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.testng.annotations.Test;
 
+import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.pageObjects.GoogleHomePage;
 import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
+import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
-public class TestGoogleSearch extends SteviaTestBase{
-	
+@Component
+@RunsWithController(controller = SeleniumWebController.class)
+public class TestGoogleSearch extends SteviaTestBase {
+
 	@Autowired
 	GoogleHomePage googleHome;
 
 	@Autowired
 	PersadoHomePage persadoHome;
-	
-@Test
 
-public void searchPersadoInGoogle(){
-	googleHome.inputSearchText("persado");
-	googleHome.controller().pressLinkNameAndWaitForPageToLoad("Home | Persado - Marketing Persuasion Technology");
-	persadoHome.checkPersadoTitle();
+	@Test
+	public void searchPersadoInGoogle() {
+		googleHome.inputSearchText("persado");
+		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado | Global leader in Marketing Language Engineering");
+		persadoHome.checkPersadoTitle();
 	}
 
 }

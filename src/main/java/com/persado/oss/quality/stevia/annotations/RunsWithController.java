@@ -10,7 +10,7 @@ import java.lang.annotation.Target;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 
 @Documented
-@Target(ElementType.TYPE)
+@Target({ElementType.TYPE, ElementType.METHOD})
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
 public @interface RunsWithController {
