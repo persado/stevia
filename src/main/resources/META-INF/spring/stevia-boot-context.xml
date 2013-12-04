@@ -17,7 +17,7 @@
 	<bean id="webDriverController" class="com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController" scope="prototype" />
 	
 
-	<import resource="classpath:/META-INF/spring/test-beans-*.xml" />
+	<import resource="classpath:META-INF/spring/test-beans-*.xml" />
 
 
 
