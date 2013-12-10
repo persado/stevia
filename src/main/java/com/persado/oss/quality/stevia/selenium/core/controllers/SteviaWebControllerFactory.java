@@ -1,18 +1,22 @@
 package com.persado.oss.quality.stevia.selenium.core.controllers;
 
+import java.io.File;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
+import org.openqa.selenium.interactions.HasTouchScreen;
+import org.openqa.selenium.remote.*;
 import org.openqa.selenium.safari.SafariDriver;
+import org.openqa.selenium.interactions.TouchScreen;
+
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -22,7 +26,7 @@ import com.persado.oss.quality.stevia.selenium.core.Constants;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.*;
 
 public final class SteviaWebControllerFactory implements Constants {
 
@@ -34,7 +38,9 @@ public final class SteviaWebControllerFactory implements Constants {
 			controller = new WebDriverWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("webDriverController"));
 		} else if (SteviaContext.getParam(DRIVER_TYPE).contentEquals("selenium")) {
 			controller = new SeleniumWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("seleniumController"));
-		}
+		} else if(SteviaContext.getParam(DRIVER_TYPE).contentEquals("appium")) {
+            controller = new AppiumControllerFactoryImpl().initialize(context, (WebController) context.getBean("appiumController"));
+        }
 		return controller;
 	}
 
@@ -42,9 +48,11 @@ public final class SteviaWebControllerFactory implements Constants {
 		WebController controller = context.getBean(requestedControllerClass);
 		if (controller instanceof WebDriverWebController) {
 			controller = new WebDriverWebControllerFactoryImpl().initialize(context, controller);
-		} else {
+		} else if (controller instanceof SeleniumWebController){
 			controller = new SeleniumWebControllerFactoryImpl().initialize(context, controller);
-		}
+		} else if (controller instanceof AppiumWebController){
+            controller = new AppiumControllerFactoryImpl().initialize(context,controller);
+        }
 		return controller;
 	}
 
@@ -170,5 +178,42 @@ public final class SteviaWebControllerFactory implements Constants {
 			return controller;
 		}
 	}
+
+    static class AppiumControllerFactoryImpl implements WebControllerFactory {
+        public WebController initialize(ApplicationContext context, WebController controller) {
+            AppiumWebController wdController = (AppiumWebController) controller;
+            WebDriver driver = null;
+
+            File appDir = new File("/Users/gkogketsof/Library/Developer/Xcode/DerivedData/UICatalog-ffxccrvvnwpbfpelfveunzwlgvtd/Build/Products/Release-iphonesimulator/");
+            File app = new File(appDir, "UICatalog.app");
+            DesiredCapabilities capabilities = new DesiredCapabilities();
+            capabilities.setCapability(CapabilityType.BROWSER_NAME, "iOS");
+            capabilities.setCapability(CapabilityType.VERSION, "6.0");
+            capabilities.setCapability(CapabilityType.PLATFORM, "Mac");
+            capabilities.setCapability("app", app.getAbsolutePath());
+            try {
+                driver = new SwipeableWebDriver(new URL("http://" + SteviaContext.getParam(RC_HOST) + ":" + SteviaContext.getParam(RC_PORT)
+                        + "/wd/hub"), capabilities);
+            } catch (MalformedURLException e) {
+                e.printStackTrace();
+            }
+
+            wdController.setDriver(driver);
+            return wdController;
+        }
+    }
+
+    public static class SwipeableWebDriver extends RemoteWebDriver implements HasTouchScreen {
+        private RemoteTouchScreen touch;
+
+        public SwipeableWebDriver(URL remoteAddress, Capabilities desiredCapabilities) {
+            super(remoteAddress, desiredCapabilities);
+            touch = new RemoteTouchScreen(getExecuteMethod());
+        }
+
+        public TouchScreen getTouch() {
+            return touch;
+        }
+    }
 
 }
