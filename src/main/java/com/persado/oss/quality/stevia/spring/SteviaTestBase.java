@@ -34,7 +34,6 @@ package com.persado.oss.quality.stevia.spring;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
-import java.util.HashMap;
 import java.util.Map;
 
 import org.slf4j.Logger;
@@ -51,8 +50,6 @@ import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeSuite;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Listeners;
-import org.testng.annotations.Optional;
-import org.testng.annotations.Parameters;
 
 import com.persado.oss.quality.stevia.selenium.core.Constants;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
@@ -60,8 +57,6 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContextSupport;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListener;
-
-
 
 /**
  * The Class SteviaTestBase.
@@ -105,23 +100,15 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	/**
 	 * Start rc server.
 	 *
-	 * @param rcHost the rc host
-	 * @param rcPort the rc port
-	 * @param targetHostUrl the target host url
-	 * @param driverType the driver type
-	 * @param debugging the debugging
 	 * @param testContext the test context
 	 * @throws Exception the exception
 	 */
 	@BeforeSuite(alwaysRun = true)
-	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
-	protected void configureSuiteSettings(@Optional String browser,
-			String rcHost, String rcPort, @Optional String targetHostUrl,
-			String driverType, String debugging, String actionsLogging,
-			@Optional String profile, ITestContext testContext)
-			throws Exception {		
+	protected void configureSuiteSettings(ITestContext testContext) throws Exception {	
+		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
+		
 		//if the suite needs RC server, we start it here 
-		if (driverType.compareTo("webdriver") != 0 && debugging.compareTo(TRUE)==0 && !isRCStarted){
+		if (parameters.get("driverType").compareTo("webdriver") != 0 && parameters.get("debugging").compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
 		}
 		setSuiteOutputDir(testContext.getSuite().getOutputDirectory());
@@ -131,7 +118,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase                                                    ***");
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
-		initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+		initializeStevia(parameters);
 		// user code
 		suiteInitialisation(testContext);
 		//stevia context clean
@@ -154,25 +141,16 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	/**
 	 * Before test.
 	 *
-	 * @param browser the browser
-	 * @param rcHost the rc host
-	 * @param rcPort the rc port
-	 * @param targetHostUrl the target host url
-	 * @param driverType the driver type
-	 * @param debugging the debugging
-	 * @param actionsLogging the actions logging
-	 * @param profile the profile
 	 * @param testContext the test context
 	 * @throws Exception the exception
 	 */
 	@BeforeTest(alwaysRun = true)
-	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
-	protected void beforeTest(@Optional String browser, String rcHost,
-			String rcPort, @Optional String targetHostUrl, String driverType,
-			String debugging, String actionsLogging, @Optional String profile,
-			ITestContext testContext) throws Exception {
+	protected void beforeTest(ITestContext testContext) throws Exception {
+		
+		Map<String,String> parameters = testContext.getCurrentXmlTest().getParameters();
+		
 		// we check here **again** if the test needs the RC server and start it.
-		if (driverType.compareTo("webdriver") != 0 && debugging.compareTo(TRUE)==0 && !isRCStarted){
+		if (parameters.get("driverType").compareTo("webdriver") != 0 && parameters.get("debugging").compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
 		}
 		String parallelSetup = testContext.getSuite().getParallel();
@@ -182,61 +160,48 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeTest            ***");
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			
-			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(parameters);
 		}
 	}
 	
 	/**
 	 * Before class.
 	 *
-	 * @param browser the browser
-	 * @param rcHost the rc host
-	 * @param rcPort the rc port
-	 * @param targetHostUrl the target host url
-	 * @param driverType the driver type
-	 * @param debugging the debugging
-	 * @param actionsLogging the actions logging
-	 * @param profile the profile
 	 * @param testContext the test context
 	 * @throws Exception the exception
 	 */
 	@BeforeClass(alwaysRun = true)
-	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
-	protected void beforeClass(@Optional String browser,String rcHost, String rcPort,@Optional String targetHostUrl,String driverType, String debugging, String actionsLogging,@Optional String profile,ITestContext testContext) throws Exception {
+	protected void beforeClass(ITestContext testContext) throws Exception {
+		
+		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
+		
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("classes")) {
 
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeClass**************");
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			
-			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(parameters);
 		}
 	}
 	
 	/**
 	 * Before method.
 	 *
-	 * @param browser the browser
-	 * @param rcHost the rc host
-	 * @param rcPort the rc port
-	 * @param targetHostUrl the target host url
-	 * @param driverType the driver type
-	 * @param debugging the debugging
-	 * @param actionsLogging the actions logging
-	 * @param profile the profile
 	 * @param testContext the test context
 	 * @throws Exception the exception
 	 */
 	@BeforeMethod(alwaysRun = true)
-	@Parameters({BROWSER,RC_HOST,RC_PORT, TARGET_HOST_URL, DRIVER_TYPE, DEBUGGING,ACTIONS_LOGGING,PROFILE})
-	protected void beforeMethod(@Optional String browser,String rcHost, String rcPort,@Optional String targetHostUrl,String driverType, String debugging, String actionsLogging,@Optional String profile,ITestContext testContext) throws Exception {
+	protected void beforeMethod(ITestContext testContext) throws Exception {
+		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
+		
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("methods")) {
 
 			STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeMethod[PANICMODE] ***");
 			STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
 			
-			initializeStevia(browser,rcHost, rcPort, targetHostUrl, driverType, debugging, actionsLogging,profile);
+			initializeStevia(parameters);
 		}
 	}
 	
@@ -282,31 +247,16 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 
 	/**
 	 * Initialize driver.
-	 *
-	 * @param browser the browser type (optional-default value firefox)
-	 * @param rcHost the rc host
-	 * @param rcPort the rc port
-	 * @param targetHostUrl the target host url
-	 * @param driverType the driver type (webdriver or selenium)
-	 * @param debugging (if true use local Web Driver - if false Remote Web Driver )
-	 * @param actionsLogging the actions logging (valid only in WebDriver if true log actions output to console and testng results)
-	 * @param profile the profile
-	 * @throws Exception the exception
+	 * 
+	 * @param params
+	 * @throws Exception
 	 */
-	public void initializeStevia(String browser, String rcHost, String rcPort, String targetHostUrl,String driverType, String debugging, String actionsLogging,String profile) throws Exception {
+	public void initializeStevia(Map<String,String> params) throws Exception {
 		if (applicationContext == null) {
 			super.springTestContextPrepareTestInstance();
 		}
-		Map<String, String> map = new HashMap<String,String>();
-		map.put("browser", browser);
-		map.put("rcHost", rcHost);
-		map.put("rcPort", rcPort);
-		map.put("targetHostUrl", targetHostUrl);
-		map.put("driverType", driverType);
-		map.put("debugging", debugging);
-		map.put("actionsLogging", actionsLogging);
-		map.put("profile", profile);
-		SteviaContext.registerParameters(SteviaContextSupport.getParameters( map ));
+
+		SteviaContext.registerParameters(SteviaContextSupport.getParameters( params ));
 		SteviaContext.attachSpringContext(applicationContext);
 		
 		WebController controller = SteviaWebControllerFactory.getWebController(applicationContext);
