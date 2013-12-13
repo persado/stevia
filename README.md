@@ -40,7 +40,7 @@ A first release of our technical document is uploaded in the following link: htt
 
 * * *
 
-### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://persado.com/images/site/lgo-header.svg"></p>
+### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://www.persado.com/templates/youandigraphics/images/logo.png"></p>
 Persado is the leader in Marketing Language Engineering: the use of math and big data to unlock the DNA of selling online. 
 
 Persado uses semantic and statistical algorithms to map marketing language and engineer the absolute best online marketing messages. It's proven. With our technology, you sell more. 
