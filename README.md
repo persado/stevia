@@ -10,7 +10,15 @@ Stevia is an Open Source QA Automation Testing Framework by Persado (www.persado
 ### 20-Jan-2014 Upcoming Stevia 0.8.0!
 Dear friends, 
 
-We are now getting ready with a 0.8.0 release, with many ideas still in progress and waiting to be merged. For the moment we've changed the way we're instantiating controllers so now you can add your own without the need to recompile. Check our wiki page [here](https://github.com/persado/stevia/wiki/Extending-web-controller-support) for the way to do this. Contact us for more ideas!
+We are now getting ready with a 0.8.0 release, with many ideas still in progress and waiting to be merged. For the moment we've changed the way we're instantiating controllers so now you can add your own without the need to recompile. Check our wiki page [here](https://github.com/persado/stevia/wiki/Extending-web-controller-support) for the way to do this. Contact us for more ideas - play with this in our snapshot 0.8.2 version (snapshot repo location in pom.xml):
+
+```
+<dependency>
+  <groupId>com.persado.oss.quality.stevia</groupId>
+  <artifactId>stevia-core</artifactId>
+  <version>0.8.2-SNAPSHOT</version>
+</dependency>
+```
 
 ### 05-Jul-2013 Stevia 0.7.0 uploaded to Maven Central!
 Dear friends,
