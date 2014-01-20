@@ -3,20 +3,42 @@
 <beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns:aop="http://www.springframework.org/schema/aop"
 	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
 	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
 	http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
-	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd
+	http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd">
 
 
 	<context:annotation-config />
 	<context:component-scan base-package="com.persado.oss"/>
 	
-
+	<!--  
+		driver registry: we need this to be able to augment known driver types in runtime or future via inclusion of related
+		spring configuration - the SteviaWebControllerFactory uses this information to instantiate the relevant
+		controller at runtime
+	 -->
+	<bean id="steviaDriverRegistry" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.DriverRegistry"/>
 	
+	<!-- registration of a seleniumController and the respective driver (note: controller needs scope=prototype!!!!) -->	
 	<bean id="seleniumController" class="com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController" scope="prototype" />
-	<bean id="webDriverController" class="com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController" scope="prototype" />
-	
+	<!-- note: id needs to be "drivername"-driver for this to work!!! -->
+	<bean id="selenium-driver" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.Driver"
+		p:name="selenium" 
+		p:className="com.persado.oss.quality.stevia.selenium.core.controllers.factories.SeleniumWebControllerFactoryImpl"/>
 
+	<!-- registration of a webdriver controller and the respective driver -->
+	<bean id="webDriverController" class="com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController" scope="prototype" />
+	<!-- note: id needs to be "drivername"-driver for this to work!!! -->
+	<bean id="webdriver-driver" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.Driver"
+		p:name="webdriver" 
+		p:className="com.persado.oss.quality.stevia.selenium.core.controllers.factories.WebDriverWebControllerFactoryImpl"/>
+
+	<!-- additional drivers may be registered this way -->
+	<import resource="classpath:META-INF/spring/stevia-extensions-drivers-*.xml" />
+
+	<!-- additional test beans specific per project may be registered this way -->
 	<import resource="classpath:META-INF/spring/test-beans-*.xml" />
 
 
