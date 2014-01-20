@@ -38,9 +38,7 @@ public final class SteviaWebControllerFactory implements Constants {
 			controller = new WebDriverWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("webDriverController"));
 		} else if (SteviaContext.getParam(DRIVER_TYPE).contentEquals("selenium")) {
 			controller = new SeleniumWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("seleniumController"));
-		} else if(SteviaContext.getParam(DRIVER_TYPE).contentEquals("appium")) {
-            controller = new AppiumControllerFactoryImpl().initialize(context, (WebController) context.getBean("appiumController"));
-        }
+		}
 		return controller;
 	}
 
@@ -50,9 +48,7 @@ public final class SteviaWebControllerFactory implements Constants {
 			controller = new WebDriverWebControllerFactoryImpl().initialize(context, controller);
 		} else if (controller instanceof SeleniumWebController){
 			controller = new SeleniumWebControllerFactoryImpl().initialize(context, controller);
-		} else if (controller instanceof AppiumWebController){
-            controller = new AppiumControllerFactoryImpl().initialize(context,controller);
-        }
+		}
 		return controller;
 	}
 
@@ -179,41 +175,6 @@ public final class SteviaWebControllerFactory implements Constants {
 		}
 	}
 
-    static class AppiumControllerFactoryImpl implements WebControllerFactory {
-        public WebController initialize(ApplicationContext context, WebController controller) {
-            AppiumWebController wdController = (AppiumWebController) controller;
-            WebDriver driver = null;
-
-            File appDir = new File("/Users/gkogketsof/Library/Developer/Xcode/DerivedData/UICatalog-ffxccrvvnwpbfpelfveunzwlgvtd/Build/Products/Release-iphonesimulator/");
-            File app = new File(appDir, "UICatalog.app");
-            DesiredCapabilities capabilities = new DesiredCapabilities();
-            capabilities.setCapability(CapabilityType.BROWSER_NAME, "iOS");
-            capabilities.setCapability(CapabilityType.VERSION, "6.0");
-            capabilities.setCapability(CapabilityType.PLATFORM, "Mac");
-            capabilities.setCapability("app", app.getAbsolutePath());
-            try {
-                driver = new SwipeableWebDriver(new URL("http://" + SteviaContext.getParam(RC_HOST) + ":" + SteviaContext.getParam(RC_PORT)
-                        + "/wd/hub"), capabilities);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            }
-
-            wdController.setDriver(driver);
-            return wdController;
-        }
-    }
-
-    public static class SwipeableWebDriver extends RemoteWebDriver implements HasTouchScreen {
-        private RemoteTouchScreen touch;
-
-        public SwipeableWebDriver(URL remoteAddress, Capabilities desiredCapabilities) {
-            super(remoteAddress, desiredCapabilities);
-            touch = new RemoteTouchScreen(getExecuteMethod());
-        }
-
-        public TouchScreen getTouch() {
-            return touch;
-        }
-    }
+   
 
 }
