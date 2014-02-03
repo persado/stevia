@@ -1,7 +1,7 @@
 package com.persado.oss.quality.stevia.selenium.core.controllers.factories;
 
 import org.springframework.context.ApplicationContext;
-
+import java.lang.Exception;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
@@ -41,10 +41,16 @@ public class SeleniumWebControllerFactoryImpl implements WebControllerFactory {
 		} else {
 			throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 		}
-		selenium.start();
-		// selenium.windowMaximize();
-		selenium.open("");
 
+		try {
+			selenium.start();
+			// selenium.windowMaximize();
+			selenium.open("");
+		} catch (Exception e) {
+			SteviaWebControllerFactory.LOG.warn("Exception caught while trying to start Selenium RC - did you start an RC server?");
+			SteviaWebControllerFactory.LOG.warn("Exception message : "+e.getMessage(),e);
+			throw new IllegalStateException("Failed to start Selenium RC",e);
+		}
 		selController.setSelenium(selenium);
 
 		return controller;
