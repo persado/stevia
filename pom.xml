@@ -147,14 +147,14 @@
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>1.4.01</version>
+			<version>2.0.2</version>
 		</dependency>
 
 		<!-- Jetty HTTP Client -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>8.1.9.v20130131</version>
+			<version>9.1.1.v20140108</version>
 		</dependency>
 
 		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
@@ -178,7 +178,7 @@
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
-			<version>1.1.2</version>
+			<version>1.1.4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.testng</groupId>
@@ -209,14 +209,14 @@
 		<dependency>
 			<groupId>com.opera</groupId>
 			<artifactId>operadriver</artifactId>
-			<version>1.2</version>
+			<version>1.5</version>
 		</dependency>
 		
 		
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<version>2.3</version>
 		</dependency>
 		
 
@@ -318,12 +318,12 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.3</version>
+			<version>1.7.5</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.0.11</version>
+			<version>1.1.0</version>
 			<scope>test</scope>
 		</dependency>
             
@@ -333,8 +333,8 @@
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>3.2.6.RELEASE</org.springframework.version>
-		<selenium.version>2.34.0</selenium.version>
+		<org.springframework.version>3.2.7.RELEASE</org.springframework.version>
+		<selenium.version>2.39.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 
