@@ -147,14 +147,14 @@
 		<dependency>
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
-			<version>2.0.2</version>
+			<version>1.4.01</version>
 		</dependency>
 
 		<!-- Jetty HTTP Client -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>9.1.1.v20140108</version>
+			<version>8.1.12.v20130726</version>
 		</dependency>
 
 		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
