@@ -1,14 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.8.5-SNAPSHOT</version>
 	<packaging>jar</packaging>
- 	<parent>
-    		<groupId>org.sonatype.oss</groupId>
-    		<artifactId>oss-parent</artifactId>
-    		<version>7</version>
-  	</parent>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
@@ -18,6 +19,7 @@
 	reporting functionality via ReportNG, including remote screenshots.</description>
 
 	<url>http://www.persado.com</url>
+	<inceptionYear>2013</inceptionYear>
 	<licenses>
 		<license>
 			<name>BSD 3-clause New or Revised License</name>
@@ -26,32 +28,32 @@
 	</licenses>
 	<developers>
 		<developer>
-            		<name>Thanos Angelatos</name>
-            		<id>thanosa75</id>
-            		<email>thanos.angelatos@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>Java Developer</role>
-            		</roles>
-        	</developer>
+			<name>Thanos Angelatos</name>
+			<id>thanosa75</id>
+			<email>thanos.angelatos@persado.com</email>
+			<organization>Persado Intellectual Property Limited</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
 		<developer>
-            		<name>George Kogketsof</name>
-            		<id>gkog</id>
-            		<email>george.kogketsof@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>QA Engineer</role>
-            		</roles>
-        	</developer>
+			<name>George Kogketsof</name>
+			<id>gkog</id>
+			<email>george.kogketsof@persado.com</email>
+			<organization>Persado</organization>
+			<roles>
+				<role>QA Engineer</role>
+			</roles>
+		</developer>
 		<developer>
-            		<name>Panagiotis Tsiakos</name>
-            		<id>tsak77</id>
-            		<email>panagiotis.tsiakos@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>QA Engineer</role>
-            		</roles>
-        	</developer>
+			<name>Panagiotis Tsiakos</name>
+			<id>tsak77</id>
+			<email>panagiotis.tsiakos@persado.com</email>
+			<organization>Persado</organization>
+			<roles>
+				<role>QA Engineer</role>
+			</roles>
+		</developer>
 	</developers>
 	<issueManagement>
 		<system>GitHub</system>
@@ -61,8 +63,8 @@
 		<url>https://github.com/persado/stevia</url>
 		<connection>scm:git:git@github.com:persado/stevia.git</connection>
 		<developerConnection>scm:git:git@github.com:persado/stevia.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	<!-- -->
 	<distributionManagement>
 		<repository>
@@ -112,10 +114,45 @@
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-        				<groupId>org.apache.maven.plugins</groupId>
-        				<artifactId>maven-release-plugin</artifactId>
-        				<version>2.4.1</version>
-      				</plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.4.1</version>
+				</plugin>
+
+				<!--This plugin's configuration is used to store Eclipse m2e settings 
+					only. It has no influence on the Maven build itself. -->
+				<plugin>
+					<groupId>org.eclipse.m2e</groupId>
+					<artifactId>lifecycle-mapping</artifactId>
+					<version>1.0.0</version>
+					<configuration>
+						<lifecycleMappingMetadata>
+							<pluginExecutions>
+								<pluginExecution>
+									<pluginExecutionFilter>
+										<groupId>
+											org.codehaus.mojo
+										</groupId>
+										<artifactId>
+											license-maven-plugin
+										</artifactId>
+										<versionRange>
+											[1.6,)
+										</versionRange>
+										<goals>
+											<goal>
+												update-file-header
+											</goal>
+										</goals>
+									</pluginExecutionFilter>
+									<action>
+										<ignore></ignore>
+									</action>
+								</pluginExecution>
+							</pluginExecutions>
+						</lifecycleMappingMetadata>
+					</configuration>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -135,6 +172,32 @@
 							<suiteXmlFiles>
 								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 							</suiteXmlFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<verbose>false</verbose>
+					<organizationName>Persado Intellectual Property Limited</organizationName>
+					<licenseResolver>${project.baseUri}/src/license</licenseResolver>
+					<licenseName>persado_bsd3_revised</licenseName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>license headers</id>
+						<goals>
+							<goal>update-file-header</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
 						</configuration>
 					</execution>
 				</executions>
@@ -203,7 +266,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-java</artifactId>
-			 <version>${selenium.version}</version>
+			<version>${selenium.version}</version>
 		</dependency>
 
 		<dependency>
@@ -211,14 +274,14 @@
 			<artifactId>operadriver</artifactId>
 			<version>1.5</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
 			<version>2.3</version>
 		</dependency>
-		
+
 
 		<!-- OBTAINING SPRING RELEASES FROM MANEN CENTRAL -->
 
@@ -309,7 +372,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-instrument</artifactId>
@@ -326,8 +389,8 @@
 			<version>1.1.0</version>
 			<scope>test</scope>
 		</dependency>
-            
-		
+
+
 	</dependencies>
 
 
