@@ -77,6 +77,7 @@
 			<id>sonatype-snapshots</id>
 			<name>OSS Sonatype Snapshot Repository</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
 
