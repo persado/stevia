@@ -38,6 +38,7 @@ package com.persado.oss.quality.stevia.selenium.core;
 
 import java.util.HashMap;
 import java.util.Map;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -77,6 +78,8 @@ public class SteviaContext {
 		private int waitForElementInvisibility = 1;
 		private ApplicationContext context;
 		
+		private TestState state;
+		
 		/**
 		 * Clear context.
 		 */
@@ -91,6 +94,7 @@ public class SteviaContext {
 				paramsRegistry.clear();
 			}
 			context = null;
+			state = null;
 			STEVIA_CONTEXT_LOG.info("Context closed, controller shutdown");
 			RunsWithControllerHelper.tearDown();
 			Thread.currentThread().setName("Stevia - context Inactive");
@@ -191,6 +195,23 @@ public class SteviaContext {
 	 */
 	public static Map<String,String> getParams() {
 		return innerContext.get().paramsRegistry;
+	}
+	
+	/**
+	 * get the test state that is relevant to the running thread for this test script
+	 * @return <T extends TestState> T an object that implements TestState
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T extends TestState> T getTestState() {
+		return (T) innerContext.get().state;
+	}
+	
+	/**
+	 * set the test state at any given time for the running thread. 
+	 * @param state an object implementing the marker interface
+	 */
+	public static <T extends TestState> void setTestState(T state) {
+		innerContext.get().state = state;
 	}
 	
 	
