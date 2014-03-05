@@ -40,9 +40,11 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi;
 import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Pattern;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.InvalidElementStateException;
 import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.SearchContext;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
@@ -90,7 +92,13 @@ public abstract class ByExtended extends By {
 
 	public static class ByCssSelectorExtended extends ByCssSelector {
 
+		/**
+		 * uid
+		 */
+		private static final long serialVersionUID = 1L;
+		
 		private static final String DEFAULT_SIZZLE_URL = "https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js";
+		
 		private String ownSelector;
 
 		public ByCssSelectorExtended(String selector) {
@@ -157,8 +165,9 @@ public abstract class ByExtended extends By {
 			List<WebElement> elements = findElementsBySizzleCss(context, cssLocator);
 			if (elements != null && elements.size() > 0 ) {
 				return elements.get(0);
-			}
-			return null;
+			}			
+			// if we get here, we cannot find the element via Sizzle.
+			throw new NoSuchElementException("selector '"+cssLocator+"' cannot be found in DOM");
 		}
 
 		private void fixLocator(SearchContext context, String cssLocator,
@@ -237,11 +246,15 @@ public abstract class ByExtended extends By {
 				} catch (InterruptedException e) {
 					// FIX: nothing to print here
 				}
+				if (i % 10 == 0) {
+					LOG.warn("Attempting to re-load SizzleCSS {}",i);
+					injectSizzle();
+				}
 			}
 			
 			//Try on last time
 			if (!sizzleLoaded()) {
-				injectSizzle();
+				LOG.error("After so many tries, sizzle does not appear in DOM");
 			} 
 			// sizzle is not loaded yet 
 			throw new RuntimeException("Sizzle loading from ("+DEFAULT_SIZZLE_URL+") has failed - " +
@@ -254,11 +267,12 @@ public abstract class ByExtended extends By {
 		 * @return the true if Sizzle is loaded in the web page 
 		 */
 		public Boolean sizzleLoaded() {
-			Boolean loaded;
+			Boolean loaded = true;
 			try {
 				loaded = (Boolean) ((JavascriptExecutor) getDriver())
-						.executeScript("return Sizzle()!=null");
+						.executeScript("return !window.Sizzle");
 			} catch (WebDriverException e) {
+				LOG.error("while trying to verify Sizzle loading, WebDriver threw exception {} {}",e.getMessage(),e.getCause() != null ? "with cause "+e.getCause() : "");
 				loaded = false;
 			}
 			return loaded;
@@ -271,11 +285,15 @@ public abstract class ByExtended extends By {
 			String sizzleUrl = System.getProperty("sizzleUrl",DEFAULT_SIZZLE_URL );
 			
 			((JavascriptExecutor) getDriver())
-					.executeScript(" var headID = document.getElementsByTagName(\"head\")[0];"
-							+ "var newScript = document.createElement('script');"
-							+ "newScript.type = 'text/javascript';"
-							+ "newScript.src = '"+sizzleUrl+"';"
-							+ "headID.appendChild(newScript);");
+					.executeScript(" var bodyTag = document.getElementsByTagName('body')[0];"
+							+ "if (bodyTag) {"
+							+ "  var sizzl = document.createElement('script');"
+							+ "  sizzl.type = 'text/javascript';"
+							+ "  sizzl.src = '"+sizzleUrl+"';"
+							+ "  bodyTag.appendChild(sizzl);"
+							+ "} else if (window.jQuery) { {"
+							+ "	 $.getScript('"+sizzleUrl+"');"
+							+ "}");
 		}
 		/**
 		 * ******************** SIZZLE SUPPORT CODE
@@ -284,6 +302,13 @@ public abstract class ByExtended extends By {
 	}
 
 	public static class ByXPathExtended extends ByXPath {
+
+		/**
+		 * uid
+		 */
+		private static final long serialVersionUID = 1L;
+
+		
 		private final String ownXpathExpression;
 
 		public ByXPathExtended(String xpathExpression) {
@@ -327,7 +352,7 @@ public abstract class ByExtended extends By {
 					}
 					
 					// by here, we should have the parent WebElement to contain what we want.
-					//LOG.info("Found compount selector : "+parent.toString());
+					//LOG.info("Found compound selector : "+parent.toString());
 					return parent;
 				}
 				// simple case: one selector
