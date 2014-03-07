@@ -1,13 +1,38 @@
 stevia
 ======
-
-Stevia is in Travis-CI: [![Build Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia)
+<p align="right">[![Build Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) </p>
 
 Stevia is an Open Source QA Automation Testing Framework by Persado (www.persado.com). In Persado, we took the pain out of having to care about Selenium or Webdriver (or both) and unified them under a common API, with a sane and clear-cut design, ability to extend and expand (courtesy of Spring!) and a bit of sweetness. Stevia is what we got out of it: 
 
-<p align="center"><img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" width="200"> </p>
+<p align="center"><img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" width="150"> </p>
 
 ## Breaking news
+
+### 07-Mar-2014 Latest developments
+
+It has come to our attention that some of our friends have difficulty downloading stevia from our Open Source repository, Sonatype. The best (and easiest) way to do this is via Maven dependencies; adding the repo to your pom.xml is fairly trivial:
+
+```
+<repositories>
+  <repository>
+    <id>sonatype-nexus-snapshots</id>
+    <name>OSS Sonatype Snapshot Repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </repository>
+</repositories>	
+```
+
+Our latest SNAPSHOT (you can see this by observing the pom.xml) can be added in your dependencies as follows:
+```
+<dependency>
+  <groupId>com.persado.oss.quality.stevia</groupId>
+  <artifactId>stevia-core</artifactId>
+  <version>0.8.6-SNAPSHOT</version>
+</dependency>
+```
+
+Enjoy!
+
 
 ### 20-Jan-2014 Upcoming Stevia 0.8.0!
 Dear friends, 
