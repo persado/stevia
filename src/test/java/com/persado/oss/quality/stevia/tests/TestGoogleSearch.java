@@ -47,7 +47,6 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebContr
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
 @Component
-@RunsWithController(controller = SeleniumWebController.class)
 public class TestGoogleSearch extends SteviaTestBase {
 
 	@Autowired
@@ -56,6 +55,9 @@ public class TestGoogleSearch extends SteviaTestBase {
 	@Autowired
 	PersadoHomePage persadoHome;
 
+	/**
+	 * this test checks loading of sizzle css and verification of contains
+	 */
 	@Test
 	public void searchPersadoInGoogle() {
 		googleHome.inputSearchText("persado");

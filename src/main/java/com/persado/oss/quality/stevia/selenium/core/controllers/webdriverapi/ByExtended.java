@@ -270,7 +270,8 @@ public abstract class ByExtended extends By {
 			Boolean loaded = true;
 			try {
 				loaded = (Boolean) ((JavascriptExecutor) getDriver())
-						.executeScript("return !window.Sizzle");
+						.executeScript("return (window.Sizzle != null);");
+				
 			} catch (WebDriverException e) {
 				LOG.error("while trying to verify Sizzle loading, WebDriver threw exception {} {}",e.getMessage(),e.getCause() != null ? "with cause "+e.getCause() : "");
 				loaded = false;
@@ -291,7 +292,7 @@ public abstract class ByExtended extends By {
 							+ "  sizzl.type = 'text/javascript';"
 							+ "  sizzl.src = '"+sizzleUrl+"';"
 							+ "  bodyTag.appendChild(sizzl);"
-							+ "} else if (window.jQuery) { {"
+							+ "} else if (window.jQuery) { "
 							+ "	 $.getScript('"+sizzleUrl+"');"
 							+ "}");
 		}

@@ -44,8 +44,9 @@ import com.persado.oss.quality.stevia.selenium.core.WebComponent;
 public class PersadoHomePage extends WebComponent{
 	
 	public enum PersadoHomePageLocators {
-		
+		TITLE_SIZZLECSS("css=a:contains('twitter')"),
 		TITLE_PERSADO_PAGE("css=a[title='twitter']");
+		
 		
 		
 	private String myLocator;
@@ -66,6 +67,7 @@ public class PersadoHomePage extends WebComponent{
 	 * Verify Persado title in home page
 	 */
 	public void checkPersadoTitle(){
+		SteviaContext.verify().text(PersadoHomePageLocators.TITLE_SIZZLECSS.get(),"twitter");
 		SteviaContext.verify().text(PersadoHomePageLocators.TITLE_PERSADO_PAGE.get(), "twitter");
 	}
 
