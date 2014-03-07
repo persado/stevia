@@ -36,10 +36,10 @@
 		p:className="com.persado.oss.quality.stevia.selenium.core.controllers.factories.WebDriverWebControllerFactoryImpl"/>
 
 	<!-- additional drivers may be registered this way -->
-	<import resource="classpath:META-INF/spring/stevia-extensions-drivers-*.xml" />
+	<import resource="classpath*:META-INF/spring/stevia-extensions-drivers-*.xml" />
 
 	<!-- additional test beans specific per project may be registered this way -->
-	<import resource="classpath:META-INF/spring/test-beans-*.xml" />
+	<import resource="classpath*:META-INF/spring/test-beans-*.xml" />
 
 
 
