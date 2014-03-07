@@ -4,6 +4,15 @@ before_script:
   - sleep 3 # give xvfb some time to start
 
 language: java
+
+env:
+	global:
+		- SONATYPE_USERNAME=persado.com
+		- secure: "M37au37q5KQxoymNVqR3uA6BhUEx4dfzqeprTGesD8sc8K5pccZdjcD6BdsZOoQ6kfIFw+6g3i/7t8Z4sJ3MF210JXU++bJA7GElvxgqOlz1/imSht42aV6cbkmhjoDKYyD3BIP7VOdr07X3GA5ngqgSEtptkXaj3/UijFJ/nXY="
+
+after_success:
+  - python src/scripts/addServer.py
+  - mvn clean javadoc:jar source:jar deploy -DskipTests --settings ~/.m2/mySettings.xml
+  
 jdk:
-  - oraclejdk7
   - openjdk6
