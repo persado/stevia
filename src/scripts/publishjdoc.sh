@@ -17,8 +17,12 @@ cd stevia
 git checkout --orphan gh-pages
 git rm -rf .
 rm -fr *
-unzip ../../target/*javadoc.jar 
+unzip ../../target/*javadoc.jar  >/dev/null 2>&1
 git add .
 git commit -a -m "pages @ `date`"
-git push origin gh-pages
+git push --force origin gh-pages
 echo done
+cd ../../
+if [ -d "javadocgen" ] ; then
+    rm -fr javadocgen/*
+fi
