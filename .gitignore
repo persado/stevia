@@ -11,3 +11,4 @@ target
 /test-output
 /.idea/
 .DS_Store
+/javadocgen
