@@ -8,6 +8,20 @@ Stevia is an Open Source QA Automation Testing Framework by Persado (www.persado
 
 ## Breaking news
 
+### 13-Mar-2014 Update for Selenium libraries 2.40
+
+Hello!
+
+Our latest SNAPSHOT 0.8.7 has an important update that fixes our SizzleCSS integration with Selenium 2.40 (commit [6b857c6](https://github.com/persado/stevia/commit/6b857c650b684a60f483c9caf7b106b359284f0b)). Pick up the latest with this fragment:
+```
+<dependency>
+  <groupId>com.persado.oss.quality.stevia</groupId>
+  <artifactId>stevia-core</artifactId>
+  <version>0.8.7-SNAPSHOT</version>
+</dependency>
+```
+
+
 ### 07-Mar-2014 Latest developments
 
 It has come to our attention that some of our friends have difficulty downloading stevia from our Open Source repository, Sonatype. The best (and easiest) way to do this is via Maven dependencies; adding the repo to your pom.xml is fairly trivial:
