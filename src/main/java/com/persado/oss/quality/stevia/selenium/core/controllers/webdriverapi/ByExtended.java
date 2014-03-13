@@ -41,14 +41,7 @@ import java.lang.reflect.Method;
 import java.util.List;
 import java.util.regex.Pattern;
 
-import org.openqa.selenium.By;
-import org.openqa.selenium.InvalidElementStateException;
-import org.openqa.selenium.JavascriptExecutor;
-import org.openqa.selenium.NoSuchElementException;
-import org.openqa.selenium.SearchContext;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverException;
-import org.openqa.selenium.WebElement;
+import org.openqa.selenium.*;
 import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.internal.FindsByXPath;
 import org.openqa.selenium.remote.RemoteWebElement;
@@ -97,7 +90,7 @@ public abstract class ByExtended extends By {
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		private static final String DEFAULT_SIZZLE_URL = "https://raw.github.com/jquery/sizzle/1.8.2/sizzle.js";
+		private static final String DEFAULT_SIZZLE_URL = "https://raw.github.com/jquery/sizzle/1.10.18/dist/sizzle.min.js";
 		
 		private String ownSelector;
 
@@ -113,8 +106,12 @@ public abstract class ByExtended extends By {
 					return ((FindsByCssSelector) context)
 							.findElementByCssSelector(ownSelector);
 				}
-			} catch (InvalidElementStateException e) {
+			} catch(InvalidSelectorException e){
+                return findElementBySizzleCss(context,ownSelector);
+
+            } catch (InvalidElementStateException e) {
 				return findElementBySizzleCss(context, ownSelector);
+
 			} catch (WebDriverException e) {
 				if (e.getMessage().startsWith(
 						"An invalid or illegal string was specified")) {
@@ -132,7 +129,9 @@ public abstract class ByExtended extends By {
 					return ((FindsByCssSelector) context)
 							.findElementsByCssSelector(ownSelector);
 				}
-			} catch (InvalidElementStateException e) {
+			} catch(InvalidSelectorException e){
+                return findElementsBySizzleCss(context, ownSelector);
+            } catch (InvalidElementStateException e) {
 				return findElementsBySizzleCss(context, ownSelector);
 			} catch (WebDriverException e) {
 				if (e.getMessage().startsWith(
@@ -247,7 +246,7 @@ public abstract class ByExtended extends By {
 					// FIX: nothing to print here
 				}
 				if (i % 10 == 0) {
-					LOG.warn("Attempting to re-load SizzleCSS {}",i);
+					LOG.warn("Attempting to re-load SizzleCSS from {}",getSizzleUrl());
 					injectSizzle();
 				}
 			}
@@ -257,11 +256,15 @@ public abstract class ByExtended extends By {
 				LOG.error("After so many tries, sizzle does not appear in DOM");
 			} 
 			// sizzle is not loaded yet 
-			throw new RuntimeException("Sizzle loading from ("+DEFAULT_SIZZLE_URL+") has failed - " +
+			throw new RuntimeException("Sizzle loading from ("+ getSizzleUrl() +") has failed - " +
 					"provide a better sizzle URL via -DsizzleUrl");
 		}
 
-		/**
+        private String getSizzleUrl() {
+            return System.getProperty("sizzleUrl",DEFAULT_SIZZLE_URL );
+        }
+
+        /**
 		 * Check if the Sizzle library is loaded.
 		 * 
 		 * @return the true if Sizzle is loaded in the web page 
@@ -283,7 +286,7 @@ public abstract class ByExtended extends By {
 		 * Inject sizzle 1.8.2
 		 */
 		public void injectSizzle() {
-			String sizzleUrl = System.getProperty("sizzleUrl",DEFAULT_SIZZLE_URL );
+			String sizzleUrl = getSizzleUrl();
 			
 			((JavascriptExecutor) getDriver())
 					.executeScript(" var bodyTag = document.getElementsByTagName('body')[0];"
