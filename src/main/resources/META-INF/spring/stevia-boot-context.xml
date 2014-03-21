@@ -38,6 +38,10 @@
 	<!-- additional drivers may be registered this way -->
 	<import resource="classpath*:META-INF/spring/stevia-extensions-drivers-*.xml" />
 
+	<!-- additional connectors (e.g. for JIRA, Zephyr, Testlink, Rally may be registered this way -->
+	<import resource="classpath*:META-INF/spring/stevia-extensions-connectors-*.xml" />
+
+
 	<!-- additional test beans specific per project may be registered this way -->
 	<import resource="classpath*:META-INF/spring/test-beans-*.xml" />
 
