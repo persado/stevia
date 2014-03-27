@@ -63,12 +63,11 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControl
 import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListener;
 
 /**
- * The Class SteviaTestBase.
+ * The base class that is responsible for initializing Stevia contexts on start and shutting down on
+ * test ends. It is parallel-aware and has options to start RC server locally if needed via XML 
+ * configuration parameters.
  */
-@ContextConfiguration(locations = { 
-		"classpath:META-INF/spring/stevia-boot-context.xml", 
-		"classpath:META-INF/spring/*-controllers.xml",
-		"classpath:META-INF/spring/controllers-*-shared.xml" })
+@ContextConfiguration(locations = { "classpath:META-INF/spring/stevia-boot-context.xml" })
 @Listeners({ControllerMaskingListener.class})
 public class SteviaTestBase extends AbstractTestNGSpringContextTests implements Constants {
 
@@ -96,7 +95,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	@BeforeClass(alwaysRun = true)
 	@BeforeTest(alwaysRun = true)
 	@Override
-	protected void springTestContextPrepareTestInstance() throws Exception {
+	protected final void springTestContextPrepareTestInstance() throws Exception {
 		super.springTestContextPrepareTestInstance();
 	} 
 	
@@ -108,7 +107,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @throws Exception the exception
 	 */
 	@BeforeSuite(alwaysRun = true)
-	protected void configureSuiteSettings(ITestContext testContext) throws Exception {	
+	protected final void configureSuiteSettings(ITestContext testContext) throws Exception {	
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
 		
 		//if the suite needs RC server, we start it here 
@@ -149,7 +148,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @throws Exception the exception
 	 */
 	@BeforeTest(alwaysRun = true)
-	protected void beforeTest(ITestContext testContext) throws Exception {
+	protected final void contextInitBeforeTest(ITestContext testContext) throws Exception {
 		
 		Map<String,String> parameters = testContext.getCurrentXmlTest().getParameters();
 		
@@ -175,7 +174,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @throws Exception the exception
 	 */
 	@BeforeClass(alwaysRun = true)
-	protected void beforeClass(ITestContext testContext) throws Exception {
+	protected final void contextInitBeforeClass(ITestContext testContext) throws Exception {
 		
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
 		
@@ -196,7 +195,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @throws Exception the exception
 	 */
 	@BeforeMethod(alwaysRun = true)
-	protected void beforeMethod(ITestContext testContext) throws Exception {
+	protected final void contextInitBeforeMethod(ITestContext testContext) throws Exception {
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
 		
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("methods")) {
@@ -215,7 +214,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param testContext the test context
 	 */
 	@AfterClass(alwaysRun = true)
-	public void cleanContextOnClass(ITestContext testContext) {
+	protected final void cleanContextOnClass(ITestContext testContext) {
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("classes")) {
 			SteviaContext.clean();
 		}
@@ -227,7 +226,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param testContext the test context
 	 */
 	@AfterTest(alwaysRun = true)
-	public void cleanContextOnTest(ITestContext testContext) {
+	protected final void cleanContextOnTest(ITestContext testContext) {
 		String parallelSetup = testContext.getSuite().getParallel();
 		if (parallelSetup == null || parallelSetup.isEmpty()
 				|| parallelSetup.equalsIgnoreCase("false")
@@ -242,7 +241,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param testContext the test context
 	 */
 	@AfterMethod(alwaysRun = true)
-	public void cleanContextOnMethod(ITestContext testContext) {
+	protected final void cleanContextOnMethod(ITestContext testContext) {
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("methods")) {
 			SteviaContext.clean();
 		}
@@ -255,7 +254,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param params
 	 * @throws Exception
 	 */
-	public void initializeStevia(Map<String,String> params) throws Exception {
+	protected final void initializeStevia(Map<String,String> params) throws Exception {
 		if (applicationContext == null) {
 			super.springTestContextPrepareTestInstance();
 		}
@@ -274,7 +273,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * Stop RC server if it's running.
 	 */
 	@AfterSuite(alwaysRun = true)
-	protected void stopRCServer() {		
+	private void stopRCServer() {		
 		if (isRCStarted) {
 			
 			Object server = seleniumServer[0];
@@ -353,7 +352,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 *
 	 * @param suiteOutputDir the new suite output dir
 	 */
-	public static void setSuiteOutputDir(String suiteOutputDir) {
+	public final static void setSuiteOutputDir(String suiteOutputDir) {
 		SteviaTestBase.suiteOutputDir = suiteOutputDir;
 	}
 

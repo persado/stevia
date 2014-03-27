@@ -39,6 +39,7 @@ package com.persado.oss.quality.stevia.selenium.core;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
@@ -54,7 +55,7 @@ import com.persado.oss.quality.stevia.testng.Verify;
 public class SteviaContext {
 	
 	/** The Constant STEVIA_CONTEXT_LOG. */
-	private static final Logger STEVIA_CONTEXT_LOG = LoggerFactory.getLogger(SteviaContext.class);
+	private static final Logger LOG = LoggerFactory.getLogger(SteviaContext.class);
 	
 	/**
 	 * The inner Class Context.
@@ -85,7 +86,11 @@ public class SteviaContext {
 		 */
 		public void clear() {
 			if (controller != null) {
-				controller.quit();
+				try {
+					controller.quit();
+				} catch (WebDriverException wde) {
+					LOG.warn("Exception caught calling controller.quit(): \""+wde.getMessage()+"\" additional info: "+wde.getAdditionalInformation());
+				}
 			}
 			controller = null;
 			verify = null;
@@ -95,7 +100,7 @@ public class SteviaContext {
 			}
 			context = null;
 			state = null;
-			STEVIA_CONTEXT_LOG.info("Context closed, controller shutdown");
+			LOG.info("Context closed, controller shutdown");
 			RunsWithControllerHelper.tearDown();
 			Thread.currentThread().setName("Stevia - context Inactive");
 		}
@@ -175,7 +180,7 @@ public class SteviaContext {
 			innerContext.get().paramsRegistry = new HashMap<String, String>();
 		}
 		innerContext.get().paramsRegistry.putAll(params.getAllParameters());
-		STEVIA_CONTEXT_LOG.warn("Thread {} just registered {}", new Object[]{Thread.currentThread().getName(), params.getAllParameters()});
+		LOG.warn("Thread {} just registered {}", new Object[]{Thread.currentThread().getName(), params.getAllParameters()});
 	}
 	
 	/**
@@ -225,12 +230,12 @@ public class SteviaContext {
 		context.controller = instance;
 		if (instance instanceof WebDriverWebController) {
 			context.isWebDriver = true;
-			STEVIA_CONTEXT_LOG.warn("Handle is : "+((WebDriverWebController)instance).getDriver().getWindowHandle());
+			LOG.warn("Handle is : "+((WebDriverWebController)instance).getDriver().getWindowHandle());
 		} else {
 			context.isWebDriver = false;   
 		}
 
-		STEVIA_CONTEXT_LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "Webdriver" : "Selenium");
+		LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "Webdriver" : "Selenium");
 		Thread.currentThread().setName("Stevia ["+(context.isWebDriver ? "Webdriver" : "Selenium")+"] - context Active "+System.currentTimeMillis()%2048);
 		
 	}

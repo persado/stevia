@@ -45,6 +45,10 @@
 	<!-- additional test beans specific per project may be registered this way -->
 	<import resource="classpath*:META-INF/spring/test-beans-*.xml" />
 
+	<!-- define additional controllers (e.g. appium) -->
+	<import resource="classpath*:META-INF/spring/*-controllers.xml" />
 
+	<!-- define additional shared objects for this context (backwards compatibility) -->
+	<import resource="classpath*:META-INF/spring/controllers-*-shared.xml" />
 
 </beans>
