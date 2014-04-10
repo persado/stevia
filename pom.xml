@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.9.0</version>
+	<version>0.9.1-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -62,7 +62,7 @@
 		<url>https://github.com/persado/stevia</url>
 		<connection>scm:git:git@github.com:persado/stevia.git</connection>
 		<developerConnection>scm:git:git@github.com:persado/stevia.git</developerConnection>
-		<tag>stevia-core-0.9.0</tag>
+		<tag>HEAD</tag>
 	</scm>
 	<!-- -->
 	<distributionManagement>
