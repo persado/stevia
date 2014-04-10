@@ -60,6 +60,7 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContextSupport;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
+import com.persado.oss.quality.stevia.selenium.listeners.ConditionsListener;
 import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListener;
 
 /**
@@ -68,7 +69,7 @@ import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListen
  * configuration parameters.
  */
 @ContextConfiguration(locations = { "classpath:META-INF/spring/stevia-boot-context.xml" })
-@Listeners({ControllerMaskingListener.class})
+@Listeners({ControllerMaskingListener.class, ConditionsListener.class})
 public class SteviaTestBase extends AbstractTestNGSpringContextTests implements Constants {
 
 	/** The Constant STEVIA_TEST_BASE_LOG. */

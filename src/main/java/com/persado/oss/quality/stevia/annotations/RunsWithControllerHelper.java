@@ -51,6 +51,7 @@ import org.springframework.util.StopWatch;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
+import com.persado.oss.quality.stevia.selenium.core.interfaces.PrePostCondition;
 
 @Component
 public class RunsWithControllerHelper implements ApplicationContextAware {
@@ -88,36 +89,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			if (null != rw) {
 				watch.start("Controller masking");
 				Class<? extends WebController> requestedControllerClass = rw.controller();
-				WebController currentControllerObj = SteviaContext.getWebController();
-				Class<? extends WebController> currentControllerClass = currentControllerObj.getClass();
-				Map<String, WebController> cache = controllerCache.get();
-
-
-				String curControllerKey = currentControllerClass.getCanonicalName();
-				String reqControllerKey = requestedControllerClass.getCanonicalName();
-
-				//check if running controller is already cached.				
-				if (!cache.containsKey(curControllerKey) ) {
-					cache.put(curControllerKey,currentControllerObj);
-				}
-				
-				//check if requested controller is different from the currently running
-				if (!curControllerKey.startsWith(reqControllerKey)) {
-					WebController replacer = null;
-					if (cache.containsKey(reqControllerKey)) { // we have one
-						replacer = cache.get(reqControllerKey);
-					} else {
-						replacer = SteviaWebControllerFactory.getWebController(context, requestedControllerClass);
-						cache.put(reqControllerKey, replacer);			
-						ownControllers.put(reqControllerKey, replacer);
-						LOG.debug("Controller {} not found in cache, creating new ", reqControllerKey);
-					}
-					SteviaContext.setWebController(replacer);
-					cache.put("masked", currentControllerObj); //save for later
-
-				} else {
-					LOG.trace("Controller requested is the currently used one. No action");
-				}
+				controllerMask(requestedControllerClass);
 				watch.stop();
 			} else {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
@@ -129,6 +101,46 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			LOG.info(watch.prettyPrint());
 		}
 	}
+	
+	
+	/**
+	 * mask existing controller with requestedControllerClass
+	 * @param requestedControllerClass
+	 */
+	private void controllerMask(Class<? extends WebController> requestedControllerClass) {
+		WebController currentControllerObj = SteviaContext.getWebController();
+		Class<? extends WebController> currentControllerClass = currentControllerObj.getClass();
+		
+		Map<String, WebController> cache = controllerCache.get();
+
+
+		String curControllerKey = currentControllerClass.getCanonicalName();
+		String reqControllerKey = requestedControllerClass.getCanonicalName();
+
+		//check if running controller is already cached.				
+		if (!cache.containsKey(curControllerKey) ) {
+			cache.put(curControllerKey,currentControllerObj);
+		}
+		
+		//check if requested controller is different from the currently running
+		if (!curControllerKey.startsWith(reqControllerKey)) {
+			WebController replacer = null;
+			if (cache.containsKey(reqControllerKey)) { // we have one
+				replacer = cache.get(reqControllerKey);
+			} else {
+				replacer = SteviaWebControllerFactory.getWebController(context, requestedControllerClass);
+				cache.put(reqControllerKey, replacer);			
+				ownControllers.put(reqControllerKey, replacer);
+				LOG.debug("Controller {} not found in cache, creating new ", reqControllerKey);
+			}
+			SteviaContext.setWebController(replacer);
+			cache.put("masked", currentControllerObj); //save for later
+
+		} else {
+			LOG.trace("Controller requested is the currently used one. No action");
+		}
+	}
+	
 	public void revertToOriginalController() throws Throwable {
 		Map<String, WebController> cache = controllerCache.get();
 
@@ -144,4 +156,67 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			throws BeansException {
 		context = applicationContext;
 	}
+
+
+	public void maskAndExecPreconditions(Method m) throws Throwable {
+		StopWatch watch = new StopWatch();
+		try {
+			
+			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
+			if (null != rw) {
+				Class<? extends WebController> requestedControllerClass = rw.controller();
+				watch.start("Controller PreConditions with "+rw.controller());
+				controllerMask(requestedControllerClass);
+				
+				for (Class<? extends PrePostCondition> pre : rw.conditions()) {
+					LOG.info("Executing preCondition for "+pre.getName());
+					PrePostCondition objCondition = pre.newInstance();
+					objCondition.preCondition();
+				}
+				
+				revertToOriginalController();
+				watch.stop();
+			} else {
+				throw new IllegalStateException("unable to find an entry for the annotation!");
+			}
+		} finally {
+			if (watch.isRunning()) {
+				watch.stop();
+			}
+			LOG.info(watch.prettyPrint());
+		}
+	}
+
+
+	public void maskAndExecPostconditions(Method m) throws Throwable {
+		StopWatch watch = new StopWatch();
+		try {
+			
+			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
+			if (null != rw) {
+				Class<? extends WebController> requestedControllerClass = rw.controller();
+				watch.start("Controller PostConditions with "+rw.controller());
+				controllerMask(requestedControllerClass);
+				
+				for (Class<? extends PrePostCondition> pre : rw.conditions()) {
+					LOG.info("Executing postCondition for "+pre.getName());
+					PrePostCondition objCondition = pre.newInstance();
+					objCondition.postCondition();
+				}
+				
+				revertToOriginalController();
+				watch.stop();
+			} else {
+				throw new IllegalStateException("unable to find an entry for the annotation!");
+			}
+		} finally {
+			if (watch.isRunning()) {
+				watch.stop();
+			}
+			LOG.info(watch.prettyPrint());
+		}
+	}
+	
+	
+	
 }
