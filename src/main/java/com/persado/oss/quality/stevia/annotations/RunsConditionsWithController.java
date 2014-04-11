@@ -8,7 +8,6 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 import com.persado.oss.quality.stevia.selenium.core.WebController;
-import com.persado.oss.quality.stevia.selenium.core.interfaces.PrePostCondition;
 
 @Documented
 @Target({ElementType.TYPE, ElementType.METHOD})
@@ -16,7 +15,23 @@ import com.persado.oss.quality.stevia.selenium.core.interfaces.PrePostCondition;
 @Inherited
 public @interface RunsConditionsWithController {
 
-	Class<? extends WebController> controller();
+	/**
+	 * Controller to use for executing the methods in this list. 
+	 * Optional, do not use if the same controller applies for preconditions
+	 * @return
+	 */
+	Class<? extends WebController> controller() default VoidController.class;
 	
-	Class<? extends PrePostCondition>[] conditions();
+	/**
+	 * list of publicly accessible methods for preconditions
+	 * @return 
+	 */
+	String[] preConditionMethods() default {};
+	
+	/**
+	 * list of publicly accessible methods for postconditions
+	 * @return
+	 */
+	String[] postConditionMethods() default {};
+
 }

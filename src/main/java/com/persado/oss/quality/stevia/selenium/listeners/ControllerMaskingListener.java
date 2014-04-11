@@ -92,7 +92,7 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 		if (masked) {
 			RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
 			try {
-				p.revertToOriginalController();
+				p.controllerUnmask();
 				masked = false;
 			} catch (Throwable e) {
 				throw new IllegalStateException("failed to replace masked controller",e);

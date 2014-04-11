@@ -44,13 +44,13 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 				LOG.warn("Method or Class of {} wants pre/post conditions to be checked", rmethod.getName());
 				RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
 				try {
-					LOG.debug("Mask and Execute Preconditions of method ",rmethod.getName());
-					p.maskAndExecPreconditions(rmethod);
-					LOG.debug("Reverting to original controller");
-					p.revertToOriginalController();
+					LOG.debug("Mask and Execute Preconditions of method {} ",rmethod.getName());
+					p.maskAndExecPreconditions(rmethod, method.getTestMethod().getInstance());
+					LOG.debug("Mask and Execute Preconditions of method {} DONE",rmethod.getName());
 				} catch (Throwable e) {
-					throw new IllegalStateException("failed to replace controller",e);
-				}
+					LOG.error("Detected exception in preconditions execution, message = "+e.getMessage(),e);
+					throw new IllegalStateException("Exception in preconditions execution",e);
+				} 
 			}
 		}
 	}
@@ -63,13 +63,13 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 				LOG.warn("Method or Class of {} wants pre/post conditions to be checked", rmethod.getName());
 				RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
 				try {
-					LOG.debug("Mask and Execute Postconditions of method ",rmethod.getName());
-					p.maskAndExecPostconditions(rmethod);
-					LOG.debug("Reverting to original controller");
-					p.revertToOriginalController();
+					LOG.debug("Mask and Execute Postconditions of method {} ",rmethod.getName());
+					p.maskAndExecPostconditions(rmethod, method.getTestMethod().getInstance());
+					LOG.debug("Mask and Execute Postconditions of method {} DONE",rmethod.getName());
 				} catch (Throwable e) {
-					throw new IllegalStateException("failed to replace controller",e);
-				}
+					LOG.error("Detected exception in preconditions execution, message = "+e.getMessage(),e);
+					throw new IllegalStateException("Exception in preconditions execution",e);
+				} 
 			}
 		}
 	}

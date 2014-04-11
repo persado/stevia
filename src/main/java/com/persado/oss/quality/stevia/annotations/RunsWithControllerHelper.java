@@ -51,7 +51,6 @@ import org.springframework.util.StopWatch;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
-import com.persado.oss.quality.stevia.selenium.core.interfaces.PrePostCondition;
 
 @Component
 public class RunsWithControllerHelper implements ApplicationContextAware {
@@ -79,7 +78,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 	
 	
 	public void maskExistingController(Method m) throws Throwable {
-		StopWatch watch = new StopWatch();
+		StopWatch watch = new StopWatch("Controller Mask");
 		try {
 			
 			RunsWithController rw = 
@@ -98,7 +97,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			if (watch.isRunning()) {
 				watch.stop();
 			}
-			LOG.info(watch.prettyPrint());
+			LOG.info(watch.shortSummary());
 		}
 	}
 	
@@ -131,22 +130,22 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 				replacer = SteviaWebControllerFactory.getWebController(context, requestedControllerClass);
 				cache.put(reqControllerKey, replacer);			
 				ownControllers.put(reqControllerKey, replacer);
-				LOG.debug("Controller {} not found in cache, creating new ", reqControllerKey);
+				LOG.debug("Controller {} not found in cache, created new ", reqControllerKey);
 			}
 			SteviaContext.setWebController(replacer);
 			cache.put("masked", currentControllerObj); //save for later
-
 		} else {
-			LOG.trace("Controller requested is the currently used one. No action");
+			LOG.warn("Controller requested is the currently used one. No masking done!");
 		}
 	}
 	
-	public void revertToOriginalController() throws Throwable {
+	public void controllerUnmask() throws Throwable {
 		Map<String, WebController> cache = controllerCache.get();
-
 		if (cache.containsKey("masked")) {
-			LOG.trace("Controller unmasked");
+			LOG.debug("Controller unmasked");
 			SteviaContext.setWebController(cache.remove("masked"));
+		} else {
+			LOG.warn("Controller was not masked. It is optional anyway in @RunsConditionsWithController.");
 		}
 	}
 	
@@ -158,62 +157,91 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 	}
 
 
-	public void maskAndExecPreconditions(Method m) throws Throwable {
-		StopWatch watch = new StopWatch();
+	public void maskAndExecPreconditions(Method m, Object testObject) throws Throwable {
+		StopWatch watch = new StopWatch("Pre-Conditions execution");
 		try {
 			
 			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
 			if (null != rw) {
 				Class<? extends WebController> requestedControllerClass = rw.controller();
-				watch.start("Controller PreConditions with "+rw.controller());
-				controllerMask(requestedControllerClass);
-				
-				for (Class<? extends PrePostCondition> pre : rw.conditions()) {
-					LOG.info("Executing preCondition for "+pre.getName());
-					PrePostCondition objCondition = pre.newInstance();
-					objCondition.preCondition();
+				watch.start("PreConditions run");
+
+				if (requestedControllerClass != VoidController.class) {
+					controllerMask(requestedControllerClass);
+				} else {
+					LOG.debug("Empty controller found, no controller masking for pre/post conditions");
 				}
 				
-				revertToOriginalController();
-				watch.stop();
+				for (String methodName : rw.preConditionMethods()) {
+					LOG.info("Executing preCondition method {} for method {}", methodName, m.getName());
+					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
+					toExecute.invoke(testObject);
+				}
 			} else {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
 			}
 		} finally {
+			controllerUnmask();
 			if (watch.isRunning()) {
 				watch.stop();
 			}
-			LOG.info(watch.prettyPrint());
+			LOG.info(watch.shortSummary());
 		}
 	}
 
 
-	public void maskAndExecPostconditions(Method m) throws Throwable {
-		StopWatch watch = new StopWatch();
+	private Method findMethodByName(String methodName, Class<?> clazz) {
+		Method toExecute = null;
+		if (null == clazz || clazz == Object.class) {
+			LOG.error("Cannot find method {} in all parents, will return null");
+			return null;
+		}
+		LOG.debug("Looking for method {} in class {} ",methodName, clazz);
+		for (Method method : clazz.getMethods()) {
+			if (method.getName().equals(methodName)) {
+				LOG.debug("found method object for method {}",methodName);
+				toExecute = method;
+				break;
+			}
+		}
+		
+		if (toExecute == null) {
+			return findMethodByName(methodName, clazz.getSuperclass());
+		} else {
+			return toExecute;
+		}
+	}
+
+
+	public void maskAndExecPostconditions(Method m, Object testObject) throws Throwable {
+		StopWatch watch = new StopWatch("Post-Conditions execution");
 		try {
 			
 			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
 			if (null != rw) {
 				Class<? extends WebController> requestedControllerClass = rw.controller();
-				watch.start("Controller PostConditions with "+rw.controller());
-				controllerMask(requestedControllerClass);
-				
-				for (Class<? extends PrePostCondition> pre : rw.conditions()) {
-					LOG.info("Executing postCondition for "+pre.getName());
-					PrePostCondition objCondition = pre.newInstance();
-					objCondition.postCondition();
+				watch.start("PostConditions run");
+
+				if (requestedControllerClass != VoidController.class) {
+					controllerMask(requestedControllerClass);
+				} else {
+					LOG.debug("Empty controller found, no controller masking for pre/post conditions");
 				}
 				
-				revertToOriginalController();
-				watch.stop();
+				for (String methodName : rw.postConditionMethods()) {
+					LOG.info("Executing postCondition method {} for method {}", methodName, m.getName());
+					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
+					toExecute.invoke(testObject);
+				}
 			} else {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
 			}
 		} finally {
+			controllerUnmask();
 			if (watch.isRunning()) {
 				watch.stop();
 			}
-			LOG.info(watch.prettyPrint());
+			LOG.info(watch.shortSummary());
 		}
 	}
 	

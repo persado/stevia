@@ -40,6 +40,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.testng.annotations.Test;
 
+import com.persado.oss.quality.stevia.annotations.RunsConditionsWithController;
 import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.pageObjects.GoogleHomePage;
 import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
@@ -65,4 +66,23 @@ public class TestGoogleSearch extends SteviaTestBase {
 		persadoHome.checkPersadoTitle();
 	}
 
+	
+	@RunsConditionsWithController(preConditionMethods = { "precondition1", "precondition2" }, postConditionMethods = { "postCondition1" } )
+	@Test
+	public void testExecutionOfPreconditions() {
+		System.out.println("TEST METHOD CODE");
+	}
+	
+	public void precondition1() {
+		System.out.println("TEST precondition1 CODE");
+
+	}
+	
+	public void precondition2() {
+		System.out.println("TEST precondition2 CODE");
+	}
+
+	public void postCondition1() {
+		System.out.println("TEST postCondition1 CODE");
+	}
 }
