@@ -41,10 +41,8 @@ import org.springframework.stereotype.Component;
 import org.testng.annotations.Test;
 
 import com.persado.oss.quality.stevia.annotations.RunsConditionsWithController;
-import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.pageObjects.GoogleHomePage;
 import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
-import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
 @Component
