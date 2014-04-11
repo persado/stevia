@@ -40,6 +40,7 @@ import java.lang.reflect.Method;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeansException;
@@ -68,7 +69,11 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 	public static void tearDown() {
 		for (WebController controller : ownControllers.values()) {
 			LOG.info("Removing {} in teardown",controller);
-			controller.close();
+			try {
+				controller.quit();
+			} catch (WebDriverException wde) {
+				LOG.warn("Exception caught calling controller.quit(): \""+wde.getMessage()+"\" additional info: "+wde.getAdditionalInformation());
+			}
 		}
 		ownControllers.clear();
 		controllerCache.get().clear();
