@@ -1,6 +1,6 @@
 stevia
 ======
-Build Status of 0.9.1-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
+Build Status of 0.9.5-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
 Stevia is an Open Source QA Automation Testing Framework by [Persado](http://www.persado.com). In Persado, we took the pain out of having to care about Selenium or Webdriver (or both) and unified them under a common API, with a sane and clear-cut design, ability to extend and expand (courtesy of Spring!) and a bit of sweetness. Stevia is what we got out of it: 
 
@@ -15,6 +15,10 @@ You can browse our javadoc via this [link](http://persado.github.io/stevia/).
 Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
 
 ## News
+### 14-Apr-2014 Stevia 0.9.3 released
+Dear friends,
+
+we just released Stevia 0.9.3 to maven repositories - newest feature is the use of @Preconditions and @Postconditions annotations, allowing you to execute pre/post conditions with or without a different controller/session! This breakthrough feature is going to be a series of blog posts at [seleniumtestingworld](http://seleniumtestingworld.blogspot.gr/). Check it out! Changelog: [0.9.0 -> 0.9.3](https://github.com/persado/stevia/compare/stevia-core-0.9.0...stevia-core-0.9.3).
 
 ### 10-Apr-2014 Stevia 0.9.0 released 
 Dear friends,
