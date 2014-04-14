@@ -41,8 +41,10 @@ import org.springframework.stereotype.Component;
 import org.testng.annotations.Test;
 
 import com.persado.oss.quality.stevia.annotations.RunsConditionsWithController;
+import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.pageObjects.GoogleHomePage;
 import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
+import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
 @Component
@@ -59,9 +61,7 @@ public class TestGoogleSearch extends SteviaTestBase {
 	 */
 	@Test
 	public void searchPersadoInGoogle() {
-		googleHome.inputSearchText("persado");
-		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado | Global leader in Marketing Language Engineering");
-		persadoHome.checkPersadoTitle();
+		commonControllerTest();
 	}
 
 	
@@ -83,4 +83,31 @@ public class TestGoogleSearch extends SteviaTestBase {
 	public void postCondition1() {
 		System.out.println("TEST postCondition1 CODE");
 	}
+	
+	@RunsConditionsWithController(controller=SeleniumWebController.class, preConditionMethods= {"precondition2" })
+	@Test(dependsOnMethods= {"searchPersadoInGoogle","testExecutionOfPreconditions"})
+	public void lastTestWithOtherController() {
+		System.out.println("Should run in WEB DRIVER, precondition in SELENIUM mode");
+	}
+	
+	
+	@RunsWithController(controller=SeleniumWebController.class) 
+	@Test(dependsOnMethods= {"lastTestWithOtherController"})
+	public void lastMethodWithDifferentController() {
+		System.out.println("Should run with SELENIUM");
+		commonControllerTest();
+	}
+
+
+	/**
+	 * this method contains Stevia - API code that runs with any controller;
+	 * in this test it runs with WebDriver in {@link TestGoogleSearch##searchPersadoInGoogle()} 
+	 * and Selenium {@link TestGoogleSearch#lastMethodWithDifferentController()}
+	 */
+	private void commonControllerTest() {
+		googleHome.inputSearchText("persado");
+		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado | Global leader in Marketing Language Engineering");
+		persadoHome.checkPersadoTitle();
+	}
+	
 }

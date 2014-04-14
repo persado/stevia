@@ -66,7 +66,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 	
 	private static final Map<String, WebController> ownControllers = new HashMap<String, WebController>();
 
-	public static void tearDown() {
+	public static void disposeControllers() {
 		for (WebController controller : ownControllers.values()) {
 			LOG.info("Removing {} in teardown",controller);
 			try {
@@ -76,7 +76,17 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			}
 		}
 		ownControllers.clear();
-		controllerCache.get().clear();
+		Map<String, WebController> cache = controllerCache.get();
+		if (cache.containsKey("masked")) {
+			LOG.warn("test ends while controller still masked - will clear the masked controller also");
+			WebController controller = cache.remove("masked");
+			try {
+				controller.quit();
+			} catch (WebDriverException wde) {
+				LOG.warn("Exception caught calling controller.quit(): \""+wde.getMessage()+"\" additional info: "+wde.getAdditionalInformation());
+			}
+		}
+		cache.clear();
 	}
 	
 	private ApplicationContext context;
@@ -163,11 +173,16 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 
 	public void maskAndExecPreconditions(Method m, Object testObject) throws Throwable {
-		StopWatch watch = new StopWatch("Pre-Conditions execution");
+		StopWatch watch = null;
 		try {
 			
 			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
 			if (null != rw) {
+				if (rw.preConditionMethods().length == 0) {
+					LOG.info("no preconditions found - masking not necessary");
+					return;
+				}
+				watch = new StopWatch("Pre-Conditions execution");
 				Class<? extends WebController> requestedControllerClass = rw.controller();
 				watch.start("PreConditions run");
 
@@ -187,10 +202,10 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			}
 		} finally {
 			controllerUnmask();
-			if (watch.isRunning()) {
+			if (null != watch && watch.isRunning()) {
 				watch.stop();
+				LOG.info(watch.shortSummary());
 			}
-			LOG.info(watch.shortSummary());
 		}
 	}
 
@@ -219,11 +234,16 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 
 	public void maskAndExecPostconditions(Method m, Object testObject) throws Throwable {
-		StopWatch watch = new StopWatch("Post-Conditions execution");
+		StopWatch watch = null;
 		try {
 			
 			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
 			if (null != rw) {
+				if (rw.postConditionMethods().length == 0) {
+					LOG.info("no postconditions found - masking not necessary");
+					return;
+				}
+				watch = new StopWatch("Post-Conditions execution");
 				Class<? extends WebController> requestedControllerClass = rw.controller();
 				watch.start("PostConditions run");
 
@@ -243,10 +263,10 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 			}
 		} finally {
 			controllerUnmask();
-			if (watch.isRunning()) {
+			if (null != watch && watch.isRunning()) {
 				watch.stop();
+				LOG.info(watch.shortSummary());
 			}
-			LOG.info(watch.shortSummary());
 		}
 	}
 	

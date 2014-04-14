@@ -100,9 +100,10 @@ public class SteviaContext {
 			}
 			context = null;
 			state = null;
+
+			Thread.currentThread().setName("Stevia - Inactive");
 			LOG.info("Context closed, controller shutdown");
-			RunsWithControllerHelper.tearDown();
-			Thread.currentThread().setName("Stevia - context Inactive");
+			RunsWithControllerHelper.disposeControllers();
 		}
 
 		public int getWaitForPageToLoad() {
@@ -235,8 +236,8 @@ public class SteviaContext {
 			context.isWebDriver = false;   
 		}
 
-		LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "Webdriver" : "Selenium");
-		Thread.currentThread().setName("Stevia ["+(context.isWebDriver ? "Webdriver" : "Selenium")+"] - context Active "+System.currentTimeMillis()%2048);
+		Thread.currentThread().setName("Stevia ["+(context.isWebDriver ? "WD" : "SRC")+" "+instance.getClass().getSimpleName()+"] - Active "+System.currentTimeMillis()%2048);
+		LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "WebDriver" : "SeleniumRC");
 		
 	}
 	
