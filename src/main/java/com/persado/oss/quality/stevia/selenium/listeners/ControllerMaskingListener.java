@@ -51,7 +51,6 @@ import org.testng.annotations.Test;
 import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
-import com.persado.oss.quality.stevia.selenium.core.WebController;
 
 public class ControllerMaskingListener implements IInvokedMethodListener2 {
 
@@ -65,6 +64,7 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult) {
 	}
 
+	//boolean is necessary for cases that the context is clean (spring context does not exist) and we've not masked anyway
 	boolean masked = false;
 	
 	@Override
@@ -90,14 +90,14 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
 		if (masked) {
-			RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
-			try {
-				p.controllerUnmask();
+		RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
+		try {
+			p.controllerUnmask();
 				masked = false;
-			} catch (Throwable e) {
-				throw new IllegalStateException("failed to replace masked controller",e);
-			}
+		} catch (Throwable e) {
+			throw new IllegalStateException("failed to replace masked controller",e);
 		}
+	}
 	}
 
 }

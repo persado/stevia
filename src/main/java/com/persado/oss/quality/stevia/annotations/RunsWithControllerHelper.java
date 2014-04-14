@@ -37,7 +37,10 @@ package com.persado.oss.quality.stevia.annotations;
  */
 
 import java.lang.reflect.Method;
+import java.util.ArrayList;
+import java.util.Deque;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.Map;
 
 import org.openqa.selenium.WebDriverException;
@@ -57,29 +60,29 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControl
 public class RunsWithControllerHelper implements ApplicationContextAware {
 	public static Logger LOG = LoggerFactory.getLogger(RunsWithControllerHelper.class);
 	
-	private static final ThreadLocal<Map<String,WebController>> controllerCache = new ThreadLocal<Map<String,WebController>>() {
+	private static final ThreadLocal<Deque<WebController>> controllerStack = new ThreadLocal<Deque<WebController>>() {
 		@Override
-		protected java.util.Map<String,WebController> initialValue() {
-			return new HashMap<String,WebController>();
+		protected Deque<WebController> initialValue() {
+			return new LinkedList<WebController>();
 		};
 	};
 	
-	private static final Map<String, WebController> ownControllers = new HashMap<String, WebController>();
+	private static final Map<String, WebController> controllers = new HashMap<String, WebController>();
 
 	public static void disposeControllers() {
-		for (WebController controller : ownControllers.values()) {
-			LOG.info("Removing {} in teardown",controller);
+		for (WebController controller : controllers.values()) {
+			LOG.info("Removing {} in SteviaContext.clean - disposeControllers()",controller);
 			try {
 				controller.quit();
 			} catch (WebDriverException wde) {
 				LOG.warn("Exception caught calling controller.quit(): \""+wde.getMessage()+"\" additional info: "+wde.getAdditionalInformation());
 			}
 		}
-		ownControllers.clear();
-		Map<String, WebController> cache = controllerCache.get();
-		if (cache.containsKey("masked")) {
-			LOG.warn("test ends while controller still masked - will clear the masked controller also");
-			WebController controller = cache.remove("masked");
+		controllers.clear();
+		Deque<WebController> cache = controllerStack.get();
+		while (cache.peek() != null) {
+			LOG.warn("test ends while controllers still masked - will clear the masked controller also");
+			WebController controller = cache.pop();
 			try {
 				controller.quit();
 			} catch (WebDriverException wde) {
@@ -125,40 +128,39 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 		WebController currentControllerObj = SteviaContext.getWebController();
 		Class<? extends WebController> currentControllerClass = currentControllerObj.getClass();
 		
-		Map<String, WebController> cache = controllerCache.get();
+		Deque<WebController> maskStack = controllerStack.get();
 
 
 		String curControllerKey = currentControllerClass.getCanonicalName();
 		String reqControllerKey = requestedControllerClass.getCanonicalName();
 
-		//check if running controller is already cached.				
-		if (!cache.containsKey(curControllerKey) ) {
-			cache.put(curControllerKey,currentControllerObj);
+		if (!controllers.containsKey(curControllerKey)) {
+			controllers.put(curControllerKey, currentControllerObj);
 		}
+		
 		
 		//check if requested controller is different from the currently running
 		if (!curControllerKey.startsWith(reqControllerKey)) {
 			WebController replacer = null;
-			if (cache.containsKey(reqControllerKey)) { // we have one
-				replacer = cache.get(reqControllerKey);
+			if (controllers.containsKey(reqControllerKey)) { // we have one
+				replacer = controllers.get(reqControllerKey);
 			} else {
 				replacer = SteviaWebControllerFactory.getWebController(context, requestedControllerClass);
-				cache.put(reqControllerKey, replacer);			
-				ownControllers.put(reqControllerKey, replacer);
+				controllers.put(reqControllerKey, replacer);
 				LOG.debug("Controller {} not found in cache, created new ", reqControllerKey);
 			}
+			maskStack.push(currentControllerObj);
 			SteviaContext.setWebController(replacer);
-			cache.put("masked", currentControllerObj); //save for later
 		} else {
 			LOG.warn("Controller requested is the currently used one. No masking done!");
 		}
 	}
 	
 	public void controllerUnmask() throws Throwable {
-		Map<String, WebController> cache = controllerCache.get();
-		if (cache.containsKey("masked")) {
+		Deque<WebController> cache = controllerStack.get();
+		if (cache.peek() != null) {
+			SteviaContext.setWebController(cache.pop());
 			LOG.debug("Controller unmasked");
-			SteviaContext.setWebController(cache.remove("masked"));
 		} else {
 			LOG.warn("Controller was not masked. It is optional anyway in @RunsConditionsWithController.");
 		}
