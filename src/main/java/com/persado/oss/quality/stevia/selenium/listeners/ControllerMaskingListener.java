@@ -49,7 +49,7 @@ import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import com.persado.oss.quality.stevia.annotations.RunsWithController;
-import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
+import com.persado.oss.quality.stevia.annotations.AnnotationsHelper;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 
 public class ControllerMaskingListener implements IInvokedMethodListener2 {
@@ -76,7 +76,7 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 			if (rmethod.getAnnotation(RunsWithController.class) != null || 
 				rmethod.getDeclaringClass().getAnnotation(RunsWithController.class) != null) {
 				LOG.warn("Method or Class of {} asks Controller to be masked", rmethod.getName());
-				RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
+				AnnotationsHelper p = SteviaContext.getSpringContext().getBean(AnnotationsHelper.class);
 				try {
 					p.maskExistingController(rmethod);
 					masked = true;
@@ -90,14 +90,14 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
 		if (masked) {
-		RunsWithControllerHelper p = SteviaContext.getSpringContext().getBean(RunsWithControllerHelper.class);
-		try {
-			p.controllerUnmask();
+			AnnotationsHelper p = SteviaContext.getSpringContext().getBean(AnnotationsHelper.class);
+			try {
+				p.controllerUnmask();
 				masked = false;
-		} catch (Throwable e) {
-			throw new IllegalStateException("failed to replace masked controller",e);
+			} catch (Throwable e) {
+				throw new IllegalStateException("failed to replace masked controller",e);
+			}
 		}
-	}
 	}
 
 }

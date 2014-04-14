@@ -38,13 +38,14 @@ package com.persado.oss.quality.stevia.selenium.core;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import org.openqa.selenium.WebDriverException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
+import com.persado.oss.quality.stevia.annotations.AnnotationsHelper;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
 import com.persado.oss.quality.stevia.testng.Verify;
 
@@ -56,6 +57,8 @@ public class SteviaContext {
 	
 	/** The Constant STEVIA_CONTEXT_LOG. */
 	private static final Logger LOG = LoggerFactory.getLogger(SteviaContext.class);
+	
+	private static final AtomicInteger threadSeq = new AtomicInteger((int) (System.currentTimeMillis() % 0xcafe));
 	
 	/**
 	 * The inner Class Context.
@@ -103,7 +106,7 @@ public class SteviaContext {
 
 			Thread.currentThread().setName("Stevia - Inactive");
 			LOG.info("Context closed, controller shutdown");
-			RunsWithControllerHelper.disposeControllers();
+			AnnotationsHelper.disposeControllers();
 		}
 
 		public int getWaitForPageToLoad() {
@@ -236,7 +239,10 @@ public class SteviaContext {
 			context.isWebDriver = false;   
 		}
 
-		Thread.currentThread().setName("Stevia ["+(context.isWebDriver ? "WD" : "SRC")+" "+instance.getClass().getSimpleName()+"] - Active "+System.currentTimeMillis()%2048);
+		Thread.currentThread().setName(
+				"Stevia [" + (context.isWebDriver ? "WD" : "SRC") + " "
+						+ instance.getClass().getSimpleName() + "@"
+						+ Integer.toHexString(threadSeq.incrementAndGet()) + "]");
 		LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "WebDriver" : "SeleniumRC");
 		
 	}

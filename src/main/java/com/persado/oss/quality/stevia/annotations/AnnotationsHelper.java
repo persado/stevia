@@ -37,7 +37,6 @@ package com.persado.oss.quality.stevia.annotations;
  */
 
 import java.lang.reflect.Method;
-import java.util.ArrayList;
 import java.util.Deque;
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -57,8 +56,8 @@ import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 
 @Component
-public class RunsWithControllerHelper implements ApplicationContextAware {
-	public static Logger LOG = LoggerFactory.getLogger(RunsWithControllerHelper.class);
+public class AnnotationsHelper implements ApplicationContextAware {
+	public static Logger LOG = LoggerFactory.getLogger(AnnotationsHelper.class);
 	
 	private static final ThreadLocal<Deque<WebController>> controllerStack = new ThreadLocal<Deque<WebController>>() {
 		@Override
@@ -105,7 +104,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 								m.getAnnotation(RunsWithController.class);
 			if (null != rw) {
 				watch.start("Controller masking");
-				Class<? extends WebController> requestedControllerClass = rw.controller();
+				Class<? extends WebController> requestedControllerClass = rw.value();
 				controllerMask(requestedControllerClass);
 				watch.stop();
 			} else {
@@ -176,11 +175,13 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 	public void maskAndExecPreconditions(Method m, Object testObject) throws Throwable {
 		StopWatch watch = null;
+		// need flag so we do not pop() the stack too much
+		boolean masked = false;
 		try {
 			
-			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
+			Preconditions rw = m.getAnnotation(Preconditions.class);
 			if (null != rw) {
-				if (rw.preConditionMethods().length == 0) {
+				if (rw.value().length == 0) {
 					LOG.info("no preconditions found - masking not necessary");
 					return;
 				}
@@ -190,11 +191,12 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 				if (requestedControllerClass != VoidController.class) {
 					controllerMask(requestedControllerClass);
+					masked = true;
 				} else {
 					LOG.debug("Empty controller found, no controller masking for pre/post conditions");
 				}
 				
-				for (String methodName : rw.preConditionMethods()) {
+				for (String methodName : rw.value()) {
 					LOG.info("Executing preCondition method {} for method {}", methodName, m.getName());
 					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
 					toExecute.invoke(testObject);
@@ -203,7 +205,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
 			}
 		} finally {
-			controllerUnmask();
+			if (masked) controllerUnmask();
 			if (null != watch && watch.isRunning()) {
 				watch.stop();
 				LOG.info(watch.shortSummary());
@@ -237,11 +239,14 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 	public void maskAndExecPostconditions(Method m, Object testObject) throws Throwable {
 		StopWatch watch = null;
+		// need flag so we do not pop() the stack too much
+		boolean masked = false;
+		
 		try {
 			
-			RunsConditionsWithController rw = m.getAnnotation(RunsConditionsWithController.class);
+			Postconditions rw = m.getAnnotation(Postconditions.class);
 			if (null != rw) {
-				if (rw.postConditionMethods().length == 0) {
+				if (rw.value().length == 0) {
 					LOG.info("no postconditions found - masking not necessary");
 					return;
 				}
@@ -251,11 +256,12 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 
 				if (requestedControllerClass != VoidController.class) {
 					controllerMask(requestedControllerClass);
+					masked = true;
 				} else {
 					LOG.debug("Empty controller found, no controller masking for pre/post conditions");
 				}
 				
-				for (String methodName : rw.postConditionMethods()) {
+				for (String methodName : rw.value()) {
 					LOG.info("Executing postCondition method {} for method {}", methodName, m.getName());
 					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
 					toExecute.invoke(testObject);
@@ -264,7 +270,7 @@ public class RunsWithControllerHelper implements ApplicationContextAware {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
 			}
 		} finally {
-			controllerUnmask();
+			if (masked) controllerUnmask();
 			if (null != watch && watch.isRunning()) {
 				watch.stop();
 				LOG.info(watch.shortSummary());

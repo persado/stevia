@@ -37,12 +37,15 @@ package com.persado.oss.quality.stevia.tests;
  */
 
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
 import org.testng.annotations.Test;
 
-import com.persado.oss.quality.stevia.annotations.RunsConditionsWithController;
+import com.persado.oss.quality.stevia.annotations.Postconditions;
+import com.persado.oss.quality.stevia.annotations.Preconditions;
 import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.pageObjects.GoogleHomePage;
 import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
@@ -54,6 +57,7 @@ import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 @Component
 public class TestGoogleSearch extends SteviaTestBase {
 
+	private static Logger LOG = LoggerFactory.getLogger(TestGoogleSearch.class);
 	@Autowired
 	GoogleHomePage googleHome;
 
@@ -70,11 +74,11 @@ public class TestGoogleSearch extends SteviaTestBase {
 
 	
 	
-	@RunsWithController(controller=SeleniumWebController.class) 
-	@RunsConditionsWithController(controller=WebDriverWebController.class, preConditionMethods= {"precondition2" })
+	@RunsWithController(SeleniumWebController.class) 
+	@Preconditions(controller=WebDriverWebController.class, value = {"precondition2" })
 	@Test
 	public void testWithBothAnnotations() {
-		System.out.println("Should run with SELENIUM");
+		LOG.info("Should run with SELENIUM");
 		Assert.isTrue(SteviaContext.isWebDriver() != true, "this controller is not Selenium");
 
 		commonControllerTest();
@@ -82,42 +86,43 @@ public class TestGoogleSearch extends SteviaTestBase {
 
 	
 	
-	@RunsConditionsWithController(preConditionMethods = { "precondition1", "precondition2" }, postConditionMethods = { "postCondition1" } )
+	@Preconditions( { "precondition1", "precondition2" })
+	@Postconditions( { "postCondition1" } )
 	@Test(dependsOnMethods= {"testWithBothAnnotations"})
 	public void testExecutionOfPreconditions() {	
 		//this test should run with webdriver
 		Assert.isTrue(SteviaContext.isWebDriver() == true, "this controller is not WebDriver");
-		System.out.println("TEST METHOD CODE");
+		LOG.info("TEST METHOD CODE");
 	}
 	
 	public void precondition1() {
-		System.out.println("TEST precondition1 CODE");
+		LOG.info("TEST precondition1 CODE");
 
 	}
 	
 	public void precondition2() {
-		System.out.println("TEST precondition2 CODE");
+		LOG.info("TEST precondition2 CODE");
 		commonControllerTest();
 	}
 
 	public void postCondition1() {
-		System.out.println("TEST postCondition1 CODE");
+		LOG.info("TEST postCondition1 CODE");
 		commonControllerTest();
 	}
 	
-	@RunsConditionsWithController(controller=SeleniumWebController.class, preConditionMethods= {"precondition2" })
+	@Preconditions(controller=SeleniumWebController.class, value = {"precondition2" })
 	@Test(dependsOnMethods= {"searchPersadoInGoogle","testExecutionOfPreconditions"})
 	public void lastTestWithOtherController() {
-		System.out.println("Should run in WEB DRIVER, precondition in SELENIUM mode");
+		LOG.info("Should run in WEB DRIVER, precondition in SELENIUM mode");
 		Assert.isTrue(SteviaContext.isWebDriver() == true, "this controller is not WebDriver");
 
 	}
 	
 
-	@RunsWithController(controller=SeleniumWebController.class) 
+	@RunsWithController(SeleniumWebController.class) 
 	@Test(dependsOnMethods= {"lastTestWithOtherController"})
 	public void lastMethodWithDifferentController() {
-		System.out.println("Should run with SELENIUM");
+		LOG.info("Should run with SELENIUM");
 		Assert.isTrue(SteviaContext.isWebDriver() != true, "this controller is not Selenium");
 
 		commonControllerTest();

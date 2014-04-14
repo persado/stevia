@@ -51,6 +51,6 @@ import com.persado.oss.quality.stevia.selenium.core.WebController;
 @Inherited
 public @interface RunsWithController {
 	
-	Class<? extends WebController> controller();
+	Class<? extends WebController> value();
 	
 }
