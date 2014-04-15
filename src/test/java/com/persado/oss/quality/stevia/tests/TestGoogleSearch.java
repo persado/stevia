@@ -81,10 +81,12 @@ public class TestGoogleSearch extends SteviaTestBase {
 		LOG.info("Should run with SELENIUM");
 		Assert.isTrue(SteviaContext.isWebDriver() != true, "this controller is not Selenium");
 
+		Assert.hasText( pre2, "variable should have 2 inside");
+		Assert.isTrue(pre2.equals("2"),"variable should have 2");
 		commonControllerTest();
 	}
 
-	
+	private String pre1, pre2, post1;
 	
 	@Preconditions( { "precondition1", "precondition2" })
 	@Postconditions( { "postCondition1" } )
@@ -93,21 +95,38 @@ public class TestGoogleSearch extends SteviaTestBase {
 		//this test should run with webdriver
 		Assert.isTrue(SteviaContext.isWebDriver() == true, "this controller is not WebDriver");
 		LOG.info("TEST METHOD CODE");
+		Assert.hasText( pre1, "variable should have 1 inside");
+		Assert.isTrue(pre1.equals("1"),"variable should have 1");
+
+		Assert.hasText( pre2, "variable should have 22 inside");
+		Assert.isTrue(pre2.equals("22"),"variable should have 22");
+
+		Assert.isNull(post1);
 	}
 	
 	public void precondition1() {
 		LOG.info("TEST precondition1 CODE");
-
+		if (pre1 == null) {
+			pre1 = "1";
+		}
 	}
 	
 	public void precondition2() {
 		LOG.info("TEST precondition2 CODE");
 		commonControllerTest();
+		if (pre2 == null) {
+			pre2 = "2";
+		} else {
+			pre2 = "22";
+		}
 	}
 
 	public void postCondition1() {
 		LOG.info("TEST postCondition1 CODE");
 		commonControllerTest();
+		if (post1 == null) {
+			post1 = "3";
+		}
 	}
 	
 	@Preconditions(controller=SeleniumWebController.class, value = {"precondition2" })
@@ -115,7 +134,9 @@ public class TestGoogleSearch extends SteviaTestBase {
 	public void lastTestWithOtherController() {
 		LOG.info("Should run in WEB DRIVER, precondition in SELENIUM mode");
 		Assert.isTrue(SteviaContext.isWebDriver() == true, "this controller is not WebDriver");
-
+		Assert.hasText(post1,"variable should have 1");
+		Assert.hasText(pre2,"variable should have 22");
+		Assert.isTrue(pre2.equals("22"),"variable should have 22");
 	}
 	
 
