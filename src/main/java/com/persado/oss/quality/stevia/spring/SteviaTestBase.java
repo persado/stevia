@@ -120,26 +120,46 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		//stevia context init
 
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
-		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase                                                    ***");
+		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase START                                              ***");
 		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
-		initializeStevia(parameters);
+		
+		boolean initContext = true; 
+		if (parameters.get("suite.init.context") != null && parameters.get("suite.init.context").startsWith("false")) {
+			initContext = false;
+			STEVIA_TEST_BASE_LOG.info("suite initialisation via suiteInitialisation() override will not use a Stevia Context");
+		}
+		
+		if (initContext) {
+			initializeStevia(parameters);
+		}
 		// user code
 		suiteInitialisation(testContext);
-		//stevia context clean
-		SteviaContext.clean();
+		if (initContext) {
+			//stevia context clean
+			SteviaContext.clean();
+		}
+		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
+		STEVIA_TEST_BASE_LOG.warn("*** SUITE initialisation phase END                                                ***");
+		STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 	}
 
 	/**
-	 * Suite-Level initialisation callback; this method should be overrriden to 
+	 * Suite-Level initialisation callback; this method should be overrriden to
 	 * allow suite-level configuration to happen - preferrably at the Base class
-	 * of the tests (overriden versions of this method will be called from the class 
-	 * extending this Base, at Suite initialisation, best place for this method 
-         * to be overriden is at the class extending this Base class).
+	 * of the tests (overriden versions of this method will be called from the
+	 * class extending this Base, at Suite initialisation, best place for this
+	 * method to be overriden is at the class extending this Base class).
 	 * 
-	 * @param context test context
+	 * @param context
+	 *            test context
 	 */
 	protected void suiteInitialisation(ITestContext context) {
-		STEVIA_TEST_BASE_LOG.warn("suiteInitialisation method not overriden; doing nothing at suite level.");
+		STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
+		STEVIA_TEST_BASE_LOG.warn("*** suiteInitialisation() not overriden. Check your code and javadoc of method      ***");
+		STEVIA_TEST_BASE_LOG.warn("*** NOTE: suiteInitialisation() by default has a SteviaContext to work with.        ***");
+		STEVIA_TEST_BASE_LOG.warn("***       If you don't want this (one extra browser to start/stop) define           ***"); 
+		STEVIA_TEST_BASE_LOG.warn("***       parameter 'suite.init.context' with value 'false'                         ***");
+		STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
 	}
 
 	/**
