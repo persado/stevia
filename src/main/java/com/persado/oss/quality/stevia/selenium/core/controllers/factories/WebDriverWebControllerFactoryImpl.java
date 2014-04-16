@@ -49,6 +49,8 @@ import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
 import com.opera.core.systems.OperaDriver;
@@ -58,6 +60,8 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControl
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
 
 public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
+	private static final Logger LOG = LoggerFactory.getLogger(WebDriverWebControllerFactoryImpl.class);
+	
 	@Override
 	public WebController initialize(ApplicationContext context, WebController controller) {
 		WebDriverWebController wdController = (WebDriverWebController) controller;
@@ -65,26 +69,27 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 		if (SteviaContext.getParam(SteviaWebControllerFactory.DEBUGGING).compareTo(SteviaWebControllerFactory.TRUE) == 0) { // debug=on
 			if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER) == null || SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("firefox") == 0
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
-				if (SteviaContext.getParam(SteviaWebControllerFactory.PROFILE) == null || SteviaContext.getParam(SteviaWebControllerFactory.PROFILE).isEmpty()) {
-					SteviaWebControllerFactory.LOG.info("Debug enabled, using Firefox Driver");
+				String profileToUse = SteviaContext.getParam(SteviaWebControllerFactory.PROFILE);
+				if (profileToUse == null || profileToUse.isEmpty()) {
+					LOG.info("Debug enabled, using Firefox Driver");
 					driver = new FirefoxDriver();
 				} else {
-					SteviaWebControllerFactory.LOG.info("Debug enabled, using a local Firefox profile with FirefoxDriver");
+					LOG.info("Debug enabled, using a local Firefox profile {} with FirefoxDriver", profileToUse);
 					ProfilesIni allProfiles = new ProfilesIni();
-					FirefoxProfile ffProfile = allProfiles.getProfile(SteviaWebControllerFactory.PROFILE);
+					FirefoxProfile ffProfile = allProfiles.getProfile(profileToUse);
 					driver = new FirefoxDriver(ffProfile);
 				}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug enabled, using ChromeDriver");
+				LOG.info("Debug enabled, using ChromeDriver");
 				driver = new ChromeDriver();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug enabled, using InternetExplorerDriver");
+				LOG.info("Debug enabled, using InternetExplorerDriver");
 				driver = new InternetExplorerDriver();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug enabled, using SafariDriver");
+				LOG.info("Debug enabled, using SafariDriver");
 				driver = new SafariDriver();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug enabled, using OperaDriver");
+				LOG.info("Debug enabled, using OperaDriver");
 				driver = new OperaDriver();
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
@@ -94,28 +99,24 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			DesiredCapabilities capability = new DesiredCapabilities();
 			if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER) == null || SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("firefox") == 0
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
-				SteviaWebControllerFactory.LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
+				LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
 				capability = DesiredCapabilities.firefox();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
+				LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
 				capability = DesiredCapabilities.chrome();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
+				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
 				capability = DesiredCapabilities.internetExplorer();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug OFF, using a RemoteWebDriver with Safari capabilities");
+				LOG.info("Debug OFF, using a RemoteWebDriver with Safari capabilities");
 				capability = DesiredCapabilities.safari();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
-				SteviaWebControllerFactory.LOG.info("Debug OFF, using a RemoteWebDriver with Opera capabilities");
+				LOG.info("Debug OFF, using a RemoteWebDriver with Opera capabilities");
 				capability = DesiredCapabilities.opera();
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}
-			Augmenter augmenter = new Augmenter(); // adds screenshot
-													// capability
-													// to a default web
-													// driver.
-
+			Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default webdriver.
 			try {
 				driver = augmenter.augment(new RemoteWebDriver(new URL("http://" + SteviaContext.getParam(SteviaWebControllerFactory.RC_HOST) + ":" + SteviaContext.getParam(SteviaWebControllerFactory.RC_PORT)
 						+ "/wd/hub"), capability));

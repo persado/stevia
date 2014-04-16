@@ -261,6 +261,9 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		}
 
 		SteviaContext.registerParameters(SteviaContextSupport.getParameters( params ));
+		if (applicationContext == null) {
+			throw new IllegalStateException("ApplicationContext not set - Stevia cannot continue"); 
+		}
 		SteviaContext.attachSpringContext(applicationContext);
 		
 		WebController controller = SteviaWebControllerFactory.getWebController(applicationContext);
