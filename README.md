@@ -18,7 +18,7 @@ Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persad
 ### 15-Apr-2014 Stevia 0.9.5 released
 Dear friends,
 
-we just released Stevia 0.9.5 to maven repositories - newest feature is the use of @Preconditions and @Postconditions annotations, allowing you to execute pre/post conditions with or without a different controller/session! This breakthrough feature is going to be a series of blog posts at [seleniumtestingworld](http://seleniumtestingworld.blogspot.gr/). Check it out! Changelog: [0.9.0 -> 0.9.3](https://github.com/persado/stevia/compare/stevia-core-0.9.0...stevia-core-0.9.3).
+we just released Stevia 0.9.5 to maven repositories - newest feature is the use of @Preconditions and @Postconditions annotations, allowing you to execute pre/post conditions with or without a different controller/session! This breakthrough feature is going to be a series of blog posts at [seleniumtestingworld](http://seleniumtestingworld.blogspot.gr/). Check it out! Changelog: [0.9.0 -> 0.9.5](https://github.com/persado/stevia/compare/stevia-core-0.9.0...stevia-core-0.9.5).
 
 ### 10-Apr-2014 Stevia 0.9.0 released 
 Dear friends,
