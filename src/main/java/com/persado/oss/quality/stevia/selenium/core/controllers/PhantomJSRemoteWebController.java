@@ -1,4 +1,4 @@
-package com.persado.oss.quality.stevia.pageObjects;
+package com.persado.oss.quality.stevia.selenium.core.controllers;
 
 /*
  * #%L
@@ -37,54 +37,14 @@ package com.persado.oss.quality.stevia.pageObjects;
  */
 
 
-import java.text.MessageFormat;
+import com.persado.oss.quality.stevia.selenium.core.WebController;
 
-import com.persado.oss.quality.stevia.selenium.core.WebComponent;
 
-public class GoogleHomePage extends WebComponent{
-	/*
-	 * Declare page elements (Buttons, Input fields etc)
-	 * in the form of enumeration
-	 */
-	public enum GoogleHomePageLocators {
-		
-		INPUT_GOOGLE_SEARCH("//input[@id='gbqfq']"),
-		BTN_GOOGLE_SEARCH("gbqfsa"),
-		BTN_FEEL_LUCKY("gbqfsb"),
-		;
-		
-	private String myLocator;
+/**
+ * This controller fully inherits the WebDriverWebController because
+ * PhantomJS implements the complete WebDriver Remote wire protocol. Used 
+ * only for consistency to the other implementations.
+ */
+public class PhantomJSRemoteWebController extends WebDriverWebController implements WebController {
 
-	GoogleHomePageLocators(String locator) {
-		myLocator = locator;
-	}
-
-	public String get() {
-		return myLocator;
-	}
-
-	public String getWithParams(Object... params) {
-		return MessageFormat.format(myLocator, params);
-	}
-}	
-	/*
-	 * Input text to search for on Google home page
-	 */
-	public void inputSearchText(String desiredText){
-		controller().input(GoogleHomePageLocators.INPUT_GOOGLE_SEARCH.get(), desiredText);
-	}
-	
-	/*
-	 * Press button Search on Google home page
-	 */
-	public void pressGoogleSearchButton(){
-		controller().press(GoogleHomePageLocators.BTN_GOOGLE_SEARCH.get());
-	}
-	
-	/*
-	 * Press button Feel lucky on Google home page
-	 */
-	public void pressFeelLuckyButton(){
-		controller().press(GoogleHomePageLocators.BTN_FEEL_LUCKY.get());
-	}
 }

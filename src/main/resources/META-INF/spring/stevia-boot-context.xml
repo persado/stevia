@@ -35,6 +35,14 @@
 		p:name="webdriver" 
 		p:className="com.persado.oss.quality.stevia.selenium.core.controllers.factories.WebDriverWebControllerFactoryImpl"/>
 
+	<!-- registration of a phantomjs Remote WebDriver controller and the respective driver -->
+	<bean id="phantomjsRemoteController" class="com.persado.oss.quality.stevia.selenium.core.controllers.PhantomJSRemoteWebController" scope="prototype" />
+	<!-- note: id needs to be "drivername"-driver for this to work!!! -->
+	<bean id="phantomjs-driver" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.Driver"
+		p:name="phantomjs" 
+		p:className="com.persado.oss.quality.stevia.selenium.core.controllers.factories.PhantomJSWebControllerFactoryImpl"/>
+
+
 	<!-- additional drivers may be registered this way -->
 	<import resource="classpath*:META-INF/spring/stevia-extensions-drivers-*.xml" />
 

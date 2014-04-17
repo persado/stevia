@@ -5,10 +5,10 @@
 	<parameter name="rcHost" value="localhost" />
 	<parameter name="rcPort" value="4444" />
 	<parameter name="targetHostUrl" value="http://www.google.com" />
-	<parameter name="debugging" value="true" />
-	<parameter name="browser" value="firefox" />
+	<parameter name="debugging" value="false" />
+	<parameter name="browser" value="phantomjs" />
 	<parameter name="profile" value="" />
-	<parameter name="driverType" value="webdriver" />
+	<parameter name="driverType" value="phantomjs" />
 	<parameter name="actionsLogging" value="true" />
 	<parameter name="tests.takeScreenshot" value="true" />
 
