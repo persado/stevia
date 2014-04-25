@@ -89,7 +89,7 @@ public class TestGoogleSearch extends SteviaTestBase {
 	private String pre1, pre2, post1;
 	
 	@Preconditions( { "precondition1", "precondition2" })
-	@Postconditions( { "postCondition1" } )
+	@Postconditions( { "postCondition1", "postCondition2" } )
 	@Test(dependsOnMethods= {"testWithBothAnnotations"})
 	public void testExecutionOfPreconditions() {	
 		//this test should run with webdriver
@@ -127,6 +127,10 @@ public class TestGoogleSearch extends SteviaTestBase {
 		if (post1 == null) {
 			post1 = "3";
 		}
+	}
+	
+	private void postCondition2() {
+		Assert.state(false,"postCondition2 SHOULD NEVER BE CALLED, IT IS PRIVATE");
 	}
 	
 	@Preconditions(controller=SeleniumWebController.class, value = {"precondition2" })

@@ -36,6 +36,7 @@ package com.persado.oss.quality.stevia.annotations;
  * #L%
  */
 
+import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Deque;
 import java.util.HashMap;
@@ -198,8 +199,7 @@ public class AnnotationsHelper implements ApplicationContextAware {
 				
 				for (String methodName : rw.value()) {
 					LOG.info("Executing preCondition method {} for method {}", methodName, m.getName());
-					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
-					toExecute.invoke(testObject);
+					executeMethod(m, testObject, methodName);
 				}
 			} else {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
@@ -217,10 +217,10 @@ public class AnnotationsHelper implements ApplicationContextAware {
 	private Method findMethodByName(String methodName, Class<?> clazz) {
 		Method toExecute = null;
 		if (null == clazz || clazz == Object.class) {
-			LOG.error("Cannot find method {} in all parents, will return null");
+			LOG.error("Cannot find method {} in class {} and all it's parents, will return null",methodName, clazz.getName());
 			return null;
 		}
-		LOG.debug("Looking for method {} in class {} ",methodName, clazz);
+		LOG.debug("Looking for method {} in class {} ",methodName, clazz.getName());
 		for (Method method : clazz.getMethods()) {
 			if (method.getName().equals(methodName)) {
 				LOG.debug("found method object for method {}",methodName);
@@ -263,8 +263,7 @@ public class AnnotationsHelper implements ApplicationContextAware {
 				
 				for (String methodName : rw.value()) {
 					LOG.info("Executing postCondition method {} for method {}", methodName, m.getName());
-					Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
-					toExecute.invoke(testObject);
+					executeMethod(m, testObject, methodName);
 				}
 			} else {
 				throw new IllegalStateException("unable to find an entry for the annotation!");
@@ -275,6 +274,17 @@ public class AnnotationsHelper implements ApplicationContextAware {
 				watch.stop();
 				LOG.info(watch.shortSummary());
 			}
+		}
+	}
+
+
+	private void executeMethod(Method m, Object testObject, String methodName)
+			throws IllegalAccessException, InvocationTargetException {
+		try {
+			Method toExecute = findMethodByName(methodName, m.getDeclaringClass());
+			toExecute.invoke(testObject);
+		} catch (NullPointerException npe) {
+			LOG.error("NPE thrown trying to invoke '{}.{}' The method does not exist or is private", m.getDeclaringClass().getName(), methodName );
 		}
 	}
 	
