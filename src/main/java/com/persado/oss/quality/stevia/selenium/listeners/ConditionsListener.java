@@ -36,6 +36,7 @@ package com.persado.oss.quality.stevia.selenium.listeners;
  * #L%
  */
 
+import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
@@ -49,6 +50,8 @@ import org.testng.annotations.Test;
 import com.persado.oss.quality.stevia.annotations.Postconditions;
 import com.persado.oss.quality.stevia.annotations.Preconditions;
 import com.persado.oss.quality.stevia.annotations.AnnotationsHelper;
+import com.persado.oss.quality.stevia.annotations.ProxyCallback;
+import com.persado.oss.quality.stevia.annotations.ProxyHelper;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 
 public class ConditionsListener implements IInvokedMethodListener2 {
@@ -71,17 +74,41 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 	@Override
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
 		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
+		Object instance = method.getTestMethod().getInstance();
+		Object proxy = null;
+
+		try {
+			proxy = ProxyHelper.create(instance, null, new ProxyCallback() {
+				@Override
+				public void execute() {
+					try {
+						SteviaContext.getWebController().takeScreenShot();
+					} catch (IOException e) {
+						LOG.error("Screenshot failed! reason = "+e.getMessage());
+					}
+					
+				}
+			});	
+		} catch (Exception e) {
+			LOG.error("Proxy creation failed, using non-proxyed original object, reason = "+e.getMessage());
+			proxy = instance;
+		}
 		if (rmethod.getAnnotation(Test.class) != null) {
 			if (rmethod.getAnnotation(Preconditions.class) != null) {
 				LOG.warn("Method or Class of {} wants preconditions to be checked", rmethod.getName());
 				AnnotationsHelper p = SteviaContext.getSpringContext().getBean(AnnotationsHelper.class);
 				try {
 					LOG.debug("Mask and Execute Preconditions of method {} ",rmethod.getName());
-					p.maskAndExecPreconditions(rmethod, method.getTestMethod().getInstance());
+					p.maskAndExecPreconditions(rmethod, proxy);
 					LOG.debug("Mask and Execute Preconditions of method {} DONE",rmethod.getName());
 				} catch (Throwable e) {
-					LOG.error("Detected exception in preconditions execution, message = "+e.getMessage(),e);
-					throw new IllegalStateException("Exception in preconditions execution",e);
+					Throwable realException = findExceptionWithMessage(e);
+					LOG.error("Detected exception in preconditions execution, message = "+realException.getMessage(),e);
+					if (realException instanceof RuntimeException ) {
+						throw ((RuntimeException)realException);
+					} else {
+						throw new IllegalStateException(realException.getMessage(),realException);
+					}
 				} 
 			}
 		}
@@ -90,20 +117,54 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
 		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
+		Object instance = method.getTestMethod().getInstance();
+		Object proxy = null;
+
+		try {
+			proxy = ProxyHelper.create(instance, null, new ProxyCallback() {
+				@Override
+				public void execute() {
+					try {
+						SteviaContext.getWebController().takeScreenShot();
+					} catch (IOException e) {
+						LOG.error("Screenshot failed! reason = "+e.getMessage());
+					}
+					
+				}
+			});	
+		} catch (Exception e) {
+			LOG.error("Proxy creation failed, using non-proxyed original object, reason = "+e.getMessage());
+			proxy = instance;
+		}
+		
 		if (rmethod.getAnnotation(Test.class) != null) {
 			if (rmethod.getAnnotation(Postconditions.class) != null) {
 				LOG.warn("Method or Class of {} wants post conditions to be checked", rmethod.getName());
 				AnnotationsHelper p = SteviaContext.getSpringContext().getBean(AnnotationsHelper.class);
 				try {
 					LOG.debug("Mask and Execute Postconditions of method {} ",rmethod.getName());
-					p.maskAndExecPostconditions(rmethod, method.getTestMethod().getInstance());
+					p.maskAndExecPostconditions(rmethod, proxy);
 					LOG.debug("Mask and Execute Postconditions of method {} DONE",rmethod.getName());
 				} catch (Throwable e) {
-					LOG.error("Detected exception in postconditions execution, message = "+e.getMessage(),e);
-					throw new IllegalStateException("Exception in preconditions execution",e);
+					Throwable realException = findExceptionWithMessage(e);
+					LOG.error("Detected exception in postconditions execution, message = "+realException.getMessage(),e);
+					if (realException instanceof RuntimeException ) {
+						throw ((RuntimeException)realException);
+					} else {
+						throw new IllegalStateException(realException.getMessage(),realException);
+					}
 				} 
 			}
 		}
+	}
+
+	private Throwable findExceptionWithMessage(Throwable e) {
+		if (null != e && e.getMessage() == null && e.getCause() != null) {
+			return findExceptionWithMessage(e.getCause());
+		}
+		
+		return e;
+		
 	}
 
 }

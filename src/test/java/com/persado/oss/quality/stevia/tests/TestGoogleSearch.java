@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import com.persado.oss.quality.stevia.annotations.Postconditions;
@@ -52,9 +53,11 @@ import com.persado.oss.quality.stevia.pageObjects.PersadoHomePage;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import com.persado.oss.quality.stevia.selenium.listeners.TestListener;
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
 @Component
+@Listeners({TestListener.class})
 public class TestGoogleSearch extends SteviaTestBase {
 
 	private static Logger LOG = LoggerFactory.getLogger(TestGoogleSearch.class);
@@ -163,6 +166,25 @@ public class TestGoogleSearch extends SteviaTestBase {
 		googleHome.inputSearchText("persado");
 		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado | Global leader in Marketing Language Engineering");
 		persadoHome.checkPersadoTitle();
+	}
+	
+// these tests are commented out - used to verify the screenshot on pre/post conditions failure	
+//	@Postconditions({"failingCondition"})
+//	@Test
+//	public void testFailingPostCondition() {
+//		LOG.info("this test has a failing postcondition");
+//		
+//	}
+//	
+//	@Preconditions({"failingCondition"})
+//	@Test
+//	public void testFailingPreCondition() {
+//		LOG.info("this test has a failing precondition");
+//		
+//	}
+	
+	public void failingCondition() {
+		throw new IllegalStateException("Should create a screenshot");
 	}
 	
 }
