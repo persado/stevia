@@ -54,7 +54,6 @@ import org.openqa.selenium.Point;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.WebDriverBackedSelenium;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
@@ -73,6 +72,7 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInf
 import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
 import com.persado.oss.quality.stevia.selenium.listeners.LogDriver;
 import com.thoughtworks.selenium.Selenium;
+import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 
 
 // TODO: Auto-generated Javadoc

@@ -47,8 +47,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import com.sshtools.j2ssh.SftpClient;
 import com.sshtools.j2ssh.SshClient;
 import com.sshtools.j2ssh.authentication.AuthenticationProtocolState;
@@ -66,10 +68,14 @@ import com.sshtools.j2ssh.transport.IgnoreHostKeyVerification;
 public class SSHUtils {
 
 	/** The Constant SSH_LOG. */
-	private static final Log SSH_LOG = LogFactory.getLog(SSHUtils.class);
+	private static final Logger SSH_LOG = LoggerFactory.getLogger(SSHUtils.class);
 
 	/** The port. */
 	private static final int SSH_PORT = 22;
+	
+	/** The key */
+	public static final String SSH_KEY = "STEVIA_KEY_ebf46d5a1508759f09313c59552f5afbf9587776157d8f727998e1669ca4e837ec8";
+	
 	/**
 	 * Connect.
 	 * 

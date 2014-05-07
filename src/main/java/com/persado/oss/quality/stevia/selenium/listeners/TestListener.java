@@ -37,13 +37,17 @@ package com.persado.oss.quality.stevia.selenium.listeners;
  */
 
 import java.io.File;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IConfigurationListener;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
+import com.persado.oss.quality.stevia.network.Hardware;
+import com.persado.oss.quality.stevia.network.IO;
+import com.persado.oss.quality.stevia.network.SSHUtils;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
@@ -55,7 +59,7 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebCont
  */
 public class TestListener implements ITestListener,IConfigurationListener {
 
-	private static final Log TEST_LISTENER_LOG = LogFactory.getLog(TestListener.class);
+	private static final Logger TEST_LISTENER_LOG = LoggerFactory.getLogger(TestListener.class);
 	private boolean takeScreenshot = true;
 	
 	public void createScreenshot(ITestResult tr) {
@@ -94,8 +98,9 @@ public class TestListener implements ITestListener,IConfigurationListener {
 				currentPath = currentPath.getCanonicalFile();
 			}
 			TEST_LISTENER_LOG.info("Current execution path is "+currentPath);
+			IO.verifyToken();
         } catch (Exception e) {
-            TEST_LISTENER_LOG.error("Failed to retrieve version, error is " + e.getMessage(), e);
+            TEST_LISTENER_LOG.error("Failed to configure screenshots, error is " + e.getMessage(), e);
         } 
 	}
 
