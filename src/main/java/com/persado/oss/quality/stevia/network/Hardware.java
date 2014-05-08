@@ -62,58 +62,70 @@ public class Hardware {
 	public static final String getNetworkIdentifiers() {
 		StringBuilder bldBuilder = new StringBuilder();
 
+		Enumeration<NetworkInterface> networkInterfaces = null;
 		try {
-			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
-					.getNetworkInterfaces();
-			bldBuilder.append("ni{");
-			while (networkInterfaces.hasMoreElements()) {
-				NetworkInterface if0 = networkInterfaces.nextElement();
+			networkInterfaces = NetworkInterface.getNetworkInterfaces();
+		} catch (SocketException e) {
+		}
+		bldBuilder.append("ni{");
+		while (networkInterfaces.hasMoreElements()) {
+			NetworkInterface if0 = networkInterfaces.nextElement();
+			try {
 				if (if0.isLoopback() || if0.isPointToPoint() || if0.isVirtual()) {
 					continue;
 				}
-				byte[] hardwareAddress = if0.getHardwareAddress();
+			} catch (SocketException e) {
+				continue;
+			}
+
+			byte[] hardwareAddress = null;
+			try {
+				hardwareAddress = if0.getHardwareAddress();
+
 				if (hardwareAddress != null) {
 					bldBuilder.append(if0.getDisplayName()).append("=");
 					Formatter formatter = new Formatter(bldBuilder);
 					try {
 						for (int k = 0; k < hardwareAddress.length; k++) {
-							formatter
-									.format("%02X%s",
-											hardwareAddress[k],
-											(k < hardwareAddress.length - 1) ? "-"
-													: "");
+							formatter.format("%02X%s", hardwareAddress[k],
+										(k < hardwareAddress.length - 1) ? "-" : "");
 						}
 					} finally {
 						formatter.close();
 					}
 					bldBuilder.append("|");
 				}
+			} catch (SocketException e) {
 			}
-			if (bldBuilder.length() > 4) bldBuilder.setLength(bldBuilder.length() - 1);
-		} catch (SocketException e) {
-			// ignore
+
 		}
+		if (bldBuilder.length() > 4)
+			bldBuilder.setLength(bldBuilder.length() - 1);
+
 		return bldBuilder.append("}").toString();
 	}
 
 	public static final String getSerialNumber() {
 		try {
 			if (SystemUtils.IS_OS_WINDOWS) {
-				return H4W.getSerialNumber()+":WIN";
+				return H4W.getSerialNumber() + ":WIN";
 			}
 			if (SystemUtils.IS_OS_LINUX) {
-				return H4N.getSerialNumber()+":LIN";
+				return H4N.getSerialNumber() + ":LIN";
 			}
 			if (SystemUtils.IS_OS_MAC_OSX) {
-				return H4M.getSerialNumber()+":MAC";
+				return H4M.getSerialNumber() + ":MAC";
 			}
 			if (SystemUtils.IS_OS_SOLARIS) {
-				return H4S.getSerialNumber()+":S"+(SystemUtils.OS_VERSION == null ? "OL" : SystemUtils.OS_VERSION);
+				return H4S.getSerialNumber()
+						+ ":S"
+						+ (SystemUtils.OS_VERSION == null ? "OL"
+								: SystemUtils.OS_VERSION);
 			}
 		} catch (Exception e) {
 		}
 		// if we're here then lets generate a random one
-		return UUID.randomUUID().toString()+":UNK";
+		return UUID.randomUUID().toString() + ":UNK";
 	}
 
 	public static String hmacDigest(String msg, String keyString, String algo) {
@@ -143,7 +155,6 @@ public class Hardware {
 	}
 }
 
-
 class H4S {
 	private static String sn = null;
 
@@ -153,12 +164,14 @@ class H4S {
 			return sn;
 		}
 		String[] cmdStrings;
-		//check if ipmitool is around
+		// check if ipmitool is around
 		File f = new File("/usr/local/bin/ipmitool");
 		if (f.exists()) {
-			cmdStrings = new String[] { "/usr/local/bin/ipmitool", "-I", "bmc", "fru" };
+			cmdStrings = new String[] { "/usr/local/bin/ipmitool", "-I", "bmc",
+					"fru" };
 		} else {
-			cmdStrings = new String[] { "/usr/platform/sun4u/sbin/prtdiag", "-v" };
+			cmdStrings = new String[] { "/usr/platform/sun4u/sbin/prtdiag",
+					"-v" };
 		}
 		OutputStream os = null;
 		InputStream is = null;
