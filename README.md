@@ -1,10 +1,7 @@
-stevia
+stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" align="right" width="80">
 ======
+
 Build Status of 0.9.6-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
-
-Stevia is an Open Source QA Automation Testing Framework by [Persado](http://www.persado.com). In Persado, we took the pain out of having to care about Selenium or Webdriver (or both) and unified them under a common API, with a sane and clear-cut design, ability to extend and expand (courtesy of Spring!) and a bit of sweetness. Stevia is what we got out of it: 
-
-<p align="center"><img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" width="120"> </p>
 
 ## Stevia API Javadoc
 
@@ -14,42 +11,30 @@ You can browse our javadoc via this [link](http://persado.github.io/stevia/).
 
 Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
 
-## News
-### 15-Apr-2014 Stevia 0.9.5 released
-Dear friends,
+## Features
 
-we just released Stevia 0.9.5 to maven repositories - newest feature is the use of @Preconditions and @Postconditions annotations, allowing you to execute pre/post conditions with or without a different controller/session! This breakthrough feature is going to be a series of blog posts at [seleniumtestingworld](http://seleniumtestingworld.blogspot.gr/). [Check the 1st post here](http://seleniumtestingworld.blogspot.gr/2014/04/concurrency-testing-made-easy.html)! Changelog: [0.9.0 -> 0.9.5](https://github.com/persado/stevia/compare/stevia-core-0.9.0...stevia-core-0.9.5).
-
-### 10-Apr-2014 Stevia 0.9.0 released 
-Dear friends,
-
-we have just released Stevia 0.9.0 to maven repositories. We will follow on with a features list - so do hold on. For the moment, check the changelog from [0.7.0 -> 0.9.0](https://github.com/persado/stevia/compare/stevia-core-0.7.0...stevia-core-0.9.0). 
-
-### 04-Apr-2014 Quick Start guide
-
-Hello! 
-
-We have just included a quick-start guide. Lots of stuff explained and a fully running project, from start to end in 10 minutes. Of course, there are still many things unexplained. Feel free to ping us or raise an issue in our [issues](https://github.com/persado/stevia/issues) tool and we'll try to answer as soon as possible.
+The following features are supported in the current Stevia build (new features have a version next to them):
 
 
-### 13-Mar-2014 Update for Selenium libraries 2.40
 
-Hello!
-
-Our latest SNAPSHOT 0.8.7 has an important update that fixes our SizzleCSS integration with Selenium 2.40 (commit [6b857c6](https://github.com/persado/stevia/commit/6b857c650b684a60f483c9caf7b106b359284f0b)). Pick up the latest with this fragment:
+## Latest in maven repositories
+### Release
 ```
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.8.7-SNAPSHOT</version>
+  <version>0.9.5</version>
 </dependency>
 ```
-
-
-### 07-Mar-2014 Latest developments
-
-It has come to our attention that some of our friends have difficulty downloading stevia from our Open Source repository, Sonatype. The best (and easiest) way to do this is via Maven dependencies; adding the repo to your pom.xml is fairly trivial:
-
+### Cutting edge
+```
+<dependency>
+  <groupId>com.persado.oss.quality.stevia</groupId>
+  <artifactId>stevia-core</artifactId>
+  <version>0.9.6-SNAPSHOT</version>
+</dependency>
+```
+To work with the cutting-edge version, don't forget to add the following to your pom.xml:
 ```
 <repositories>
   <repository>
@@ -60,41 +45,7 @@ It has come to our attention that some of our friends have difficulty downloadin
 </repositories>	
 ```
 
-Our latest SNAPSHOT (you can see this by observing the pom.xml) can be added in your dependencies as follows:
-```
-<dependency>
-  <groupId>com.persado.oss.quality.stevia</groupId>
-  <artifactId>stevia-core</artifactId>
-  <version>0.8.6-SNAPSHOT</version>
-</dependency>
-```
-
-Enjoy!
-
-
-### 20-Jan-2014 Upcoming Stevia 0.8.0!
-Dear friends, 
-
-We are now getting ready with a 0.8.0 release, with many ideas still in progress and waiting to be merged. For the moment we've changed the way we're instantiating controllers so now you can add your own without the need to recompile. Check our wiki page [here](https://github.com/persado/stevia/wiki/Extending-web-controller-support) for the way to do this. Contact us for more ideas - play with this in our snapshot 0.8.2 version (snapshot repo location in pom.xml):
-
-```
-<dependency>
-  <groupId>com.persado.oss.quality.stevia</groupId>
-  <artifactId>stevia-core</artifactId>
-  <version>0.8.2-SNAPSHOT</version>
-</dependency>
-```
-
-
 * * *
 
 ### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://www.persado.com/templates/youandigraphics/images/logo.png"></p>
-Persado is the leader in Marketing Language Engineering: the use of math and big data to unlock the DNA of selling online. 
-
-Persado uses semantic and statistical algorithms to map marketing language and engineer the absolute best online marketing messages. It's proven. With our technology, you sell more. 
-
-Over the past 7 years, we've analyzed billions of consumers' online interactions to identify and map the key components of marketing language. Emotions, product features, calls-to-action, formatting, amongst others, are semantically mapped in our database. For any marketing message, we first model and then produce all possible variations (up to 16 million). Using our statistical algorithms, we identify the absolute best one.
-
-
-
-
+Persado programmatically uncovers the language and emotions that make people buy. Its unique technology is powered by Natural Language Processing and advanced statistical algorithms. Working with leading global brands such as American Express, Esurance, McAfee, SurveyMonkey, Verizon Wireless and leading global Mobile Operators, Persado systematically delivers better marketing messages across digital channels. 
