@@ -37,6 +37,7 @@ package com.persado.oss.quality.stevia.network;
  */
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -59,12 +60,12 @@ import org.apache.commons.lang3.SystemUtils;
 public class Hardware {
 
 	public static final String getNetworkIdentifiers() {
-		StringBuilder bldBuilder = new StringBuilder("ni{");
+		StringBuilder bldBuilder = new StringBuilder();
 
 		try {
 			Enumeration<NetworkInterface> networkInterfaces = NetworkInterface
 					.getNetworkInterfaces();
-
+			bldBuilder.append("ni{");
 			while (networkInterfaces.hasMoreElements()) {
 				NetworkInterface if0 = networkInterfaces.nextElement();
 				if (if0.isLoopback() || if0.isPointToPoint() || if0.isVirtual()) {
@@ -88,10 +89,10 @@ public class Hardware {
 					bldBuilder.append("|");
 				}
 			}
+			if (bldBuilder.length() > 4) bldBuilder.setLength(bldBuilder.length() - 1);
 		} catch (SocketException e) {
 			// ignore
 		}
-		bldBuilder.setLength(bldBuilder.length() - 1);
 		return bldBuilder.append("}").toString();
 	}
 
@@ -105,6 +106,9 @@ public class Hardware {
 			}
 			if (SystemUtils.IS_OS_MAC_OSX) {
 				return H4M.getSerialNumber()+":MAC";
+			}
+			if (SystemUtils.IS_OS_SOLARIS) {
+				return H4S.getSerialNumber()+":S"+(SystemUtils.OS_VERSION == null ? "OL" : SystemUtils.OS_VERSION);
 			}
 		} catch (Exception e) {
 		}
@@ -136,6 +140,73 @@ public class Hardware {
 		} catch (NoSuchAlgorithmException e) {
 		}
 		return digest;
+	}
+}
+
+
+class H4S {
+	private static String sn = null;
+
+	public static final String getSerialNumber() {
+
+		if (sn != null) {
+			return sn;
+		}
+		String[] cmdStrings;
+		//check if ipmitool is around
+		File f = new File("/usr/local/bin/ipmitool");
+		if (f.exists()) {
+			cmdStrings = new String[] { "/usr/local/bin/ipmitool", "-I", "bmc", "fru" };
+		} else {
+			cmdStrings = new String[] { "/usr/platform/sun4u/sbin/prtdiag", "-v" };
+		}
+		OutputStream os = null;
+		InputStream is = null;
+
+		Runtime runtime = Runtime.getRuntime();
+		Process process = null;
+		try {
+			process = runtime.exec(cmdStrings);
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		os = process.getOutputStream();
+		is = process.getInputStream();
+
+		try {
+			os.close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
+		}
+
+		Scanner sc = new Scanner(is);
+		try {
+			while (sc.hasNext()) {
+				String next = sc.next();
+				if ("Chassis Serial".equals(next)) {
+					if (next.contains(":")) {
+						sn = next.split(":")[1].trim();
+					} else {
+						sn = sc.next().trim();
+					}
+					break;
+				}
+			}
+		} finally {
+			try {
+				is.close();
+				sc.close();
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			}
+		}
+
+		if (sn == null) {
+			throw new RuntimeException("Cannot find computer SN");
+		}
+
+		return sn;
 	}
 }
 
