@@ -3,10 +3,6 @@ stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.pn
 
 Build Status of 0.9.6-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
-## Stevia API Javadoc
-
-You can browse our javadoc via this [link](http://persado.github.io/stevia/).
-
 ## Stevia Quick Start (10 minutes) guide
 
 Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
@@ -14,11 +10,33 @@ Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persad
 ## Features
 
 The following features are supported in the current Stevia build (new features have a version next to them):
+* Works with latest Selenium libraries (2.41+) and Spring 3.2.x (4.0 coming soon)
+* Works with stable TestNG tested for parallel running
+* Supports both Webdriver and Selenium RC, standalone or Grid via easy configuration
+* Supports TestNG with parallel test execution (each thread has its own browser/session)
+* Versatile extension mechanism allows users of Stevia to extend it by:
+    * Controllers via Factory Pattern (we load `META-INF/spring/stevia-extensions-drivers-*.xml` from classpath)
+    * Navigation Beans, PageObjects, Spring beans (we load `META-INF/spring/test-beans-*.xml` from classpath)
+    * Connectors for Rally, JIRA, Testlink (we load `META-INF/spring/stevia-extensions-connectors-*.xml` from classpath)
+* Full logging support, with screenshots for errors using ReportNG
+* Extended "By" mechanism to support SizzleCSS on Webdriver
+* Detailed "Verify" class with lots of assertions pre-coded
+* Supports for SSH/SFTP via utility classes
+* Supports for HTTP GET,POST with high-performance, multi-threaded helper and cookies support
+* Supports thread-level common user configuration and state across Tests (within Stevia thread context)
+* Supports Annotations (Java 5+)
+    * RunsWithController - allows a different controller (different browser or session) to run a @Test method or class
+    * Precondition - allows methods to be called (optionally with different controller) before @Test method
+    * Postcondition - similar to @Precondition but after the @Test method.
+* lots of other minor features
 
+## Stevia Help and Javadoc
 
+You can browse our javadoc via this [link](http://persado.github.io/stevia/).
+Our [wiki](https://github.com/persado/stevia/wiki) contains topics of interest, let us know (via an issue) if you need clarifications. We're here to help!
 
-## Latest in maven repositories
-### Release
+### Latest in maven repositories
+#### Release
 ```
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
@@ -26,7 +44,7 @@ The following features are supported in the current Stevia build (new features h
   <version>0.9.5</version>
 </dependency>
 ```
-### Cutting edge
+#### Cutting edge
 ```
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
@@ -47,5 +65,5 @@ To work with the cutting-edge version, don't forget to add the following to your
 
 * * *
 
-### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://www.persado.com/templates/youandigraphics/images/logo.png"></p>
+### Who is Persado <img alt="Persado" width="75" align="right" src="http://www.persado.com/templates/youandigraphics/images/logo.png">
 Persado programmatically uncovers the language and emotions that make people buy. Its unique technology is powered by Natural Language Processing and advanced statistical algorithms. Working with leading global brands such as American Express, Esurance, McAfee, SurveyMonkey, Verizon Wireless and leading global Mobile Operators, Persado systematically delivers better marketing messages across digital channels. 
