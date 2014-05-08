@@ -52,7 +52,7 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebCont
 /**
  * The Class LogDriver.
  */
-public class LogDriver implements WebDriverEventListener{
+public class ReportingWebDriverEventListener implements WebDriverEventListener{
 
 	/** The log. */
 	private static final Logger EVENTS_LOGGER = LoggerFactory.getLogger("WebDriverEventListener");
@@ -60,7 +60,7 @@ public class LogDriver implements WebDriverEventListener{
     /**
      * Instantiates a new log driver.
      */
-    public LogDriver(){
+    public ReportingWebDriverEventListener(){
     	 System.setProperty("org.uncommons.reportng.escape-output", "false");
     }
 	

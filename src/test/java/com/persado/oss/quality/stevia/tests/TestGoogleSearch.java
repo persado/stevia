@@ -57,7 +57,6 @@ import com.persado.oss.quality.stevia.selenium.listeners.TestListener;
 import com.persado.oss.quality.stevia.spring.SteviaTestBase;
 
 @Component
-@Listeners({TestListener.class})
 public class TestGoogleSearch extends SteviaTestBase {
 
 	private static Logger LOG = LoggerFactory.getLogger(TestGoogleSearch.class);

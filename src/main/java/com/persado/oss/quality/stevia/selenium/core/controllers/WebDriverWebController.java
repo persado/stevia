@@ -70,7 +70,7 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
 import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
-import com.persado.oss.quality.stevia.selenium.listeners.LogDriver;
+import com.persado.oss.quality.stevia.selenium.listeners.ReportingWebDriverEventListener;
 import com.thoughtworks.selenium.Selenium;
 import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 
@@ -146,7 +146,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void enableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).register(new LogDriver()));
+		this.setDriver(new EventFiringWebDriver(driver).register(new ReportingWebDriverEventListener()));
 	}
 
 	/*
@@ -157,7 +157,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void disableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).unregister(new LogDriver()));
+		this.setDriver(new EventFiringWebDriver(driver).unregister(new ReportingWebDriverEventListener()));
 	}
 
 	/*

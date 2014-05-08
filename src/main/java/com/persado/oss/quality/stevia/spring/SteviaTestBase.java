@@ -62,6 +62,7 @@ import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 import com.persado.oss.quality.stevia.selenium.listeners.ConditionsListener;
 import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListener;
+import com.persado.oss.quality.stevia.selenium.listeners.TestListener;
 
 /**
  * The base class that is responsible for initializing Stevia contexts on start and shutting down on
@@ -69,7 +70,7 @@ import com.persado.oss.quality.stevia.selenium.listeners.ControllerMaskingListen
  * configuration parameters.
  */
 @ContextConfiguration(locations = { "classpath:META-INF/spring/stevia-boot-context.xml" })
-@Listeners({ControllerMaskingListener.class, ConditionsListener.class})
+@Listeners({ControllerMaskingListener.class, ConditionsListener.class,TestListener.class})
 public class SteviaTestBase extends AbstractTestNGSpringContextTests implements Constants {
 
 	/** The Constant STEVIA_TEST_BASE_LOG. */
