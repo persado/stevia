@@ -87,8 +87,11 @@ public class Hardware {
 					Formatter formatter = new Formatter(bldBuilder);
 					try {
 						for (int k = 0; k < hardwareAddress.length; k++) {
-							formatter.format("%02X%s", hardwareAddress[k],
-										(k < hardwareAddress.length - 1) ? "-" : "");
+							formatter
+									.format("%02X%s",
+											hardwareAddress[k],
+											(k < hardwareAddress.length - 1) ? "-"
+													: "");
 						}
 					} finally {
 						formatter.close();
@@ -106,6 +109,10 @@ public class Hardware {
 	}
 
 	public static final String getSerialNumber() {
+		// lets gather what we can
+		String osString = System.getProperty("os.name") + "-"
+				+ System.getProperty("os.version") + "-"
+				+ System.getProperty("os.arch");
 		try {
 			if (SystemUtils.IS_OS_WINDOWS) {
 				return H4W.getSerialNumber() + ":WIN";
@@ -123,9 +130,11 @@ public class Hardware {
 								: SystemUtils.OS_VERSION);
 			}
 		} catch (Exception e) {
+			// if we're here, we dont know what this is.
+			return osString + ":EXC";
 		}
-		// if we're here then lets generate a random one
-		return UUID.randomUUID().toString() + ":UNK";
+		// if we're here then lets note it's unknown
+		return osString + ":UNK";
 	}
 
 	public static String hmacDigest(String msg, String keyString, String algo) {
