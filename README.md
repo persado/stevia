@@ -18,16 +18,19 @@ The following features are supported in the current Stevia build (new features h
     * Controllers via Factory Pattern (we load `META-INF/spring/stevia-extensions-drivers-*.xml` from classpath)
     * Navigation Beans, PageObjects, Spring beans (we load `META-INF/spring/test-beans-*.xml` from classpath)
     * Connectors for Rally, JIRA, Testlink (we load `META-INF/spring/stevia-extensions-connectors-*.xml` from classpath)
-* Full logging support, with screenshots for errors using ReportNG
+* Full logging support using ReportNG, with 
+    * screenshots of browser for tests that failed
+    * highlighting of locators, (accessed = yellow, success = green, failure = red)
+    * actions reporting on test report log and HTML report
 * Extended "By" mechanism to support SizzleCSS on Webdriver
 * Detailed "Verify" class with lots of assertions pre-coded
 * Supports for SSH/SFTP via utility classes
-* Supports for HTTP GET,POST with high-performance, multi-threaded helper and cookies support
+* Supports for HTTP GET,POST with Jetty high-performance, multi-threaded helper and cookies support
 * Supports thread-level common user configuration and state across Tests (within Stevia thread context)
 * Supports Annotations (Java 5+)
     * RunsWithController - allows a different controller (different browser or session) to run a @Test method or class
-    * Precondition - allows methods to be called (optionally with different controller) before @Test method
-    * Postcondition - similar to @Precondition but after the @Test method.
+    * Preconditions - allows methods to be called (optionally with different controller) before @Test method
+    * Postconditions - similar to @Precondition but after the @Test method.
 * lots of other minor features
 
 ## Stevia Help and Javadoc
