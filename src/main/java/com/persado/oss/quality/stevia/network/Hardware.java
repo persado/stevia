@@ -275,6 +275,7 @@ class H4W {
 		} finally {
 			try {
 				is.close();
+				sc.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
@@ -304,41 +305,52 @@ class H4N {
 		Runtime runtime = Runtime.getRuntime();
 		Process process = null;
 		try {
-			process = runtime
-					.exec(new String[] { "dmidecode", "-t", "system" });
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		os = process.getOutputStream();
-		is = process.getInputStream();
-
-		try {
-			os.close();
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-
-		BufferedReader br = new BufferedReader(new InputStreamReader(is));
-		String line = null;
-		String marker = "Serial Number:";
-		try {
-			while ((line = br.readLine()) != null) {
-				if (line.indexOf(marker) != -1) {
-					sn = line.split(marker)[1].trim();
-					break;
+			File f = new File("/usr/sbin/dmidecode");
+			if (f.exists()) {
+				process = runtime.exec(new String[] { "/usr/sbin/dmidecode",
+						"-t", "system" });
+			} else {
+				f = new File("/sbin/blkid");
+				if (f.exists()) {
+					process = runtime.exec(new String[] { "/sbin/blkid" });
 				}
 			}
 		} catch (IOException e) {
 			throw new RuntimeException(e);
-		} finally {
+		}
+		if (process != null) {
+			os = process.getOutputStream();
+			is = process.getInputStream();
+
 			try {
-				is.close();
+				os.close();
 			} catch (IOException e) {
 				throw new RuntimeException(e);
 			}
-		}
 
+			BufferedReader br = new BufferedReader(new InputStreamReader(is));
+			String line = null;
+			String marker = "Serial Number:";
+			try {
+				while ((line = br.readLine()) != null) {
+					if (line.indexOf(marker) != -1) {
+						sn = line.split(marker)[1].trim();
+						break;
+					} else if (line.indexOf("UUID") != -1) {
+						line = line.substring(line.indexOf("UUID=\"")+6);
+						sn = line.split("\"")[0].trim();
+					}
+				}
+			} catch (IOException e) {
+				throw new RuntimeException(e);
+			} finally {
+				try {
+					is.close();
+				} catch (IOException e) {
+					throw new RuntimeException(e);
+				}
+			}
+		}
 		if (sn == null) {
 			throw new RuntimeException("Cannot find computer SN");
 		}
