@@ -29,7 +29,7 @@ The following features are supported in the current Stevia build (new features h
 * Supports thread-level common user configuration and state across Tests (within Stevia thread context)
 * Supports Annotations (Java 5+)
     * RunsWithController - allows a different controller (different browser or session) to run a @Test method or class
-    * Preconditions - allows methods to be called (optionally with different controller) before @Test method
+    * [Preconditions](http://seleniumtestingworld.blogspot.gr/2014/04/concurrency-testing-made-easy.html) - allows methods to be called (optionally with different controller) before @Test method
     * Postconditions - similar to @Precondition but after the @Test method.
 * lots of other minor features
 
