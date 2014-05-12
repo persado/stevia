@@ -15,7 +15,7 @@ The following features are supported in the current Stevia build (new features h
 * Supports both Webdriver and Selenium RC, standalone or Grid via easy configuration
 * Supports TestNG with parallel test execution (each thread has its own browser/session)
 * Versatile extension mechanism allows users of Stevia to extend it by:
-    * Controllers via Factory Pattern (we load `META-INF/spring/stevia-extensions-drivers-*.xml` from classpath)
+    * [Controllers via Factory Pattern](https://github.com/persado/stevia/wiki/Extending-web-controller-support) (we load `META-INF/spring/stevia-extensions-drivers-*.xml` from classpath)
     * Navigation Beans, PageObjects, Spring beans (we load `META-INF/spring/test-beans-*.xml` from classpath)
     * Connectors for Rally, JIRA, Testlink (we load `META-INF/spring/stevia-extensions-connectors-*.xml` from classpath)
 * Full logging support using ReportNG, with 
