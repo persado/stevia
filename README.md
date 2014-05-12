@@ -20,8 +20,8 @@ The following features are supported in the current Stevia build (new features h
     * Connectors for Rally, JIRA, Testlink (we load `META-INF/spring/stevia-extensions-connectors-*.xml` from classpath)
 * Full logging support using ReportNG, with 
     * [screenshots of browser for tests that failed](http://seleniumtestingworld.blogspot.gr/2013/03/reportng-enrichment-with-screenshots.html)
-    * highlighting of locators, (accessed = yellow, success = green, failure = red)
     * actions reporting on test report log and HTML report
+* Realtime(!) highlighting of locators, (accessed = yellow, success = green, failure = red)
 * [Extended "By" mechanism to support SizzleCSS](http://seleniumtestingworld.blogspot.gr/2013/01/adding-sizzle-css-selector-library-and.html) on Webdriver
 * Detailed "Verify" class with lots of assertions pre-coded
 * Supports for SSH/SFTP via utility classes
