@@ -22,7 +22,7 @@ The following features are supported in the current Stevia build (new features h
     * screenshots of browser for tests that failed
     * highlighting of locators, (accessed = yellow, success = green, failure = red)
     * actions reporting on test report log and HTML report
-* Extended "By" mechanism to support SizzleCSS on Webdriver
+* [Extended "By" mechanism to support SizzleCSS](http://seleniumtestingworld.blogspot.gr/2013/01/adding-sizzle-css-selector-library-and.html) on Webdriver
 * Detailed "Verify" class with lots of assertions pre-coded
 * Supports for SSH/SFTP via utility classes
 * Supports for HTTP GET,POST with Jetty high-performance, multi-threaded helper and cookies support
