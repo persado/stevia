@@ -52,7 +52,7 @@ import com.persado.oss.quality.stevia.annotations.RunsWithController;
 import com.persado.oss.quality.stevia.annotations.AnnotationsHelper;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 
-public class ControllerMaskingListener implements IInvokedMethodListener2 {
+public class ControllerMaskingListener extends ListenerCommon implements IInvokedMethodListener2 {
 
 	public static final Logger LOG = LoggerFactory.getLogger(ControllerMaskingListener.class);
 
@@ -69,6 +69,12 @@ public class ControllerMaskingListener implements IInvokedMethodListener2 {
 	
 	@Override
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
+		int failed = findFailed(context);
+		if (failed > 0) {
+			LOG.error("Masking will not proceed. {} Configurations have failed",failed);
+			return;
+		}
+		
 		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
 		if (rmethod.getAnnotation(Test.class) != null || 
 			rmethod.getAnnotation(BeforeClass.class) != null || 

@@ -36,7 +36,6 @@ package com.persado.oss.quality.stevia.selenium.listeners;
  * #L%
  */
 
-import java.io.IOException;
 import java.lang.reflect.Method;
 
 import org.slf4j.Logger;
@@ -50,13 +49,11 @@ import org.testng.annotations.Test;
 import com.persado.oss.quality.stevia.annotations.Postconditions;
 import com.persado.oss.quality.stevia.annotations.Preconditions;
 import com.persado.oss.quality.stevia.annotations.AnnotationsHelper;
-import com.persado.oss.quality.stevia.annotations.ProxyCallback;
-import com.persado.oss.quality.stevia.annotations.ProxyHelper;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 
-public class ConditionsListener implements IInvokedMethodListener2 {
+public class ConditionsListener extends ListenerCommon implements IInvokedMethodListener2 {
 
-	private static final Logger LOG = LoggerFactory.getLogger(ConditionsListener.class);
+	static final Logger LOG = LoggerFactory.getLogger(ConditionsListener.class);
 	
 	public ConditionsListener() {
 		
@@ -73,26 +70,17 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 	}
 	@Override
 	public void beforeInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
-		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
-		Object instance = method.getTestMethod().getInstance();
-		Object proxy = null;
-
-		try {
-			proxy = ProxyHelper.create(instance, null, new ProxyCallback() {
-				@Override
-				public void execute() {
-					try {
-						SteviaContext.getWebController().takeScreenShot();
-					} catch (IOException e) {
-						LOG.error("Screenshot failed! reason = "+e.getMessage());
-					}
-					
-				}
-			});	
-		} catch (Exception e) {
-			LOG.error("Proxy creation failed, using non-proxyed original object, reason = "+e.getMessage());
-			proxy = instance;
+		int failed = findFailed(context);
+		if (failed > 0) {
+			LOG.error("Preconditions execution will not proceed. {} Configurations have failed",failed);
+			return;
 		}
+		
+		
+		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
+		Object proxy = proxifyObject(method);
+		
+		
 		if (rmethod.getAnnotation(Test.class) != null) {
 			if (rmethod.getAnnotation(Preconditions.class) != null) {
 				LOG.warn("Method or Class of {} wants preconditions to be checked", rmethod.getName());
@@ -116,30 +104,19 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 
 	@Override
 	public void afterInvocation(IInvokedMethod method, ITestResult testResult, ITestContext context) {
-		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
-		Object instance = method.getTestMethod().getInstance();
-		Object proxy = null;
-
-		try {
-			proxy = ProxyHelper.create(instance, null, new ProxyCallback() {
-				@Override
-				public void execute() {
-					try {
-						SteviaContext.getWebController().takeScreenShot();
-					} catch (IOException e) {
-						LOG.error("Screenshot failed! reason = "+e.getMessage());
-					}
-					
-				}
-			});	
-		} catch (Exception e) {
-			LOG.error("Proxy creation failed, using non-proxyed original object, reason = "+e.getMessage());
-			proxy = instance;
+		int failed = findFailed(context);
+		if (failed > 0) {
+			LOG.error("Preconditions execution will not proceed. {} Configurations have failed",failed);
+			return;
 		}
 		
+		
+		Method rmethod = method.getTestMethod().getConstructorOrMethod().getMethod();
+		Object proxy = proxifyObject(method);
+
 		if (rmethod.getAnnotation(Test.class) != null) {
 			if (rmethod.getAnnotation(Postconditions.class) != null) {
-				LOG.warn("Method or Class of {} wants post conditions to be checked", rmethod.getName());
+				LOG.warn("Method or Class of {} wants postconditions to be checked", rmethod.getName());
 				AnnotationsHelper p = SteviaContext.getSpringContext().getBean(AnnotationsHelper.class);
 				try {
 					LOG.debug("Mask and Execute Postconditions of method {} ",rmethod.getName());
@@ -156,15 +133,6 @@ public class ConditionsListener implements IInvokedMethodListener2 {
 				} 
 			}
 		}
-	}
-
-	private Throwable findExceptionWithMessage(Throwable e) {
-		if (null != e && e.getMessage() == null && e.getCause() != null) {
-			return findExceptionWithMessage(e.getCause());
-		}
-		
-		return e;
-		
 	}
 
 }

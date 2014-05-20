@@ -240,7 +240,7 @@ public class SteviaContext {
 		}
 
 		Thread.currentThread().setName(
-				"Stevia [" + (context.isWebDriver ? "WD" : "SRC") + " "
+				"Stevia [" + (context.isWebDriver ? "WD" : "RC") + " "
 						+ instance.getClass().getSimpleName() + "@"
 						+ Integer.toHexString(threadSeq.incrementAndGet()) + "]");
 		LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "WebDriver" : "SeleniumRC");

@@ -42,6 +42,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.Assert;
+import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
@@ -65,6 +66,11 @@ public class TestGoogleSearch extends SteviaTestBase {
 
 	@Autowired
 	PersadoHomePage persadoHome;
+	
+//	@BeforeTest
+//	public void failBefore() {
+//		throw new RuntimeException("failed");
+//	}
 
 	/**
 	 * this test checks loading of sizzle css and verification of contains
