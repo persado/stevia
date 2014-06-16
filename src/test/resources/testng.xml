@@ -16,20 +16,21 @@
 		<listener class-name="org.uncommons.reportng.HTMLReporter" />
 	</listeners>
 
+<!--	
 
 	<test name="Test Google Search using Firefox Web Driver" preserve-order="true">
         <classes>
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-<!-- 	
+ -->	
 	<test name="Test Google Search using Chrome Web Driver" preserve-order="true">
 	    <parameter name="browser" value="chrome" />
 		<classes>
 			<class name="com.persado.oss.quality.stevia.tests.TestGoogleSearch" />
 		</classes>
 	</test>
-	
+<!--	
 	<test name="Test Google Search using Internet Explorer Web Driver" preserve-order="true">
 	      <parameter name="browser" value="iexplorer" />
 		<classes>

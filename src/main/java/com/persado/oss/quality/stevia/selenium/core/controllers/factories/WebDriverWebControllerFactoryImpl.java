@@ -41,6 +41,7 @@ import java.net.URL;
 
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxProfile;
 import org.openqa.selenium.firefox.internal.ProfilesIni;
@@ -81,7 +82,12 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
 				LOG.info("Debug enabled, using ChromeDriver");
-				driver = new ChromeDriver();
+				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
+				DesiredCapabilities capabilities = DesiredCapabilities.chrome();
+			    ChromeOptions options = new ChromeOptions();
+			    options.addArguments("test-type");
+			    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+				driver = new ChromeDriver(capabilities);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug enabled, using InternetExplorerDriver");
 				driver = new InternetExplorerDriver();
@@ -103,7 +109,11 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				capability = DesiredCapabilities.firefox();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
+				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				capability = DesiredCapabilities.chrome();
+			    ChromeOptions options = new ChromeOptions();
+			    options.addArguments("test-type");
+			    capability.setCapability(ChromeOptions.CAPABILITY, options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
 				capability = DesiredCapabilities.internetExplorer();

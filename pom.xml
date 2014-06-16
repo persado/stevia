@@ -133,6 +133,7 @@
 						<id>default-test</id>
 						<phase>test</phase>
 						<configuration>
+							<argLine>-Dwebdriver.chrome.driver=/Users/tangelatos/Downloads/chromedriver</argLine>
 							<suiteXmlFiles>
 								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 							</suiteXmlFiles>
@@ -177,6 +178,17 @@
 			<groupId>xml-apis</groupId>
 			<artifactId>xml-apis</artifactId>
 			<version>1.4.01</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>net.sourceforge.htmlcleaner</groupId>
+			<artifactId>htmlcleaner</artifactId>
+			<version>2.8</version>
 		</dependency>
 
 		<!-- Jetty HTTP Client -->
@@ -376,7 +388,7 @@
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
-		<selenium.version>2.41.0</selenium.version>
+		<selenium.version>2.42.2</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

@@ -90,7 +90,7 @@ public abstract class ByExtended extends By {
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		private static final String DEFAULT_SIZZLE_URL = "https://raw.github.com/jquery/sizzle/1.10.18/dist/sizzle.min.js";
+		private static final String DEFAULT_SIZZLE_URL = "http://cdnjs.cloudflare.com/ajax/libs/sizzle/1.10.19/sizzle.min.js";
 		
 		private String ownSelector;
 
