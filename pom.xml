@@ -133,7 +133,7 @@
 						<id>default-test</id>
 						<phase>test</phase>
 						<configuration>
-							<argLine>-Dwebdriver.chrome.driver=/Users/tangelatos/Downloads/chromedriver</argLine>
+							<!--  <argLine>-Dwebdriver.chrome.driver=/Users/tangelatos/Downloads/chromedriver</argLine> -->
 							<suiteXmlFiles>
 								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 							</suiteXmlFiles>
