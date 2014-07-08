@@ -167,6 +167,17 @@
 							</roots>
 						</configuration>
 					</execution>
+					<execution>
+						<id>update 3rd party licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<licensesOutputDirectory>target/classes/META-INF/licenses</licensesOutputDirectory>
+							<licensesOutputFile>target/classes/META-INF/licenses.xml</licensesOutputFile>
+						</configuration>
+					</execution>
 				</executions>
 			</plugin>
 		</plugins>
