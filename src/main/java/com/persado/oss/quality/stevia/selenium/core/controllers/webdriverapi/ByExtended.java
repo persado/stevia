@@ -38,6 +38,7 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi;
 
 
 import java.lang.reflect.Method;
+import java.util.Collections;
 import java.util.List;
 import java.util.regex.Pattern;
 
@@ -201,18 +202,45 @@ public abstract class ByExtended extends By {
 		 *            the cssLocator
 		 * @return the list of the web elements that match this locator
 		 */
-		@SuppressWarnings("unchecked")
 		public List<WebElement> findElementsBySizzleCss(SearchContext context, String cssLocator) {
 			injectSizzleIfNeeded();
 			String javascriptExpression = createSizzleSelectorExpression(cssLocator);
-			List<WebElement> elements = (List<WebElement>) ((JavascriptExecutor) getDriver())
-					.executeScript(javascriptExpression);
+			List<WebElement> elements = executeRemoteScript(javascriptExpression);
 			if (elements.size() > 0) {
 				for (WebElement el : elements) { 
 					fixLocator(context, cssLocator, el);
 				}
 			}
 			return elements;
+		}
+
+		@SuppressWarnings("unchecked")
+		private final List<WebElement> executeRemoteScript(String javascriptExpression) {
+			List<WebElement> list = null;
+			JavascriptExecutor executor = (JavascriptExecutor) getDriver();
+
+			try {
+				list = (List<WebElement>) executor
+					.executeScript(javascriptExpression);
+			} catch (WebDriverException wde) {
+				if (wde.getMessage().contains("Sizzle is not defined")) {
+					LOG.error("Attempt to execute the code '"+javascriptExpression+"' has failed - Sizzle was not detected. Trying once more");
+					// we wait for 1/2 sec
+					try { Thread.sleep(500); } catch (InterruptedException e) { }
+					// try to inject sizzle once more.
+					injectSizzleIfNeeded();
+					// now, try again to execute
+					list = (List<WebElement>) executor
+							.executeScript(javascriptExpression);
+				} else { // not a Sizzle case, just throw it
+					throw wde;
+				}
+			} finally {
+				if (list == null) {
+					list = Collections.emptyList();
+				}
+			}
+			return list;
 		}
 
 		/**
