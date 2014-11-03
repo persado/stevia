@@ -86,6 +86,10 @@ public abstract class ByExtended extends By {
 
 	public static class ByCssSelectorExtended extends ByCssSelector {
 
+		private static final String HTTPS = "https://";
+
+		private static final String HTTP = "http://";
+
 		/**
 		 * uid
 		 */
@@ -315,17 +319,25 @@ public abstract class ByExtended extends By {
 		 */
 		public void injectSizzle() {
 			String sizzleUrl = getSizzleUrl();
+			if (sizzleUrl.startsWith(HTTP)) {
+				sizzleUrl = sizzleUrl.substring(HTTP.length());
+			} else if  (sizzleUrl.startsWith(HTTPS)) {
+				sizzleUrl = sizzleUrl.substring(HTTPS.length());
+			}
 			
-			((JavascriptExecutor) getDriver())
-					.executeScript(" var bodyTag = document.getElementsByTagName('body')[0];"
-							+ "if (bodyTag) {"
-							+ "  var sizzl = document.createElement('script');"
-							+ "  sizzl.type = 'text/javascript';"
-							+ "  sizzl.src = '"+sizzleUrl+"';"
-							+ "  bodyTag.appendChild(sizzl);"
-							+ "} else if (window.jQuery) { "
-							+ "	 $.getScript('"+sizzleUrl+"');"
-							+ "}");
+			StringBuilder script = new StringBuilder()
+				.append(" var bodyTag = document.getElementsByTagName('body')[0];")
+				.append("if (bodyTag) {")
+				.append("  var sizzl = document.createElement('script');")
+				.append("  sizzl.type = 'text/javascript';")
+				.append("  sizzl.src = document.location.protocol + '//").append(sizzleUrl).append("';")
+				.append("  bodyTag.appendChild(sizzl);")
+				.append("} else if (window.jQuery) { ")
+				.append("	 $.getScript(document.location.protocol + '//").append(sizzleUrl).append("');")
+				.append("}");
+			final String stringified = script.toString();
+			LOG.debug("Executing injection script: {}",stringified);
+			((JavascriptExecutor) getDriver()).executeScript(stringified);
 		}
 		/**
 		 * ******************** SIZZLE SUPPORT CODE
