@@ -33,6 +33,11 @@
 package com.persado.oss.quality.stevia.selenium.listeners;
 
 import java.io.File;
+import java.io.FileReader;
+import java.io.FilenameFilter;
+
+import bsh.commands.dir;
+import com.persado.oss.quality.stevia.selenium.core.WebController;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.testng.IConfigurationListener;
@@ -60,13 +65,8 @@ public class TestListener implements ITestListener,IConfigurationListener {
 			return;
 		}
 		try {
-			if (SteviaContext.isWebDriver()) {
-				WebDriverWebController controller = (WebDriverWebController) SteviaContext.getWebController();
-				controller.takeScreenShot();
-			} else {
-				SeleniumWebController controller = (SeleniumWebController) SteviaContext.getWebController();
-				controller.takeScreenShot();
-			}
+            WebController controller = SteviaContext.getWebController();
+			controller.takeScreenShot();
 		} catch (Exception e) {
 			TEST_LISTENER_LOG.error("failure! ", e);
 		}
@@ -75,12 +75,28 @@ public class TestListener implements ITestListener,IConfigurationListener {
 	
 	@Override
 	public void onStart(ITestContext testContext) {
+        File currentPath = null;
         String takeIt = testContext.getSuite().getParameter("tests.takeScreenshot");
 		if (takeIt !=null && takeIt.equalsIgnoreCase("false")) {
         		takeScreenshot = false;
         }
         try {
-        	 File currentPath = new File("./target/screenshots");
+            String projectPath = System.getProperty("user.dir");
+            File dir = new File(projectPath);
+            File[] matches = dir.listFiles(new FilenameFilter() {
+                @Override
+                public boolean accept(File dir, String name) {
+                    return name.startsWith("build.gradle");
+                }
+            });
+
+            if(matches.length !=0 ){
+                currentPath = new File("./build/screenshots");
+            }
+            else{
+                currentPath = new File("./target/screenshots");
+            }
+
 			try {
 				currentPath.mkdirs();
 			} catch (SecurityException e) {

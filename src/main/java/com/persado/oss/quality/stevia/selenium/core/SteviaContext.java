@@ -32,15 +32,15 @@
  */
 package com.persado.oss.quality.stevia.selenium.core;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
+import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import com.persado.oss.quality.stevia.testng.Verify;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.persado.oss.quality.stevia.annotations.RunsWithControllerHelper;
-import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
-import com.persado.oss.quality.stevia.testng.Verify;
+import java.util.HashMap;
+import java.util.Map;
 
 
 /**
@@ -61,9 +61,7 @@ public class SteviaContext {
 		
 		/** The verify. */
 		private Verify verify;
-		
-		/** The is web driver. */
-		private boolean isWebDriver;
+
 		
 		/** The params registry. */
 		private Map<String,String> paramsRegistry;
@@ -82,7 +80,6 @@ public class SteviaContext {
 			}
 			controller = null;
 			verify = null;
-			isWebDriver = false;
 			if (paramsRegistry != null) {
 				paramsRegistry.clear();
 			}
@@ -148,15 +145,7 @@ public class SteviaContext {
 	}
 	
 	
-	/**
-	 * Determines the instance of the Web Controller
-	 *
-	 * @return true, if it is instance of WebDriverWebController false if it is instance of SeleniumWebController
-	 */
-	public static boolean isWebDriver() {
-		return innerContext.get().isWebDriver;
-	}
-	
+
 	/**
 	 * Adds parameters to registry; if a parameter exists already it will be overwritten.
 	 * @param params a type of SteviaContextParameters
@@ -199,15 +188,11 @@ public class SteviaContext {
 		Context context = innerContext.get();
 		context.controller = instance;
 		if (instance instanceof WebDriverWebController) {
-			context.isWebDriver = true;
 			STEVIA_CONTEXT_LOG.warn("Handle is : "+((WebDriverWebController)instance).getDriver().getWindowHandle());
-		} else {
-			context.isWebDriver = false;   
 		}
 
-		STEVIA_CONTEXT_LOG.info("Context ready, controller is now set, type is {}", context.isWebDriver ? "Webdriver" : "Selenium");
-		Thread.currentThread().setName("Stevia ["+(context.isWebDriver ? "Webdriver" : "Selenium")+"] - context Active "+System.currentTimeMillis()%2048);
-		
+		STEVIA_CONTEXT_LOG.info("Context ready, controller is now set, type is {}", context.controller.getClass());
+		Thread.currentThread().setName("Stevia ["+(context.controller.getClass()+"] - context Active "+System.currentTimeMillis()%2048) );
 	}
 	
 	/**
