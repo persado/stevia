@@ -1,52 +1,72 @@
-stevia
+stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" align="right" width="80">
 ======
 
-Stevia is an Open Source QA Automation Testing Framework by Persado (www.persado.com). In Persado, we took the pain out of having to care about Selenium or Webdriver (or both) and unified them under a common API, with a sane and clear-cut design, ability to extend and expand (courtesy of Spring!) and a bit of sweetness. Stevia is what we got out of it: 
+Build Status of 0.9.6-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
-<p align="center"><img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" width="200"> </p>
+## Stevia Quick Start (10 minutes) guide
 
-## Breaking news
+Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
 
-### 05-Jul-2013 Stevia 0.7.0 uploaded to Maven Central!
-Dear friends,
+## Features
 
-Stevia 0.7.0 has been released to Maven Central today. It will take a couple of hours for synchronisation to work, and in the mean time check the changelog via this link: <a href="https://github.com/persado/stevia/compare/stevia-core-0.6.0...stevia-core-0.7.0">Changelog between 0.6.0 and 0.7.0</a>
+The following features are supported in the current Stevia build (new features have a version next to them):
+* Works with latest Selenium libraries (2.41+) and Spring 3.2.x (4.0 coming soon)
+* Works with stable TestNG tested for parallel running
+* Supports both Webdriver and Selenium RC, standalone or Grid via easy configuration
+* Supports TestNG with parallel test execution (each thread has its own browser/session)
+* Versatile extension mechanism allows users of Stevia to extend it by:
+    * [Controllers via Factory Pattern](https://github.com/persado/stevia/wiki/Extending-web-controller-support) (we load `META-INF/spring/stevia-extensions-drivers-*.xml` from classpath)
+    * Navigation Beans, PageObjects, Spring beans (we load `META-INF/spring/test-beans-*.xml` from classpath)
+    * Connectors for Rally, JIRA, Testlink (we load `META-INF/spring/stevia-extensions-connectors-*.xml` from classpath)
+* Full logging support using ReportNG, with 
+    * [screenshots of browser for tests that failed](http://seleniumtestingworld.blogspot.gr/2013/03/reportng-enrichment-with-screenshots.html)
+    * actions reporting on test report log and HTML report
+* Realtime(!) highlighting of locators, (accessed = yellow, success = green, failure = red)
+* [Extended "By" mechanism to support SizzleCSS](http://seleniumtestingworld.blogspot.gr/2013/01/adding-sizzle-css-selector-library-and.html) on Webdriver
+* Detailed "Verify" class with lots of assertions pre-coded
+* Supports for SSH/SFTP via utility classes
+* Supports for HTTP GET,POST with Jetty high-performance, multi-threaded helper and cookies support
+* Supports thread-level common user configuration and state across Tests (within Stevia thread context)
+* Supports Annotations (Java 5+)
+    * RunsWithController - allows a different controller (different browser or session) to run a @Test method or class
+    * [Preconditions](http://seleniumtestingworld.blogspot.gr/2014/04/concurrency-testing-made-easy.html) - allows methods to be called (optionally with different controller) before @Test method
+    * Postconditions - similar to @Precondition but after the @Test method.
+* lots of other minor features
 
-As usual, add this dependency on your pom.xml via the following snippet:
+## Stevia Help and Javadoc
 
+You can browse our javadoc via this [link](http://persado.github.io/stevia/).
+Our [wiki](https://github.com/persado/stevia/wiki) contains topics of interest, let us know (via an issue) if you need clarifications. We're here to help!
+
+### Latest in maven repositories
+#### Release
 ```
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.7.0</version>
+  <version>0.9.5</version>
 </dependency>
 ```
-
-
-### 05-Apr-2013 Stevia 0.6.0 uploaded to Maven Central!
-Stevia 0.6.0 has been released to Maven Central! In some hours from now, the synchronization will have completed and you will be able to fetch the latest artefact directly from the Central Repository. Well done to all the team for their work!
-To use Stevia, when synchronization is complete, add this to your pom.xml:
-
+#### Cutting edge
 ```
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.6.0</version>
+  <version>0.9.6-SNAPSHOT</version>
 </dependency>
 ```
-
-### 04-Apr-2013 Tech Document Release for comments
-A first release of our technical document is uploaded in the following link: http://goo.gl/Is3lA for user reactions gathering. Please have a good read through and/or comment if you think more details are needed.  The document will stay for a week uploaded for everyone who wishes to comment and all constructive reviews are more than welcome. For any technical inquiries and details of the release, feel free to ping as at stevia-release [at] persado.com
+To work with the cutting-edge version, don't forget to add the following to your pom.xml:
+```
+<repositories>
+  <repository>
+    <id>sonatype-nexus-snapshots</id>
+    <name>OSS Sonatype Snapshot Repository</name>
+    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+  </repository>
+</repositories>	
+```
 
 * * *
 
-### Who is Persado <p align="right"><img alt="Persado" width="75" src="http://persado.com/images/site/lgo-header.svg"></p>
-Persado is the leader in Marketing Language Engineering: the use of math and big data to unlock the DNA of selling online. 
-
-Persado uses semantic and statistical algorithms to map marketing language and engineer the absolute best online marketing messages. It's proven. With our technology, you sell more. 
-
-Over the past 7 years, we've analyzed billions of consumers' online interactions to identify and map the key components of marketing language. Emotions, product features, calls-to-action, formatting, amongst others, are semantically mapped in our database. For any marketing message, we first model and then produce all possible variations (up to 16 million). Using our statistical algorithms, we identify the absolute best one.
-
-
-
-
+### Who is Persado <img alt="Persado" width="75" align="right" src="http://www.persado.com/templates/youandigraphics/images/logo.png">
+Persado programmatically uncovers the language and emotions that make people buy. Its unique technology is powered by Natural Language Processing and advanced statistical algorithms. Working with leading global brands such as American Express, Esurance, McAfee, SurveyMonkey, Verizon Wireless and leading global Mobile Operators, Persado systematically delivers better marketing messages across digital channels. 

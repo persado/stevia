@@ -1,28 +1,54 @@
 package com.persado.oss.quality.stevia.selenium.core.controllers;
 
-import java.net.MalformedURLException;
-import java.net.URL;
+/*
+ * #%L
+ * Stevia QA Framework - Core
+ * %%
+ * Copyright (C) 2013 - 2014 Persado
+ * %%
+ * Copyright (c) Persado Intellectual Property Limited. All rights reserved.
+ *  
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *  
+ * * Redistributions of source code must retain the above copyright notice, this
+ * list of conditions and the following disclaimer.
+ *  
+ * * Redistributions in binary form must reproduce the above copyright notice,
+ * this list of conditions and the following disclaimer in the documentation
+ * and/or other materials provided with the distribution.
+ *  
+ * * Neither the name of the Persado Intellectual Property Limited nor the names
+ * of its contributors may be used to endorse or promote products derived from
+ * this software without specific prior written permission.
+ *  
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ * #L%
+ */
 
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
-import org.openqa.selenium.ie.InternetExplorerDriver;
-import org.openqa.selenium.remote.Augmenter;
-import org.openqa.selenium.remote.DesiredCapabilities;
-import org.openqa.selenium.remote.RemoteWebDriver;
-import org.openqa.selenium.safari.SafariDriver;
+import java.net.MalformedURLException;
+import java.util.Map.Entry;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
+import org.springframework.util.Assert;
 
-import com.opera.core.systems.OperaDriver;
 import com.persado.oss.quality.stevia.selenium.core.Constants;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
-import com.thoughtworks.selenium.DefaultSelenium;
-import com.thoughtworks.selenium.Selenium;
+import com.persado.oss.quality.stevia.selenium.core.controllers.factories.WebControllerFactory;
+import com.persado.oss.quality.stevia.selenium.core.controllers.registry.DriverRegistry;
 
 public final class SteviaWebControllerFactory implements Constants {
 
@@ -30,145 +56,41 @@ public final class SteviaWebControllerFactory implements Constants {
 
 	public static WebController getWebController(ApplicationContext context) throws MalformedURLException {
 		WebController controller = null;
-		if (SteviaContext.getParam(DRIVER_TYPE).contentEquals("webdriver")) {
-			controller = new WebDriverWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("webDriverController"));
-		} else if (SteviaContext.getParam(DRIVER_TYPE).contentEquals("selenium")) {
-			controller = new SeleniumWebControllerFactoryImpl().initialize(context, (WebController) context.getBean("seleniumController"));
-		}
+		
+		String driverType = SteviaContext.getParam(DRIVER_TYPE);
+		
+		@SuppressWarnings("unchecked")
+		DriverRegistry<String, WebControllerFactory> registry  = (DriverRegistry<String, WebControllerFactory>)context.getBean("steviaDriverRegistry");
+		
+		WebControllerFactory factory = registry.getMappings().get(driverType);
+		Assert.notNull(factory,"Cannot find a factory for "+driverType);
+		
+		controller = (WebController) context.getBean(factory.getBeanName());
+		factory.initialize(context, controller);
 		return controller;
 	}
 
 	public static WebController getWebController(ApplicationContext context, Class<? extends WebController> requestedControllerClass) {
 		WebController controller = context.getBean(requestedControllerClass);
-		if (controller instanceof WebDriverWebController) {
-			controller = new WebDriverWebControllerFactoryImpl().initialize(context, controller);
-		} else {
-			controller = new SeleniumWebControllerFactoryImpl().initialize(context, controller);
+		String[] namesForType = context.getBeanNamesForType(requestedControllerClass);
+		Assert.isTrue(namesForType.length == 1, 
+				"The requested controller "+requestedControllerClass.getName()+" is mapped with more than one names in the spring context!");
+		
+		@SuppressWarnings("unchecked")
+		DriverRegistry<String, WebControllerFactory> registry  = (DriverRegistry<String, WebControllerFactory>)context.getBean("steviaDriverRegistry");
+		
+		
+		for (Entry<String, WebControllerFactory> entry :  registry.getMappings().entrySet()) {
+			if (entry.getValue().getBeanName().equalsIgnoreCase(namesForType[0])) {
+				LOG.info("Factory from class detected : {}",entry.getKey());
+				WebControllerFactory factory = entry.getValue();
+				factory.initialize(context, controller);
+				return controller;
+			}
 		}
-		return controller;
+		throw new IllegalStateException("Could not locate a factory for controller "+requestedControllerClass.getName()+" in this spring context!");
 	}
 
-	static class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
-		@Override
-		public WebController initialize(ApplicationContext context, WebController controller) {
-			WebDriverWebController wdController = (WebDriverWebController) controller;
-			WebDriver driver = null;
-			if (SteviaContext.getParam(DEBUGGING).compareTo(TRUE) == 0) { // debug=on
-				if (SteviaContext.getParam(BROWSER) == null || SteviaContext.getParam(BROWSER).compareTo("firefox") == 0
-						|| SteviaContext.getParam(BROWSER).isEmpty()) {
-					if (SteviaContext.getParam(PROFILE) == null || SteviaContext.getParam(PROFILE).isEmpty()) {
-						LOG.info("Debug enabled, using Firefox Driver");
-						driver = new FirefoxDriver();
-					} else {
-						LOG.info("Debug enabled, using a local Firefox profile with FirefoxDriver");
-						ProfilesIni allProfiles = new ProfilesIni();
-						FirefoxProfile ffProfile = allProfiles.getProfile(PROFILE);
-						driver = new FirefoxDriver(ffProfile);
-					}
-				} else if (SteviaContext.getParam(BROWSER).compareTo("chrome") == 0) {
-					LOG.info("Debug enabled, using ChromeDriver");
-					driver = new ChromeDriver();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("iexplorer") == 0) {
-					LOG.info("Debug enabled, using InternetExplorerDriver");
-					driver = new InternetExplorerDriver();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("safari") == 0) {
-					LOG.info("Debug enabled, using SafariDriver");
-					driver = new SafariDriver();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("opera") == 0) {
-					LOG.info("Debug enabled, using OperaDriver");
-					driver = new OperaDriver();
-				} else {
-					throw new IllegalArgumentException(WRONG_BROWSER_PARAMETER);
-				}
-
-			} else { // debug=off
-				DesiredCapabilities capability = new DesiredCapabilities();
-				if (SteviaContext.getParam(BROWSER) == null || SteviaContext.getParam(BROWSER).compareTo("firefox") == 0
-						|| SteviaContext.getParam(BROWSER).isEmpty()) {
-					LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
-					capability = DesiredCapabilities.firefox();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("chrome") == 0) {
-					LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
-					capability = DesiredCapabilities.chrome();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("iexplorer") == 0) {
-					LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
-					capability = DesiredCapabilities.internetExplorer();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("safari") == 0) {
-					LOG.info("Debug OFF, using a RemoteWebDriver with Safari capabilities");
-					capability = DesiredCapabilities.safari();
-				} else if (SteviaContext.getParam(BROWSER).compareTo("opera") == 0) {
-					LOG.info("Debug OFF, using a RemoteWebDriver with Opera capabilities");
-					capability = DesiredCapabilities.opera();
-				} else {
-					throw new IllegalArgumentException(WRONG_BROWSER_PARAMETER);
-				}
-				Augmenter augmenter = new Augmenter(); // adds screenshot
-														// capability
-														// to a default web
-														// driver.
-
-				try {
-					driver = augmenter.augment(new RemoteWebDriver(new URL("http://" + SteviaContext.getParam(RC_HOST) + ":" + SteviaContext.getParam(RC_PORT)
-							+ "/wd/hub"), capability));
-				} catch (MalformedURLException e) {
-					throw new IllegalArgumentException(e.getMessage(), e);
-				}
-
-			}
-
-			if (SteviaContext.getParam(TARGET_HOST_URL) != null) {
-				driver.get(SteviaContext.getParam(TARGET_HOST_URL));
-			}
-			// driver.manage().window().maximize();
-			wdController.setDriver(driver);
-			if (SteviaContext.getParam(ACTIONS_LOGGING).compareTo(TRUE) == 0) {
-				wdController.enableActionsLogging();
-			}
-			return wdController;
-		}
-
-	}
-
-	static class SeleniumWebControllerFactoryImpl implements WebControllerFactory {
-
-		public WebController initialize(ApplicationContext context, WebController controller) {
-
-			SeleniumWebController selController = (SeleniumWebController) controller;
-
-			LOG.info("Selenium RC mode; connecting to a Selenium RC host");
-			Selenium selenium = null;
-			if (SteviaContext.getParam(BROWSER) == null || SteviaContext.getParam(BROWSER).compareTo("firefox") == 0
-					|| SteviaContext.getParam(BROWSER).isEmpty()) {
-				LOG.info("Using Firefox with selenium RC");
-				selenium = new DefaultSelenium(SteviaContext.getParam(RC_HOST), Integer.parseInt(SteviaContext.getParam(RC_PORT)), FIREFOX,
-						SteviaContext.getParam(TARGET_HOST_URL));
-			} else if (SteviaContext.getParam(BROWSER).compareTo("chrome") == 0) {
-				LOG.info("Using Chrome with selenium RC");
-				selenium = new DefaultSelenium(SteviaContext.getParam(RC_HOST), Integer.parseInt(SteviaContext.getParam(RC_PORT)), CHROME,
-						SteviaContext.getParam(TARGET_HOST_URL));
-			} else if (SteviaContext.getParam(BROWSER).compareTo("iexplorer") == 0) {
-				LOG.info("Using Chrome with selenium RC");
-				selenium = new DefaultSelenium(SteviaContext.getParam(RC_HOST), Integer.parseInt(SteviaContext.getParam(RC_PORT)), IEXPLORER,
-						SteviaContext.getParam(TARGET_HOST_URL));
-			} else if (SteviaContext.getParam(BROWSER).compareTo("safari") == 0) {
-				LOG.info("Using Safari with selenium RC");
-				selenium = new DefaultSelenium(SteviaContext.getParam(RC_HOST), Integer.parseInt(SteviaContext.getParam(RC_PORT)), SAFARI,
-						SteviaContext.getParam(TARGET_HOST_URL));
-			} else if (SteviaContext.getParam(BROWSER).compareTo("opera") == 0) {
-				LOG.info("Using Opera with selenium RC");
-				selenium = new DefaultSelenium(SteviaContext.getParam(RC_HOST), Integer.parseInt(SteviaContext.getParam(RC_PORT)), OPERA,
-						SteviaContext.getParam(TARGET_HOST_URL));
-			} else {
-				throw new IllegalArgumentException(WRONG_BROWSER_PARAMETER);
-			}
-			selenium.start();
-			// selenium.windowMaximize();
-			selenium.open("");
-
-			selController.setSelenium(selenium);
-
-			return controller;
-		}
-	}
+   
 
 }

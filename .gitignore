@@ -9,3 +9,6 @@ target
 /.project
 /bin
 /test-output
+/.idea/
+.DS_Store
+/javadocgen

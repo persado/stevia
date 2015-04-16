@@ -1,14 +1,15 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.8.2-SNAPSHOT</version>
+	<version>0.9.6-SNAPSHOT</version>
 	<packaging>jar</packaging>
- 	<parent>
-    		<groupId>org.sonatype.oss</groupId>
-    		<artifactId>oss-parent</artifactId>
-    		<version>7</version>
-  	</parent>
+	<parent>
+		<groupId>org.sonatype.oss</groupId>
+		<artifactId>oss-parent</artifactId>
+		<version>7</version>
+	</parent>
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
@@ -18,6 +19,7 @@
 	reporting functionality via ReportNG, including remote screenshots.</description>
 
 	<url>http://www.persado.com</url>
+	<inceptionYear>2013</inceptionYear>
 	<licenses>
 		<license>
 			<name>BSD 3-clause New or Revised License</name>
@@ -26,32 +28,32 @@
 	</licenses>
 	<developers>
 		<developer>
-            		<name>Thanos Angelatos</name>
-            		<id>thanosa75</id>
-            		<email>thanos.angelatos@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>Java Developer</role>
-            		</roles>
-        	</developer>
+			<name>Thanos Angelatos</name>
+			<id>thanosa75</id>
+			<email>thanos.angelatos@persado.com</email>
+			<organization>Persado Intellectual Property Limited</organization>
+			<roles>
+				<role>Java Developer</role>
+			</roles>
+		</developer>
 		<developer>
-            		<name>George Kogketsof</name>
-            		<id>gkog</id>
-            		<email>george.kogketsof@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>QA Engineer</role>
-            		</roles>
-        	</developer>
+			<name>George Kogketsof</name>
+			<id>gkog</id>
+			<email>george.kogketsof@persado.com</email>
+			<organization>Persado</organization>
+			<roles>
+				<role>QA Engineer</role>
+			</roles>
+		</developer>
 		<developer>
-            		<name>Panagiotis Tsiakos</name>
-            		<id>tsak77</id>
-            		<email>panagiotis.tsiakos@persado.com</email>
-            		<organization>Persado</organization>
-            		<roles>
-              			<role>QA Engineer</role>
-            		</roles>
-        	</developer>
+			<name>Panagiotis Tsiakos</name>
+			<id>tsak77</id>
+			<email>panagiotis.tsiakos@persado.com</email>
+			<organization>Persado</organization>
+			<roles>
+				<role>QA Engineer</role>
+			</roles>
+		</developer>
 	</developers>
 	<issueManagement>
 		<system>GitHub</system>
@@ -61,20 +63,21 @@
 		<url>https://github.com/persado/stevia</url>
 		<connection>scm:git:git@github.com:persado/stevia.git</connection>
 		<developerConnection>scm:git:git@github.com:persado/stevia.git</developerConnection>
-	  <tag>HEAD</tag>
-  </scm>
+		<tag>HEAD</tag>
+	</scm>
 	<!-- -->
 	<distributionManagement>
 		<repository>
-			<id>sonatype-releases</id>
+			<id>sonatype-nexus-releases</id>
 			<name>OSS Sonatype Release Staging Repository</name>
 			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
 		</repository>
 
 		<snapshotRepository>
-			<id>sonatype-snapshots</id>
+			<id>sonatype-nexus-snapshots</id>
 			<name>OSS Sonatype Snapshot Repository</name>
 			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
+			<uniqueVersion>false</uniqueVersion>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -112,10 +115,10 @@
 					<version>2.4</version>
 				</plugin>
 				<plugin>
-        				<groupId>org.apache.maven.plugins</groupId>
-        				<artifactId>maven-release-plugin</artifactId>
-        				<version>2.4.1</version>
-      				</plugin>
+					<groupId>org.apache.maven.plugins</groupId>
+					<artifactId>maven-release-plugin</artifactId>
+					<version>2.5</version>
+				</plugin>
 			</plugins>
 		</pluginManagement>
 
@@ -124,17 +127,55 @@
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
 				<version>2.14</version>
-				<configuration>
-					<skipTests>true</skipTests>
-				</configuration>
+				<!-- <configuration> <skipTests>false</skipTests> </configuration> -->
 				<executions>
 					<execution>
 						<id>default-test</id>
 						<phase>test</phase>
 						<configuration>
+							<!-- <argLine>-Dwebdriver.chrome.driver=/Users/tangelatos/Downloads/chromedriver</argLine> -->
 							<suiteXmlFiles>
 								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 							</suiteXmlFiles>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+			<plugin>
+				<groupId>org.codehaus.mojo</groupId>
+				<artifactId>license-maven-plugin</artifactId>
+				<version>1.6</version>
+				<configuration>
+					<verbose>false</verbose>
+					<organizationName>Persado Intellectual Property Limited</organizationName>
+					<licenseResolver>${project.baseUri}/src/license</licenseResolver>
+					<licenseName>persado_bsd3_revised</licenseName>
+				</configuration>
+				<executions>
+					<execution>
+						<id>license headers</id>
+						<goals>
+							<goal>update-file-header</goal>
+							<goal>update-project-license</goal>
+							<goal>add-third-party</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<roots>
+								<root>src/main/java</root>
+								<root>src/test/java</root>
+							</roots>
+						</configuration>
+					</execution>
+					<execution>
+						<id>update 3rd party licenses</id>
+						<goals>
+							<goal>download-licenses</goal>
+						</goals>
+						<phase>process-sources</phase>
+						<configuration>
+							<licensesOutputDirectory>target/classes/META-INF/licenses</licensesOutputDirectory>
+							<licensesOutputFile>target/classes/META-INF/licenses.xml</licensesOutputFile>
 						</configuration>
 					</execution>
 				</executions>
@@ -150,11 +191,24 @@
 			<version>1.4.01</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.jsoup</groupId>
+			<artifactId>jsoup</artifactId>
+			<version>1.7.3</version>
+		</dependency>
+		<dependency>
+			<groupId>us.codecraft</groupId>
+			<artifactId>xsoup</artifactId>
+			<version>0.3.0</version>
+		</dependency>
+
+	
+
 		<!-- Jetty HTTP Client -->
 		<dependency>
 			<groupId>org.eclipse.jetty</groupId>
 			<artifactId>jetty-client</artifactId>
-			<version>8.1.9.v20130131</version>
+			<version>8.1.12.v20130726</version>
 		</dependency>
 
 		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
@@ -178,7 +232,7 @@
 		<dependency>
 			<groupId>org.uncommons</groupId>
 			<artifactId>reportng</artifactId>
-			<version>1.1.2</version>
+			<version>1.1.4</version>
 			<exclusions>
 				<exclusion>
 					<groupId>org.testng</groupId>
@@ -201,24 +255,24 @@
 
 		<!-- Selenium Server Standalone -->
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
-			 <version>${selenium.version}</version>
+        	<groupId>org.seleniumhq.selenium</groupId>
+        	<artifactId>selenium-java</artifactId>
+			<version>${selenium.version}</version>
 		</dependency>
 
 		<dependency>
 			<groupId>com.opera</groupId>
 			<artifactId>operadriver</artifactId>
-			<version>1.2</version>
+			<version>1.5</version>
 		</dependency>
-		
-		
+
+
 		<dependency>
 			<groupId>joda-time</groupId>
 			<artifactId>joda-time</artifactId>
-			<version>2.1</version>
+			<version>2.3</version>
 		</dependency>
-		
+
 
 		<!-- OBTAINING SPRING RELEASES FROM MANEN CENTRAL -->
 
@@ -295,6 +349,14 @@
 			<version>1.7.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>javassist</groupId>
+			<artifactId>javassist</artifactId>
+			<version>3.12.1.GA</version>
+		</dependency>
+
+
+
 		<!-- Support for testing Spring applications with tools such as JUnit and 
 			TestNG This artifact is generally always defined with a 'test' scope for 
 			the integration testing framework and unit testing stubs -->
@@ -309,7 +371,7 @@
 				</exclusion>
 			</exclusions>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework</groupId>
 			<artifactId>spring-instrument</artifactId>
@@ -318,23 +380,28 @@
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-api</artifactId>
-			<version>1.7.3</version>
+			<version>1.7.5</version>
 		</dependency>
 		<dependency>
 			<groupId>ch.qos.logback</groupId>
 			<artifactId>logback-classic</artifactId>
-			<version>1.0.11</version>
+			<version>1.1.0</version>
 			<scope>test</scope>
 		</dependency>
-            
-		
+
+
+		<dependency>
+			<groupId>org.fusesource.mqtt-client</groupId>
+			<artifactId>mqtt-client</artifactId>
+			<version>1.3</version>
+		</dependency>
 	</dependencies>
 
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>3.2.2.RELEASE</org.springframework.version>
-		<selenium.version>2.34.0</selenium.version>
+		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
+		<selenium.version>2.44.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

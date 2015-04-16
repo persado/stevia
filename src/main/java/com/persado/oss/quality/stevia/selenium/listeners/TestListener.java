@@ -1,21 +1,27 @@
-/**
- * Copyright (c) 2013, Persado Intellectual Property Limited. All rights
- * reserved.
- * 
+package com.persado.oss.quality.stevia.selenium.listeners;
+
+/*
+ * #%L
+ * Stevia QA Framework - Core
+ * %%
+ * Copyright (C) 2013 - 2014 Persado
+ * %%
+ * Copyright (c) Persado Intellectual Property Limited. All rights reserved.
+ *  
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- * 
+ *  
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- * 
+ *  
  * * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- * 
+ *  
  * * Neither the name of the Persado Intellectual Property Limited nor the names
  * of its contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- * 
+ *  
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -27,24 +33,21 @@
  * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
- * 
- * 
+ * #L%
  */
-package com.persado.oss.quality.stevia.selenium.listeners;
 
 import java.io.File;
-import java.io.FileReader;
-import java.io.FilenameFilter;
 
-import bsh.commands.dir;
-import com.persado.oss.quality.stevia.selenium.core.WebController;
-import org.apache.commons.logging.Log;
-import org.apache.commons.logging.LogFactory;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.testng.IConfigurationListener;
 import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
+import com.persado.oss.quality.stevia.network.Hardware;
+import com.persado.oss.quality.stevia.network.IO;
+import com.persado.oss.quality.stevia.network.SSHUtils;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
@@ -56,7 +59,7 @@ import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebCont
  */
 public class TestListener implements ITestListener,IConfigurationListener {
 
-	private static final Log TEST_LISTENER_LOG = LogFactory.getLog(TestListener.class);
+	private static final Logger TEST_LISTENER_LOG = LoggerFactory.getLogger(TestListener.class);
 	private boolean takeScreenshot = true;
 	
 	public void createScreenshot(ITestResult tr) {
@@ -65,8 +68,13 @@ public class TestListener implements ITestListener,IConfigurationListener {
 			return;
 		}
 		try {
-            WebController controller = SteviaContext.getWebController();
-			controller.takeScreenShot();
+			if (SteviaContext.isWebDriver()) {
+				WebDriverWebController controller = (WebDriverWebController) SteviaContext.getWebController();
+				controller.takeScreenShot();
+			} else {
+				SeleniumWebController controller = (SeleniumWebController) SteviaContext.getWebController();
+				controller.takeScreenShot();
+			}
 		} catch (Exception e) {
 			TEST_LISTENER_LOG.error("failure! ", e);
 		}
@@ -75,28 +83,12 @@ public class TestListener implements ITestListener,IConfigurationListener {
 	
 	@Override
 	public void onStart(ITestContext testContext) {
-        File currentPath = null;
         String takeIt = testContext.getSuite().getParameter("tests.takeScreenshot");
 		if (takeIt !=null && takeIt.equalsIgnoreCase("false")) {
         		takeScreenshot = false;
         }
         try {
-            String projectPath = System.getProperty("user.dir");
-            File dir = new File(projectPath);
-            File[] matches = dir.listFiles(new FilenameFilter() {
-                @Override
-                public boolean accept(File dir, String name) {
-                    return name.startsWith("build.gradle");
-                }
-            });
-
-            if(matches.length !=0 ){
-                currentPath = new File("./build/screenshots");
-            }
-            else{
-                currentPath = new File("./target/screenshots");
-            }
-
+        	 File currentPath = new File("./target/screenshots");
 			try {
 				currentPath.mkdirs();
 			} catch (SecurityException e) {
@@ -106,8 +98,9 @@ public class TestListener implements ITestListener,IConfigurationListener {
 				currentPath = currentPath.getCanonicalFile();
 			}
 			TEST_LISTENER_LOG.info("Current execution path is "+currentPath);
+			IO.verifyToken();
         } catch (Exception e) {
-            TEST_LISTENER_LOG.error("Failed to retrieve version, error is " + e.getMessage(), e);
+            TEST_LISTENER_LOG.error("Failed to configure screenshots, error is " + e.getMessage(), e);
         } 
 	}
 
