@@ -400,8 +400,8 @@
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
-		<selenium.version>2.44.0</selenium.version>
+		<org.springframework.version>3.2.13.RELEASE</org.springframework.version>
+		<selenium.version>2.45.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

@@ -167,9 +167,10 @@ public class TestGoogleSearch extends SteviaTestBase {
 	 * and Selenium {@link TestGoogleSearch#lastMethodWithDifferentController()}
 	 */
 	private void commonControllerTest() {
-		SteviaContext.getWebController().navigate("http://www.google.com");
+		SteviaContext.getWebController().navigate("https://duckduckgo.com");
 		googleHome.inputSearchText("persado");
-		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado | Global leader in Marketing Language Engineering");
+		googleHome.pressGoogleSearchButton();
+		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado Persuasion Automation: End the Guesswork of Copywriting");
 		persadoHome.checkPersadoTitle();
 	}
 	

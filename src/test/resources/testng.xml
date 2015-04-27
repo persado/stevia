@@ -4,7 +4,7 @@
 
 	<parameter name="rcHost" value="localhost" />
 	<parameter name="rcPort" value="4444" />
-	<parameter name="targetHostUrl" value="http://www.google.com" />
+	<parameter name="targetHostUrl" value="http://www.duckduckgo.com" />
 	<parameter name="debugging" value="true" />
 	<parameter name="browser" value="firefox" />
 	<parameter name="profile" value="" />

@@ -48,9 +48,8 @@ public class GoogleHomePage extends WebComponent{
 	 */
 	public enum GoogleHomePageLocators {
 		
-		INPUT_GOOGLE_SEARCH("gbqfq"),
-		BTN_GOOGLE_SEARCH("gbqfsa"),
-		BTN_FEEL_LUCKY("gbqfsb"),
+		INPUT_GOOGLE_SEARCH("search_form_input_homepage"),
+		BTN_GOOGLE_SEARCH("search_button_homepage"),
 		;
 		
 	private String myLocator;
