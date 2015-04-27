@@ -80,10 +80,5 @@ public class GoogleHomePage extends WebComponent{
 		controller().press(GoogleHomePageLocators.BTN_GOOGLE_SEARCH.get());
 	}
 	
-	/*
-	 * Press button Feel lucky on Google home page
-	 */
-	public void pressFeelLuckyButton(){
-		controller().press(GoogleHomePageLocators.BTN_FEEL_LUCKY.get());
-	}
+	
 }
