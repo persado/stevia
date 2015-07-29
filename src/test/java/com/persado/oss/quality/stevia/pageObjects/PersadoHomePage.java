@@ -44,7 +44,7 @@ import com.persado.oss.quality.stevia.selenium.core.WebComponent;
 public class PersadoHomePage extends WebComponent{
 	
 	public enum PersadoHomePageLocators {
-		WORK_WITHUS("css=div#careers div.container h2");
+		COPY("css=#sub-footer > div.mk-grid > span");
 		
 		
 		
@@ -66,7 +66,7 @@ public class PersadoHomePage extends WebComponent{
 	 * Verify Persado title in home page
 	 */
 	public void checkPersadoTitle(){
-		SteviaContext.verify().elementVisible(PersadoHomePageLocators.WORK_WITHUS.get());
+		SteviaContext.verify().elementVisible(PersadoHomePageLocators.COPY.get());
 	}
 
 }

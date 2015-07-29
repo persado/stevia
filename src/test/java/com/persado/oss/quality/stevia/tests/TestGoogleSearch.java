@@ -170,7 +170,7 @@ public class TestGoogleSearch extends SteviaTestBase {
 		SteviaContext.getWebController().navigate("https://duckduckgo.com");
 		googleHome.inputSearchText("persado");
 		googleHome.pressGoogleSearchButton();
-		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Persado Persuasion Automation: End the Guesswork of Copywriting");
+		googleHome.controller().pressLinkNameAndWaitForPageToLoad("Home - Persado Persuasion Automation");
 		persadoHome.checkPersadoTitle();
 	}
 	

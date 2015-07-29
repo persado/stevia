@@ -11,6 +11,8 @@
 	<parameter name="driverType" value="webdriver" />
 	<parameter name="actionsLogging" value="true" />
 	<parameter name="tests.takeScreenshot" value="true" />
+	
+	<parameter name="dockerized" value="true"/>
 
 	<listeners>
 		<listener class-name="org.uncommons.reportng.HTMLReporter" />

@@ -39,47 +39,42 @@ package com.persado.oss.quality.stevia.network.http;
  * #L%
  */
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
+import org.springframework.util.Assert;
+import org.springframework.web.client.RestTemplate;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
-import org.eclipse.jetty.client.ContentExchange;
-import org.eclipse.jetty.io.ByteArrayBuffer;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-import org.springframework.util.Assert;
 
 
 /**
  * The Class HttpClient.
  */
-public class HttpClient implements HttpConstants {
+public class SteviaHttpClient implements HttpConstants {
 
-	Logger LOG = LoggerFactory.getLogger(HttpClient.class);
-	
-	/** The client. */
-	private static org.eclipse.jetty.client.HttpClient client = new org.eclipse.jetty.client.HttpClient();
+	Logger LOG = LoggerFactory.getLogger(SteviaHttpClient.class);
+	static boolean shouldFollowRedirects = false;
 
-	{
-		try {
-			if (System.getProperty("httpclient.followredirects", null) != null) {
-				client.registerListener( SteviaJettyRedirectListener.class.getName() );
-				LOG.info("HttpClient will follow redirects for HTTP Codes: 301, 302 and 303");
-			} else {
-				LOG.warn("HttpClient DOES NOT FOLLOW REDIRECTS. To enable, set system property 'httpclient.followredirects' to 'true'");
-			}
-			client.start();
-		} catch (Exception e) {
-			throw new ExceptionInInitializerError(e);
-		}
-	}
+
+	static {
+
+        if (System.getProperty("httpclient.followredirects", null) != null) {
+            shouldFollowRedirects = true;
+        }
+}
 
 	
 	
 	/**
 	 * Instantiates a new http client.
 	 */
-	public HttpClient() {
+	public SteviaHttpClient() {
 	}
 
 	/**
@@ -108,19 +103,20 @@ public class HttpClient implements HttpConstants {
 		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
 		
 		List<HttpResponse> responses = new ArrayList<HttpResponse>(numberOfTimes);
-		
-		
-		HttpResponse httpResponse;
-		ContentExchange exchange;
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        if (cookies != null)
+            for (HttpCookie cookie : cookies) {
+                headers.add("Cookie", cookie.getKey()+"="+cookie.getValue());
+            }
+
+
 		for (int i = 0; i < numberOfTimes; i++) {
-			exchange = new ContentExchange();
-			exchange.setURL(url);
-			exchange.setMethod("GET");
-			
-			setCookies(exchange,cookies);
-			client.send(exchange);
-			exchange.waitForDone();
-			httpResponse = new HttpResponse(exchange);
+
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<String>(headers), String.class);
+            HttpResponse httpResponse = new HttpResponse(response.getStatusCode(),response.getBody(),response.getHeaders());
 			responses.add(httpResponse);
 		}
 		return responses;
@@ -136,7 +132,7 @@ public class HttpClient implements HttpConstants {
 	 * @throws IOException, InterruptedException 
 	 */
 	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes) throws IOException, InterruptedException{
-		return post(url,postData,numberOfTimes, null);
+		return post(url, postData, numberOfTimes, null);
 	}
 	
 	/**
@@ -155,29 +151,35 @@ public class HttpClient implements HttpConstants {
 		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
 	
 		List<HttpResponse> responses = new ArrayList<HttpResponse>(numberOfTimes);
-		HttpResponse httpResponse;
-		ContentExchange exchange;
-		for (int i = 0; i < numberOfTimes; i++) {
-			exchange = new ContentExchange();
-			exchange.setURL(url);
-			exchange.setMethod("POST");
-			setCookies(exchange,cookies);
-			addParameters(exchange, postData);
-			client.send(exchange);
-			exchange.waitForDone();
-			httpResponse = new HttpResponse(exchange);
-			responses.add(httpResponse);
-		}
+
+        RestTemplate restTemplate = new RestTemplate();
+        HttpHeaders headers = new HttpHeaders();
+
+        for (HttpCookie cookie : cookies) {
+            headers.add("Cookie", cookie.getKey()+"="+cookie.getValue());
+        }
+
+
+        for (int i = 0; i < numberOfTimes; i++) {
+            HttpEntity<String> entity = new HttpEntity<String>(addParameters(postData), headers);
+
+            ResponseEntity<String> response = restTemplate.exchange(url,
+                    HttpMethod.POST, entity, String.class);
+
+            HttpResponse httpResponse = new HttpResponse(response.getStatusCode(),response.getBody(),response.getHeaders());
+            responses.add(httpResponse);
+        }
+
+
 		return responses;
 	}
 
 	/**
 	 * Adds the parameters.
 	 *
-	 * @param exchange that retains response content for later use.
-	 * @param  list of input data for the POST requests
-	 */
-	private void addParameters(ContentExchange exchange, List<HttpPostData> data) {
+     * @param  list of input data for the POST requests
+     */
+	private String addParameters(List<HttpPostData> data) {
 		StringBuffer content = new StringBuffer();
 		int size = data.size();
 		int last = size - 1;
@@ -190,34 +192,9 @@ public class HttpClient implements HttpConstants {
 				content.append("&");
 			}
 		}
-		exchange.setRequestContent(new ByteArrayBuffer(content.toString()));
+		return content.toString();
 	}
 
-	/**
-	 * Shutdown the HTTP Client component
-	 */
-	public void shutdown() {
-		try {
-			client.stop();
-		} catch (Exception exception) {
-			throw new RuntimeException("Failed to shutdown client", exception);
-		}
-	}
 
-	/**
-	 * sets the cookies on the exchange if present
-	 * @param exchange the exchange to work with
-	 * @param cookies the cookie list; if null nothing happens
-	 */
-	protected void setCookies(ContentExchange exchange, List<HttpCookie> cookies) {
-		if (cookies == null || cookies.size() == 0) {
-			return;
-		}
-		
-		for(HttpCookie aCookie : cookies) {
-			exchange.addRequestHeader(HTTP_HEADER_COOKIE, aCookie.getKey()+"="+aCookie.getValue());
-		}
-		
-	}
 
 }

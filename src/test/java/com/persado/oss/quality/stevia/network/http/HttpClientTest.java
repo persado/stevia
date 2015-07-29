@@ -51,7 +51,7 @@ public class HttpClientTest {
 		System.setProperty("httpclient.followredirects", "true");
 
 		
-		HttpClient client = new HttpClient();
+		SteviaHttpClient client = new SteviaHttpClient();
 		List<HttpResponse> list = client.get("http://www.google.com", 2);
 		Assert.assertNotNull(list, "list cannot be null");
 		Assert.assertTrue(list.size() == 2, " list should have 2 elements ");
