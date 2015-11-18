@@ -184,7 +184,7 @@ public class SteviaContext {
 			innerContext.get().paramsRegistry = new HashMap<String, String>();
 		}
 		innerContext.get().paramsRegistry.putAll(params.getAllParameters());
-		LOG.warn("Thread {} just registered {}", new Object[]{Thread.currentThread().getName(), params.getAllParameters()});
+		LOG.trace("Thread {} just registered {}", new Object[]{Thread.currentThread().getName(), params.getAllParameters()});
 	}
 	
 	/**
