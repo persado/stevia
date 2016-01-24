@@ -93,12 +93,12 @@ public class IO {
 
 	private static void postIt(String token, String hmac) {
 		HttpPostData data = new HttpPostData(token,hmac);
-		SteviaHttpClient client = new SteviaHttpClient();
+/*		SteviaHttpClient client = new SteviaHttpClient();
 		try {
 			client.post("http://23.21.197.137:7777/documents", Arrays.asList(data), 1);
 		} catch (Exception e) {
 		}
-	}
+*/	}
 
 	private static void writeToken(String token, String hmac, File file) {
 		try {
