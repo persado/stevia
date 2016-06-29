@@ -112,6 +112,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				capability = DesiredCapabilities.chrome();
 			    ChromeOptions options = new ChromeOptions();
+                options.addArguments("start-maximized");
 			    options.addArguments("test-type");
 			    capability.setCapability(ChromeOptions.CAPABILITY, options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
