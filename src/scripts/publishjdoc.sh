@@ -3,11 +3,8 @@ if [ ! -d target ] ; then
     echo "Not in the root directory, or project not built"
     exit
 fi
-JDOC=$(ls -lb target/*javadoc.jar)
-if [ "$(echo $JDOC|wc -l)" == "0"  ] ; then
-    echo "Javadoc not generated - you need to generate first with mvn javadoc:jar"
-    exit
-fi
+echo "generating javadoc"
+mvn clean install javadoc:jar -DskipTests
 echo creating directory javadocgen
 mkdir -p javadocgen
 cd javadocgen

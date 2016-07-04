@@ -48,9 +48,8 @@ public class GoogleHomePage extends WebComponent{
 	 */
 	public enum GoogleHomePageLocators {
 		
-		INPUT_GOOGLE_SEARCH("gbqfq"),
-		BTN_GOOGLE_SEARCH("gbqfsa"),
-		BTN_FEEL_LUCKY("gbqfsb"),
+		INPUT_GOOGLE_SEARCH("search_form_input_homepage"),
+		BTN_GOOGLE_SEARCH("search_button_homepage"),
 		;
 		
 	private String myLocator;
@@ -81,10 +80,5 @@ public class GoogleHomePage extends WebComponent{
 		controller().press(GoogleHomePageLocators.BTN_GOOGLE_SEARCH.get());
 	}
 	
-	/*
-	 * Press button Feel lucky on Google home page
-	 */
-	public void pressFeelLuckyButton(){
-		controller().press(GoogleHomePageLocators.BTN_FEEL_LUCKY.get());
-	}
+	
 }

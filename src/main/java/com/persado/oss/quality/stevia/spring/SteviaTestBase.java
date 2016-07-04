@@ -236,11 +236,22 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	 * @param testContext the test context
 	 */
 	@AfterClass(alwaysRun = true)
-	protected final void cleanContextOnClass(ITestContext testContext) {
+	protected final void afterClassClean(ITestContext testContext) {
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("classes")) {
 			SteviaContext.clean();
 		}
+		cleanUpAfterClass();
 	}
+
+	/**
+	 * Method used to clean up or perform up various tasks at the end
+	 * of the class (test) execution.
+	 * 
+	 */
+	protected void cleanUpAfterClass() {
+		// needs to be overriden
+	}
+
 	
 	/**
 	 * Clean context on test.

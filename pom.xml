@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.9.6-SNAPSHOT</version>
+	<version>0.9.8-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -99,7 +99,7 @@
 					<inherited>true</inherited>
 					<configuration>
 						<source>1.6</source>
-						<target>1.6</target>
+						<target>1.7</target>
 					</configuration>
 				</plugin>
 
@@ -203,13 +203,6 @@
 		</dependency>
 
 	
-
-		<!-- Jetty HTTP Client -->
-		<dependency>
-			<groupId>org.eclipse.jetty</groupId>
-			<artifactId>jetty-client</artifactId>
-			<version>8.1.12.v20130726</version>
-		</dependency>
 
 		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
 			SSH secured VNC client, SFTP client and SSH Daemon -->
@@ -337,6 +330,13 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
+		<!-- spring mvc -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-web</artifactId>
+			<version>${org.springframework.version}</version>
+		</dependency>
+
 		<!-- AspectJ -->
 		<dependency>
 			<groupId>org.aspectj</groupId>
@@ -395,13 +395,20 @@
 			<artifactId>mqtt-client</artifactId>
 			<version>1.3</version>
 		</dependency>
+
+		<!-- apparently this fixes 2.46.0 -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-exec</artifactId>
+			<version>1.3</version>
+		</dependency>
 	</dependencies>
 
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>3.2.8.RELEASE</org.springframework.version>
-		<selenium.version>2.44.0</selenium.version>
+		<org.springframework.version>3.2.14.RELEASE</org.springframework.version>
+		<selenium.version>2.49.1</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 

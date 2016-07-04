@@ -1,7 +1,7 @@
 stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" align="right" width="80">
 ======
 
-Build Status of 0.9.6-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
+Build Status of 0.9.7-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
 ## Stevia Quick Start (10 minutes) guide
 
@@ -10,7 +10,7 @@ Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persad
 ## Features
 
 The following features are supported in the current Stevia build (new features have a version next to them):
-* Works with latest Selenium libraries (2.41+) and Spring 3.2.x (4.0 coming soon)
+* Works with latest Selenium libraries (2.46+) and Spring 3.2.x (4.0 coming soon)
 * Works with stable TestNG tested for parallel running
 * Supports both Webdriver and Selenium RC, standalone or Grid via easy configuration
 * Supports TestNG with parallel test execution (each thread has its own browser/session)
@@ -23,7 +23,7 @@ The following features are supported in the current Stevia build (new features h
     * actions reporting on test report log and HTML report
 * Realtime(!) highlighting of locators, (accessed = yellow, success = green, failure = red)
 * [Extended "By" mechanism to support SizzleCSS](http://seleniumtestingworld.blogspot.gr/2013/01/adding-sizzle-css-selector-library-and.html) on Webdriver
-* Detailed "Verify" class with lots of assertions pre-coded
+* Detailed "[Verify](https://github.com/persado/stevia/blob/ba8d0a54ed743c0050356dca7eb769ef57293175/src/main/java/com/persado/oss/quality/stevia/testng/Verify.java#L49)" class with lots of assertions pre-coded
 * Supports for SSH/SFTP via utility classes
 * Supports for HTTP GET,POST with Jetty high-performance, multi-threaded helper and cookies support
 * Supports thread-level common user configuration and state across Tests (within Stevia thread context)
@@ -52,7 +52,7 @@ Our [wiki](https://github.com/persado/stevia/wiki) contains topics of interest, 
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.6-SNAPSHOT</version>
+  <version>0.9.7-SNAPSHOT</version>
 </dependency>
 ```
 To work with the cutting-edge version, don't forget to add the following to your pom.xml:
@@ -68,5 +68,5 @@ To work with the cutting-edge version, don't forget to add the following to your
 
 * * *
 
-### Who is Persado <img alt="Persado" width="75" align="right" src="http://www.persado.com/templates/youandigraphics/images/logo.png">
+### Who is Persado <img alt="Persado" width="75" align="right" src="http://persado.com/wp-content/uploads/2015/04/persado-e1429109263656.png">
 Persado programmatically uncovers the language and emotions that make people buy. Its unique technology is powered by Natural Language Processing and advanced statistical algorithms. Working with leading global brands such as American Express, Esurance, McAfee, SurveyMonkey, Verizon Wireless and leading global Mobile Operators, Persado systematically delivers better marketing messages across digital channels. 

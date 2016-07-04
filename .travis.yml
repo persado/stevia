@@ -3,7 +3,7 @@ before_script:
   - "sh -e /etc/init.d/xvfb start"
   - sleep 3 # give xvfb some time to start
   - "wget http://selenium-release.storage.googleapis.com/2.41/selenium-server-standalone-2.41.0.jar"
-  - "java -jar selenium-server-standalone-2.41.0.jar > /dev/null &"
+  - "java -jar selenium-server-standalone-2.41.0.jar &"
 
 language: java
 
@@ -17,4 +17,4 @@ after_success:
   - mvn clean javadoc:jar source:jar deploy -DskipTests --settings ~/.m2/mySettings.xml
   
 jdk:
-  - openjdk6
+  - oraclejdk7

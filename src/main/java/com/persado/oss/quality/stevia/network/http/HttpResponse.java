@@ -36,7 +36,8 @@ package com.persado.oss.quality.stevia.network.http;
  * #L%
  */
 
-import org.eclipse.jetty.client.ContentExchange;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 
 
 /**
@@ -49,31 +50,17 @@ public class HttpResponse {
 	
 	/** The HTTP response body. */
 	private String body;
-
 	/**
-	 * Instantiates a new HTTP response.
-	 *
-	 * @param response an exchange that retains response content for later use.
-
+	 * the HTTP response headers
 	 */
-	public HttpResponse(ContentExchange response) {
-		try {
-			this.status = response.getResponseStatus();
-			this.body = response.getResponseContent();
-		} catch (Exception exception) {
-			throw new IllegalArgumentException("Failed to retrieve fields of response.", exception);
-		}
-	}
+	private HttpHeaders headers = null;
 
-	/**
-	 * Instantiates a new HTTP response.
-	 *
-	 * @param status the response status
-	 * @param body the response body
-	 */
-	public HttpResponse(int status, String body) {
-		this.status = status;
+
+
+	public HttpResponse(HttpStatus statusCode, String body, HttpHeaders headers) {
+		this.status = statusCode.value();
 		this.body = body;
+		this.headers = headers;
 	}
 
 	/**
