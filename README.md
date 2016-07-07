@@ -52,7 +52,7 @@ Our [wiki](https://github.com/persado/stevia/wiki) contains topics of interest, 
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.7-SNAPSHOT</version>
+  <version>0.9.9-SNAPSHOT</version>
 </dependency>
 ```
 To work with the cutting-edge version, don't forget to add the following to your pom.xml:
