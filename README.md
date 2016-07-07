@@ -1,7 +1,7 @@
 stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.png" align="right" width="80">
 ======
 
-Build Status of 0.9.7-SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
+Build Status of latest SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
 ## Stevia Quick Start (10 minutes) guide
 
