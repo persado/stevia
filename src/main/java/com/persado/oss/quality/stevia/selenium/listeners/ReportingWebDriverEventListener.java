@@ -63,7 +63,12 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
     public ReportingWebDriverEventListener(){
     	 System.setProperty("org.uncommons.reportng.escape-output", "false");
     }
-	
+
+
+    public void afterNavigateRefresh(WebDriver driver) { }
+    public void beforeNavigateRefresh(WebDriver driver) { }
+
+
     /**
      * Info.
      *
