@@ -12,3 +12,4 @@ target
 /.idea/
 .DS_Store
 /javadocgen
+stevia-core.iml
