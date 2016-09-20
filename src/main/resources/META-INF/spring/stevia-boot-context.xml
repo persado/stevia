@@ -22,7 +22,6 @@
 	<bean id="steviaDriverRegistry" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.DriverRegistry"/>
 	
 	<!-- registration of a seleniumController and the respective driver (note: controller needs scope=prototype!!!!) -->	
-	<bean id="seleniumController" class="com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController" scope="prototype" />
 	<!-- note: id needs to be "drivername"-driver for this to work!!! -->
 
 	<!--<bean id="selenium-driver" class="com.persado.oss.quality.stevia.selenium.core.controllers.registry.Driver"-->

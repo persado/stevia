@@ -36,8 +36,9 @@ package com.persado.oss.quality.stevia.selenium.listeners;
  * #L%
  */
 
-import java.io.File;
-
+import com.persado.oss.quality.stevia.network.IO;
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
+import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.testng.IConfigurationListener;
@@ -45,12 +46,7 @@ import org.testng.ITestContext;
 import org.testng.ITestListener;
 import org.testng.ITestResult;
 
-import com.persado.oss.quality.stevia.network.Hardware;
-import com.persado.oss.quality.stevia.network.IO;
-import com.persado.oss.quality.stevia.network.SSHUtils;
-import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
-import com.persado.oss.quality.stevia.selenium.core.controllers.SeleniumWebController;
-import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import java.io.File;
 
 /**
  * a simple test listener to keep track of tests being executed.
@@ -70,9 +66,6 @@ public class TestListener implements ITestListener,IConfigurationListener {
 		try {
 			if (SteviaContext.isWebDriver()) {
 				WebDriverWebController controller = (WebDriverWebController) SteviaContext.getWebController();
-				controller.takeScreenShot();
-			} else {
-				SeleniumWebController controller = (SeleniumWebController) SteviaContext.getWebController();
 				controller.takeScreenShot();
 			}
 		} catch (Exception e) {

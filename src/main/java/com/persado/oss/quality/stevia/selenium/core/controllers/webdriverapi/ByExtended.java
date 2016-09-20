@@ -37,20 +37,27 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi;
  */
 
 
-import java.lang.reflect.Method;
-import java.util.Collections;
-import java.util.List;
-import java.util.regex.Pattern;
-
-import org.openqa.selenium.*;
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
+import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import org.openqa.selenium.By;
+import org.openqa.selenium.InvalidElementStateException;
+import org.openqa.selenium.InvalidSelectorException;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
+import org.openqa.selenium.SearchContext;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebDriverException;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.internal.FindsByCssSelector;
 import org.openqa.selenium.internal.FindsByXPath;
 import org.openqa.selenium.remote.RemoteWebElement;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
-import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import java.lang.reflect.Method;
+import java.util.Collections;
+import java.util.List;
+import java.util.regex.Pattern;
 
 public abstract class ByExtended extends By {
 
@@ -95,7 +102,7 @@ public abstract class ByExtended extends By {
 		 */
 		private static final long serialVersionUID = 1L;
 		
-		private static final String DEFAULT_SIZZLE_URL = "http://cdnjs.cloudflare.com/ajax/libs/sizzle/1.10.19/sizzle.min.js";
+		private static final String DEFAULT_SIZZLE_URL = "http://cdnjs.cloudflare.com/ajax/libs/sizzle/2.3.3/sizzle.min.js";
 		
 		private String ownSelector;
 

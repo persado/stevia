@@ -154,6 +154,16 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
 		 info("The element with locator '" + locator + "' was clicked");
 	}
 
+	@Override
+	public void beforeChangeValueOf(WebElement webElement, WebDriver webDriver, CharSequence[] charSequences) {
+
+	}
+
+	@Override
+	public void afterChangeValueOf(WebElement webElement, WebDriver webDriver, CharSequence[] charSequences) {
+
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.support.events.WebDriverEventListener#beforeChangeValueOf(org.openqa.selenium.WebElement, org.openqa.selenium.WebDriver)
