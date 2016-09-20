@@ -6,7 +6,7 @@
 	<parameter name="rcPort" value="4444" />
 	<parameter name="targetHostUrl" value="http://www.duckduckgo.com" />
 	<parameter name="debugging" value="true" />
-	<parameter name="browser" value="chrome" />
+	<parameter name="browser" value="firefox" />
 	<parameter name="profile" value="" />
 	<parameter name="driverType" value="webdriver" />
 	<parameter name="actionsLogging" value="true" />
