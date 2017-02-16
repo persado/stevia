@@ -68,7 +68,7 @@ To work with the cutting-edge version, don't forget to add the following to your
 
 * * *
 
-### Who is Persado <img alt="Persado" width="75" style="background-color:black;" align="right" src="http://persado.com/wp-content/uploads/2015/04/persado-e1429109263656.png">
+### Who is Persado <img alt="Persado" width="75" style="background-color:black;" align="right" src="https://raw.githubusercontent.com/persado/stevia/master/doc/persado-squarelogo-1449510923430.png">
 Persado’s cognitive content platform generates language that inspires action.
 Powered by cognitive computing technologies, the platform eliminates the random process behind traditional message development.
 Persado arms organizations and individuals with “smart content” that maximizes engagement with any audience, for every touchpoint, at scale, while delivering unique insight into the specific triggers that drive action.
