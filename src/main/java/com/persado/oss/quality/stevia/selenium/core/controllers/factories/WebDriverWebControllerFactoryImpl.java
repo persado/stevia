@@ -36,7 +36,6 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.factories;
  * #L%
  */
 
-import com.opera.core.systems.OperaDriver;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
@@ -94,9 +93,6 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
 				LOG.info("Debug enabled, using SafariDriver");
 				driver = new SafariDriver();
-			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
-				LOG.info("Debug enabled, using OperaDriver");
-				driver = new OperaDriver();
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}

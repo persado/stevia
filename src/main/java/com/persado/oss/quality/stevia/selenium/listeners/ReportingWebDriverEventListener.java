@@ -78,10 +78,30 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
     	EVENTS_LOGGER.info(message);
 		Reporter.log(message+"<br>");
 	}
-    
+
+	@Override
+	public void beforeAlertAccept(WebDriver driver) {
+
+	}
+
+	@Override
+	public void afterAlertAccept(WebDriver driver) {
+
+	}
+
+	@Override
+	public void afterAlertDismiss(WebDriver driver) {
+
+	}
+
+	@Override
+	public void beforeAlertDismiss(WebDriver driver) {
+
+	}
+
 	/* (non-Javadoc)
-	 * @see org.openqa.selenium.support.events.WebDriverEventListener#beforeNavigateTo(java.lang.String, org.openqa.selenium.WebDriver)
-	 */
+         * @see org.openqa.selenium.support.events.WebDriverEventListener#beforeNavigateTo(java.lang.String, org.openqa.selenium.WebDriver)
+         */
 	public void beforeNavigateTo(String url, WebDriver driver) {
 		
 	}
@@ -152,6 +172,16 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
 		
 		String locator = element.toString().substring(element.toString().indexOf(">")+2,element.toString().lastIndexOf("]"));
 		 info("The element with locator '" + locator + "' was clicked");
+	}
+
+	@Override
+	public void beforeChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
+
+	}
+
+	@Override
+	public void afterChangeValueOf(WebElement element, WebDriver driver, CharSequence[] keysToSend) {
+
 	}
 
 //	@Override

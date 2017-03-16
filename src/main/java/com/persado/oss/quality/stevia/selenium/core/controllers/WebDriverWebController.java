@@ -55,8 +55,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -145,7 +145,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void enableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).register(new ReportingWebDriverEventListener()));
+//		this.setDriver(new EventFiringWebDriver(driver).register(new ReportingWebDriverEventListener()));
 	}
 
 	/*
@@ -156,7 +156,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void disableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).unregister(new ReportingWebDriverEventListener()));
+//		this.setDriver(new EventFiringWebDriver(driver).unregister(new ReportingWebDriverEventListener()));
 	}
 
 	/*
