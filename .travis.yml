@@ -17,4 +17,4 @@ after_success:
   - mvn clean javadoc:jar source:jar deploy -DskipTests --settings ~/.m2/mySettings.xml
   
 jdk:
-  - oraclejdk7
+  - oraclejdk8
