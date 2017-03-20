@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.9.12-SNAPSHOT</version>
+	<version>0.9.11</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -40,15 +40,6 @@
 			<name>George Kogketsof</name>
 			<id>gkog</id>
 			<email>george.kogketsof@persado.com</email>
-			<organization>Persado</organization>
-			<roles>
-				<role>QA Engineer</role>
-			</roles>
-		</developer>
-		<developer>
-			<name>Panagiotis Tsiakos</name>
-			<id>tsak77</id>
-			<email>panagiotis.tsiakos@persado.com</email>
 			<organization>Persado</organization>
 			<roles>
 				<role>QA Engineer</role>
