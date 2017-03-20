@@ -44,7 +44,7 @@ The following features are supported in the current Stevia build (new features h
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.11</version>
+  <version>0.9.12</version>
 </dependency>
 ```
 #### Cutting edge
@@ -52,7 +52,7 @@ The following features are supported in the current Stevia build (new features h
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.12-SNAPSHOT</version>
+  <version>0.9.20-SNAPSHOT</version>
 </dependency>
 ```
 To work with the cutting-edge version, don't forget to add the following to your pom.xml:
