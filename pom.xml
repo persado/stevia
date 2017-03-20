@@ -423,5 +423,15 @@
 		<selenium.version>3.3.1</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
-
+	<profiles>
+    		<profile>
+        		<id>disable-java8-doclint</id>
+        		<activation>
+            			<jdk>[1.8,)</jdk>
+        		</activation>
+        		<properties>
+            			<additionalparam>-Xdoclint:none</additionalparam>
+        		</properties>
+    		</profile>
+	</profiles>
 </project>
