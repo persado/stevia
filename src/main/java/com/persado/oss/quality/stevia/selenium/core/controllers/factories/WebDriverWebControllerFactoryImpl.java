@@ -36,9 +36,10 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.factories;
  * #L%
  */
 
-import java.net.MalformedURLException;
-import java.net.URL;
-
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
+import com.persado.oss.quality.stevia.selenium.core.WebController;
+import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
+import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -54,11 +55,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.ApplicationContext;
 
-import com.opera.core.systems.OperaDriver;
-import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
-import com.persado.oss.quality.stevia.selenium.core.WebController;
-import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
-import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import java.net.MalformedURLException;
+import java.net.URL;
 
 public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(WebDriverWebControllerFactoryImpl.class);
@@ -85,8 +83,8 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				DesiredCapabilities capabilities = DesiredCapabilities.chrome();
 			    ChromeOptions options = new ChromeOptions();
-                            options.addArguments("start-maximized");
-			    options.addArguments("test-type");
+				options.addArguments("start-maximized");
+				options.addArguments("test-type");
 			    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 				driver = new ChromeDriver(capabilities);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
@@ -95,9 +93,6 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
 				LOG.info("Debug enabled, using SafariDriver");
 				driver = new SafariDriver();
-			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
-				LOG.info("Debug enabled, using OperaDriver");
-				driver = new OperaDriver();
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}
@@ -113,7 +108,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				capability = DesiredCapabilities.chrome();
 			    ChromeOptions options = new ChromeOptions();
-                            options.addArguments("start-maximized");
+				options.addArguments("start-maximized");
 			    options.addArguments("test-type");
 			    capability.setCapability(ChromeOptions.CAPABILITY, options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {

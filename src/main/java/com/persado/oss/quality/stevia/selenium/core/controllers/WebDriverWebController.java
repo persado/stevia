@@ -37,13 +37,12 @@ package com.persado.oss.quality.stevia.selenium.core.controllers;
  */
 
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Set;
-
+import com.persado.oss.quality.stevia.network.http.HttpCookie;
+import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
+import com.persado.oss.quality.stevia.selenium.core.WebController;
+import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
+import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
+import com.persado.oss.quality.stevia.selenium.listeners.ReportingWebDriverEventListener;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -56,8 +55,8 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
+//import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.Actions;
-import org.openqa.selenium.support.events.EventFiringWebDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -65,14 +64,14 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
 
-import com.persado.oss.quality.stevia.network.http.HttpCookie;
-import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
-import com.persado.oss.quality.stevia.selenium.core.WebController;
-import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
-import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
-import com.persado.oss.quality.stevia.selenium.listeners.ReportingWebDriverEventListener;
-import com.thoughtworks.selenium.Selenium;
-import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
+import java.io.File;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Set;
+//import com.thoughtworks.selenium.Selenium;
+//import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
 
 
 // TODO: Auto-generated Javadoc
@@ -130,13 +129,13 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	/**
 	 * Gets the selenium instance.
 	 * 
-	 * @param baseUrl
+	 * @param //baseUrl
 	 *            the base url
 	 * @return the selenium instance
 	 */
-	public Selenium getSeleniumInstance(String baseUrl) {
-		return new WebDriverBackedSelenium(driver, baseUrl);
-	}
+	//public Selenium getSeleniumInstance(String baseUrl) {
+	//	return new WebDriverBackedSelenium(driver, baseUrl);
+	//}
 
 	/*
 	 * (non-Javadoc)
@@ -146,7 +145,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void enableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).register(new ReportingWebDriverEventListener()));
+//		this.setDriver(new EventFiringWebDriver(driver).register(new ReportingWebDriverEventListener()));
 	}
 
 	/*
@@ -157,7 +156,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void disableActionsLogging() {
-		this.setDriver(new EventFiringWebDriver(driver).unregister(new ReportingWebDriverEventListener()));
+//		this.setDriver(new EventFiringWebDriver(driver).unregister(new ReportingWebDriverEventListener()));
 	}
 
 	/*
