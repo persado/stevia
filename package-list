@@ -1,0 +1,13 @@
+
+com.persado.oss.quality.stevia.annotations
+com.persado.oss.quality.stevia.network
+com.persado.oss.quality.stevia.network.http
+com.persado.oss.quality.stevia.selenium.core
+com.persado.oss.quality.stevia.selenium.core.controllers
+com.persado.oss.quality.stevia.selenium.core.controllers.commonapi
+com.persado.oss.quality.stevia.selenium.core.controllers.factories
+com.persado.oss.quality.stevia.selenium.core.controllers.registry
+com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi
+com.persado.oss.quality.stevia.selenium.listeners
+com.persado.oss.quality.stevia.spring
+com.persado.oss.quality.stevia.testng
