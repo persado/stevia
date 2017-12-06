@@ -68,16 +68,8 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 		if (SteviaContext.getParam(SteviaWebControllerFactory.DEBUGGING).compareTo(SteviaWebControllerFactory.TRUE) == 0) { // debug=on
 			if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER) == null || SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("firefox") == 0
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
-				String profileToUse = SteviaContext.getParam(SteviaWebControllerFactory.PROFILE);
-				if (profileToUse == null || profileToUse.isEmpty()) {
-					LOG.info("Debug enabled, using Firefox Driver");
-					driver = new FirefoxDriver();
-				} else {
-					LOG.info("Debug enabled, using a local Firefox profile {} with FirefoxDriver", profileToUse);
-					ProfilesIni allProfiles = new ProfilesIni();
-					FirefoxProfile ffProfile = allProfiles.getProfile(profileToUse);
-					driver = new FirefoxDriver(ffProfile);
-				}
+				LOG.info("Debug enabled, using Firefox Driver");
+				driver = new FirefoxDriver();
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
 				LOG.info("Debug enabled, using ChromeDriver");
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
