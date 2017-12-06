@@ -179,7 +179,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			startRCServer();
 		}
 		String parallelSetup = testContext.getSuite().getParallel();
-		if (parallelSetup == null || parallelSetup.isEmpty() || parallelSetup.equalsIgnoreCase("false") || parallelSetup.equalsIgnoreCase("tests")) {
+		if (parallelSetup == null || parallelSetup.equalsIgnoreCase("none") || parallelSetup.isEmpty() || parallelSetup.equalsIgnoreCase("false") || parallelSetup.equalsIgnoreCase("tests")) {
 
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
 			STEVIA_TEST_BASE_LOG.warn("*** Driver initialisation phase, current parallel level is @BeforeTest            ***");
