@@ -263,6 +263,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 		String parallelSetup = testContext.getSuite().getParallel();
 		if (parallelSetup == null || parallelSetup.isEmpty()
 				|| parallelSetup.equalsIgnoreCase("false")
+				|| parallelSetup.equalsIgnoreCase("none")
 				|| parallelSetup.equalsIgnoreCase("tests")) {
 			SteviaContext.clean();
 		}
