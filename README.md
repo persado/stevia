@@ -3,6 +3,17 @@ stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.pn
 
 Build Status of latest SNAPSHOT [![Status](https://travis-ci.org/persado/stevia.png?branch=master)](https://travis-ci.org/persado/stevia) 
 
+# Moving on....
+
+Thank you all for this wonderful trip to the world of Testing Automation with Stevia. We are now looking forward to our next big release, which will be called (we cannot yet tell this!!!). However, we've uploaded a teaser video for you!
+
+Check it out....
+<iframe width="560" height="315" src="https://www.youtube-nocookie.com/embed/HeT7uZXSblM?rel=0" frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
+
+
+
+
+
 ## Stevia Quick Start (10 minutes) guide
 
 Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
