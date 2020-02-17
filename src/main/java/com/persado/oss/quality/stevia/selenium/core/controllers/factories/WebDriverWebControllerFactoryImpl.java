@@ -40,12 +40,11 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
-import org.openqa.selenium.firefox.FirefoxProfile;
-import org.openqa.selenium.firefox.internal.ProfilesIni;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.DesiredCapabilities;
@@ -63,6 +62,13 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 	
 	@Override
 	public WebController initialize(ApplicationContext context, WebController controller) {
+		Proxy proxy = null;
+		if(SteviaContext.getParam(SteviaWebControllerFactory.PROXY) != null) {
+			proxy = new Proxy();
+			proxy.setHttpProxy(SteviaContext.getParam(SteviaWebControllerFactory.PROXY));
+			proxy.setSslProxy(SteviaContext.getParam(SteviaWebControllerFactory.PROXY));
+		}
+
 		WebDriverWebController wdController = (WebDriverWebController) controller;
 		WebDriver driver = null;
 		if (SteviaContext.getParam(SteviaWebControllerFactory.DEBUGGING).compareTo(SteviaWebControllerFactory.TRUE) == 0) { // debug=on
@@ -78,6 +84,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
 			    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
+				if(proxy != null){capabilities.setCapability("proxy",proxy);}
 				driver = new ChromeDriver(capabilities);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug enabled, using InternetExplorerDriver");
@@ -95,6 +102,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
 				capability = DesiredCapabilities.firefox();
+				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
@@ -103,15 +111,19 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("start-maximized");
 			    options.addArguments("test-type");
 			    capability.setCapability(ChromeOptions.CAPABILITY, options);
+				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");
 				capability = DesiredCapabilities.internetExplorer();
+				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Safari capabilities");
 				capability = DesiredCapabilities.safari();
+				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Opera capabilities");
 				capability = DesiredCapabilities.opera();
+				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}

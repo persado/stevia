@@ -76,6 +76,9 @@ public interface Constants {
 	
 	/** The parameter that determines the browser profile. */
 	public static final String PROFILE = "profile";
+
+	/** The parameter that determines the browser profile. */
+	public static final String PROXY = "proxy";
 	
 	public static final String WRONG_BROWSER_PARAMETER = "Wrong value for 'browser' parameter was defined";
 	
