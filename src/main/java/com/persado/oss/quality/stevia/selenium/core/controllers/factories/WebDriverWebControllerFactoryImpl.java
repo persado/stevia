@@ -127,6 +127,16 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}
+
+			if(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION) != null){
+				capability.setVersion(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION));
+			}
+			capability.setCapability("enableVideo", true); //By default enabed Selenoid video
+			if(SteviaContext.getParam(SteviaWebControllerFactory.SELENOID_VIDEO) != null){
+				capability.setCapability("enableVideo", Boolean.parseBoolean(SteviaContext.getParam(SteviaWebControllerFactory.SELENOID_VIDEO))); //Selenoid video
+			}
+			capability.setCapability("enableVNC", true); //Selenoid
+
 			Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default webdriver.
 			try {
 				driver = augmenter.augment(new RemoteWebDriver(new URL("http://" + SteviaContext.getParam(SteviaWebControllerFactory.RC_HOST) + ":" + SteviaContext.getParam(SteviaWebControllerFactory.RC_PORT)

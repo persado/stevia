@@ -79,10 +79,17 @@ public interface Constants {
 
 	/** The parameter that determines the browser profile. */
 	public static final String PROXY = "proxy";
-	
+
+	/** The parameter that determines Selenoid browser version */
+	public static final String BROWSER_VERSION = "browserVersion";
+
+	/** The parameter that determines Selenoid video */
+	public static final String SELENOID_VIDEO = "selenoidVideo";
+
 	public static final String WRONG_BROWSER_PARAMETER = "Wrong value for 'browser' parameter was defined";
 	
 	public static final String TRUE = "true";
+	public static final String FALSE = "false";
 
 	
 	
