@@ -7,21 +7,21 @@ package com.persado.oss.quality.stevia.selenium.core.controllers.factories;
  * Copyright (C) 2013 - 2014 Persado
  * %%
  * Copyright (c) Persado Intellectual Property Limited. All rights reserved.
- *  
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- *  
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  
+ *
  * * Neither the name of the Persado Intellectual Property Limited nor the names
  * of its contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,6 +47,7 @@ import org.openqa.selenium.chrome.ChromeOptions;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.remote.Augmenter;
+import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.DesiredCapabilities;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
@@ -59,11 +60,11 @@ import java.net.URL;
 
 public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(WebDriverWebControllerFactoryImpl.class);
-	
+
 	@Override
 	public WebController initialize(ApplicationContext context, WebController controller) {
 		Proxy proxy = null;
-		if(SteviaContext.getParam(SteviaWebControllerFactory.PROXY) != null) {
+		if(SteviaContext.getParam(SteviaWebControllerFactory.PROXY) != null) {//security testing - ZAP
 			proxy = new Proxy();
 			proxy.setHttpProxy(SteviaContext.getParam(SteviaWebControllerFactory.PROXY));
 			proxy.setSslProxy(SteviaContext.getParam(SteviaWebControllerFactory.PROXY));
@@ -80,11 +81,17 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				LOG.info("Debug enabled, using ChromeDriver");
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				DesiredCapabilities capabilities = DesiredCapabilities.chrome();
-			    ChromeOptions options = new ChromeOptions();
+				ChromeOptions options = new ChromeOptions();
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
-			    capabilities.setCapability(ChromeOptions.CAPABILITY, options);
-				if(proxy != null){capabilities.setCapability("proxy",proxy);}
+				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
+				if(proxy != null){//security testing - ZAP
+					options.addArguments("--ignore-certificate-errors");
+					capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+					capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
+					capabilities.setCapability("proxy",proxy);
+				}
+				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
 				driver = new ChromeDriver(capabilities);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug enabled, using InternetExplorerDriver");
@@ -98,6 +105,9 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 
 		} else { // debug=off
 			DesiredCapabilities capability = new DesiredCapabilities();
+			capability.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+			capability.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
+
 			if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER) == null || SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("firefox") == 0
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Firefox capabilities");
@@ -107,10 +117,11 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Chrome capabilities");
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				capability = DesiredCapabilities.chrome();
-			    ChromeOptions options = new ChromeOptions();
+				ChromeOptions options = new ChromeOptions();
+				options.addArguments("--ignore-certificate-errors");
 				options.addArguments("start-maximized");
-			    options.addArguments("test-type");
-			    capability.setCapability(ChromeOptions.CAPABILITY, options);
+				options.addArguments("test-type");
+				capability.setCapability(ChromeOptions.CAPABILITY, options);
 				if(proxy != null){capability.setCapability("proxy",proxy);}
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer capabilities");

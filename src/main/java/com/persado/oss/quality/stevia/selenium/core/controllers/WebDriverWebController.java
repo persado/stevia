@@ -1057,6 +1057,31 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 		throw new WebDriverException("Header name not Found");
 	}
 
+	/**
+	 *
+	 * Gets the table header position by contains text
+	 * @param locator the locator
+	 * @param headerName the header name
+	 * @return
+	 */
+	public String getTableContainsTextHeaderPosition(String locator, String headerName) {
+		List<WebElement> columnHeaders = null;
+
+		WebElement element = waitForElement(locator);
+
+		columnHeaders = element.findElements(By.cssSelector("th"));
+
+		int position = 1;
+		for (WebElement record : columnHeaders) {
+			if (record.getText().contains(headerName)) {
+				return String.valueOf(position);
+			}
+			position++;
+		}
+
+		throw new WebDriverException("Header name not Found: "+headerName);
+	}
+
 	/* (non-Javadoc)
 	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#getTableElementColumnPosition(java.lang.String, java.lang.String)
 	 */
