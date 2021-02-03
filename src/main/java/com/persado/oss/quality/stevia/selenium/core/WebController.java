@@ -721,7 +721,16 @@ public interface WebController {
 	 * @return the table header position
 	 */
 	String getTableHeaderPosition(String locator, String headerName);
-	
+
+
+	/**
+	 * Gets the table header position.
+	 *
+	 * @param locator the locator
+	 * @param headerName contains the header name
+	 * @return the table header position
+	 */
+	String getTableContainsTextHeaderPosition(String locator, String headerName);
 	
 	/**
 	 * Gets the table element column position.
