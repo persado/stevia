@@ -85,10 +85,12 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
 				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
+
+				//Ignore certifications - insecure for zap
+				options.addArguments("--ignore-certificate-errors");
+				capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+				capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
 				if(proxy != null){//security testing - ZAP
-					options.addArguments("--ignore-certificate-errors");
-					capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-					capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
 					capabilities.setCapability("proxy",proxy);
 				}
 				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
