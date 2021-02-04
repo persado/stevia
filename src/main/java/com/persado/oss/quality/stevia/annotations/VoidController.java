@@ -536,6 +536,11 @@ class VoidController implements WebController {
 	}
 
 	@Override
+	public String getTableContainsTextHeaderPosition(String locator, String headerName) {
+		return null;
+	}
+
+	@Override
 	public String getTableElementColumnPosition(String locator,
 			String elementName) {
 		// TODO Auto-generated method stub
