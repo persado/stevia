@@ -1,9 +1,9 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>0.9.22-SNAPSHOT</version>
+	<version>0.9.36-SNAPSHOT</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -13,10 +13,10 @@
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
-	a common uniform API that handles all differences. Using Stevia allows the QA Engineer
-	to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
-	and other artifacts. By design both drivers play under Selenium Grid and support extended 
-	reporting functionality via ReportNG, including remote screenshots.</description>
+		a common uniform API that handles all differences. Using Stevia allows the QA Engineer
+		to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
+		and other artifacts. By design both drivers play under Selenium Grid and support extended
+		reporting functionality via ReportNG, including remote screenshots.</description>
 
 	<url>http://www.persado.com</url>
 	<inceptionYear>2013</inceptionYear>
@@ -57,18 +57,33 @@
 		<tag>HEAD</tag>
 	</scm>
 	<!-- -->
+	<!--<distributionManagement>-->
+	<!--<repository>-->
+	<!--<id>sonatype-nexus-releases</id>-->
+	<!--<name>OSS Sonatype Release Staging Repository</name>-->
+	<!--<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
+	<!--</repository>-->
+
+	<!--<snapshotRepository>-->
+	<!--<id>sonatype-nexus-snapshots</id>-->
+	<!--<name>OSS Sonatype Snapshot Repository</name>-->
+	<!--<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+	<!--<uniqueVersion>false</uniqueVersion>-->
+	<!--</snapshotRepository>-->
+	<!--</distributionManagement>-->
+
 	<distributionManagement>
+
 		<repository>
-			<id>sonatype-nexus-releases</id>
-			<name>OSS Sonatype Release Staging Repository</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<id>persado-snapshot</id>
+			<name>persado-libs-snapshot-local</name>
+			<url>http://artifactory.ath.persado.com:8081/artifactory/libs-snapshot-local</url>
 		</repository>
 
 		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>OSS Sonatype Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
+			<id>persado</id>
+			<name>persado-snapshots</name>
+			<url>http://artifactory.ath.persado.com:8081/artifactory/libs-snapshot-local</url>
 		</snapshotRepository>
 	</distributionManagement>
 
@@ -207,9 +222,9 @@
 			<version>0.3.0</version>
 		</dependency>
 
-	
 
-		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
+
+		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal,
 			SSH secured VNC client, SFTP client and SSH Daemon -->
 		<dependency>
 			<groupId>sshtools</groupId>
@@ -224,6 +239,7 @@
 			<version>0.30.0</version>
 		</dependency>
 
+
 		<!-- TestNG framework -->
 		<dependency>
 			<groupId>org.testng</groupId>
@@ -231,8 +247,8 @@
 			<version>6.4</version>
 		</dependency>
 
-		<!-- ReportNG, a simple HTML reporting plug-in for the TestNG unit-testing 
-			framework Usually in our project newer TestNG version is used, so that ReportNG 
+		<!-- ReportNG, a simple HTML reporting plug-in for the TestNG unit-testing
+			framework Usually in our project newer TestNG version is used, so that ReportNG
 			dependency should be excluded -->
 		<dependency>
 			<groupId>org.uncommons</groupId>
@@ -260,8 +276,8 @@
 
 		<!-- Selenium Server Standalone -->
 		<dependency>
-        	<groupId>org.seleniumhq.selenium</groupId>
-        	<artifactId>selenium-java</artifactId>
+			<groupId>org.seleniumhq.selenium</groupId>
+			<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
 		<dependency>
@@ -283,7 +299,7 @@
 
 		<!-- Core utilities used by other modules. -->
 		<dependency>
-                <groupId>org.springframework</groupId>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
@@ -302,7 +318,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core, 
+		<!-- Aspect Oriented Programming (AOP) Framework (depends on spring-core,
 			spring-beans) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -310,7 +326,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Application Context (depends on spring-core, spring-expression, spring-aop, 
+		<!-- Application Context (depends on spring-core, spring-expression, spring-aop,
 			spring-beans) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -318,7 +334,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Various Application Context utilities, including EhCache, JavaMail, 
+		<!-- Various Application Context utilities, including EhCache, JavaMail,
 			Quartz, and Freemarker integration -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -326,7 +342,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans, 
+		<!-- Transaction Management Abstraction (depends on spring-core, spring-beans,
 			spring-aop, spring-context) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -334,7 +350,7 @@
 			<version>${org.springframework.version}</version>
 		</dependency>
 
-		<!-- JDBC Data Access Library (depends on spring-core, spring-beans, spring-context, 
+		<!-- JDBC Data Access Library (depends on spring-core, spring-beans, spring-context,
 			spring-tx) -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -369,8 +385,8 @@
 
 
 
-		<!-- Support for testing Spring applications with tools such as JUnit and 
-			TestNG This artifact is generally always defined with a 'test' scope for 
+		<!-- Support for testing Spring applications with tools such as JUnit and
+			TestNG This artifact is generally always defined with a 'test' scope for
 			the integration testing framework and unit testing stubs -->
 		<dependency>
 			<groupId>org.springframework</groupId>
@@ -426,6 +442,11 @@
 			<artifactId>commons-lang3</artifactId>
 			<version>3.0</version>
 		</dependency>
+		<dependency>
+			<groupId>javax.annotation</groupId>
+			<artifactId>javax.annotation-api</artifactId>
+			<version>1.3.2</version>
+		</dependency>
 	</dependencies>
 
 
@@ -436,14 +457,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<profiles>
-    		<profile>
-        		<id>disable-java8-doclint</id>
-        		<activation>
-            			<jdk>[1.8,)</jdk>
-        		</activation>
-        		<properties>
-            			<additionalparam>-Xdoclint:none</additionalparam>
-        		</properties>
-    		</profile>
+		<profile>
+			<id>disable-java8-doclint</id>
+			<activation>
+				<jdk>[1.8,)</jdk>
+			</activation>
+			<properties>
+				<additionalparam>-Xdoclint:none</additionalparam>
+			</properties>
+		</profile>
 	</profiles>
 </project>
