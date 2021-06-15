@@ -57,6 +57,7 @@ import org.springframework.context.ApplicationContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Map;
 
 public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 	private static final Logger LOG = LoggerFactory.getLogger(WebDriverWebControllerFactoryImpl.class);
@@ -85,10 +86,12 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
 				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
+
+				//Ignore certifications - insecure for zap
+				options.addArguments("--ignore-certificate-errors");
+				capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
+				capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
 				if(proxy != null){//security testing - ZAP
-					options.addArguments("--ignore-certificate-errors");
-					capabilities.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
-					capabilities.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
 					capabilities.setCapability("proxy",proxy);
 				}
 				capabilities.setCapability(ChromeOptions.CAPABILITY, options);
@@ -147,7 +150,9 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				capability.setCapability("enableVideo", Boolean.parseBoolean(SteviaContext.getParam(SteviaWebControllerFactory.SELENOID_VIDEO))); //Selenoid video
 			}
 			capability.setCapability("enableVNC", true); //Selenoid
-
+			capability.setCapability("labels", Map.<String, Object>of( //Selenoid manual session so that we can delete it
+					"manual", "true"
+			));
 			Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default webdriver.
 			try {
 				driver = augmenter.augment(new RemoteWebDriver(new URL("http://" + SteviaContext.getParam(SteviaWebControllerFactory.RC_HOST) + ":" + SteviaContext.getParam(SteviaWebControllerFactory.RC_PORT)

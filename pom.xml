@@ -45,6 +45,15 @@
 				<role>QA Engineer</role>
 			</roles>
 		</developer>
+		<developer>
+			<name>Ioannis Chitiris</name>
+			<id>ixytiris</id>
+			<email>ioannis.chitiris@persado.com</email>
+			<organization>Persado</organization>
+			<roles>
+				<role>QA Engineer</role>
+			</roles>
+		</developer>
 	</developers>
 	<issueManagement>
 		<system>GitHub</system>
