@@ -3,6 +3,7 @@ stevia <img src="https://raw.github.com/persado/stevia/master/doc/stevia-logo.pn
 
 Build Status of latest SNAPSHOT [![Status](https://travis-ci.com/persado/stevia.png?branch=master)](https://travis-ci.com/persado/stevia) 
 
+
 # Moving on....
 
 Thank you all for this wonderful trip to the world of Testing Automation with Stevia. We are now looking forward to our next big release, which will be called (we cannot yet tell this!!!). However, we've uploaded a teaser video for you!
