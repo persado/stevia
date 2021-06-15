@@ -15,6 +15,7 @@ env:
 script: mvn clean install -DskipTests
 
 after_success:
+  - echo $SONATYPE_PASSWORD
   - python src/scripts/addServer.py
   - mvn clean javadoc:jar source:jar deploy -DskipTests --settings ~/.m2/mySettings.xml
   
