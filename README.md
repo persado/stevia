@@ -52,7 +52,7 @@ The following features are supported in the current Stevia build (new features h
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.12</version>
+  <version>0.9.50</version>
 </dependency>
 ```
 #### Cutting edge
