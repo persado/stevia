@@ -21,6 +21,5 @@ jobs:
       - name: Publish package
         run: mvn --batch-mode javadoc:jar source:jar deploy -DskipTests
         env:
-          gpg_private_key: ${{ secrets.gpg_private_key }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
