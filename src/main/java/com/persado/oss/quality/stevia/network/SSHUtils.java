@@ -90,7 +90,7 @@ public class SSHUtils {
 	}
 	
 	/** Disconnect
-	 * @param ssh
+	 * @param ssh sshClient
 	 */
 	public static void disConnect(SshClient ssh) {
 		if(ssh.isConnected()){
@@ -199,13 +199,12 @@ public class SSHUtils {
 	/**
 	 * Gets the file from remote host.
 	 *
-	 * @param hostthe hostname of the client. The port number is by default 22
+	 * @param host hostname of the client. The port number is by default 22
 	 * @param username the username required for authentication
 	 * @param password the password required for authentication
 	 * @param remoteFilePath remotePath the remote path from where the file is going to be get
-	 * @param localfilePath the localfile path where the file is going to be put
+	 * @param localPath the localfile path where the file is going to be put
 	 * @param fileName the name of the file you want to transfer
-	 * @return the file from remote host
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void getFileFromRemoteHost(String host, String username,String password, String remoteFilePath,String localPath,String fileName) throws IOException {
@@ -220,9 +219,8 @@ public class SSHUtils {
 	 * @param username the username required for authentication
 	 * @param password the password required for authentication
 	 * @param remoteFilePath remotePath the remote path from where the file is going to be get
-	 * @param localfilePath the local file path where the file is going to be put
+	 * @param localPath the local file path where the file is going to be put
 	 * @param fileName the name of the file you want to transfer
-	 * @return the file from the remote host
 	 * @throws IOException Signals that an I/O exception has occurred.
 	 */
 	public static void getFileFromRemoteHost(String host, int port,String username,String password, String remoteFilePath,String localPath,String fileName) throws IOException {
@@ -314,7 +312,8 @@ public class SSHUtils {
 	 * @param password the password required for authentication
 	 * @param cmd the commands you want to execute remotely
 	 * @return the string with the parameters you entered
-	 * @throws IOException, InterruptedException
+	 * @throws IOException IOException
+	 * @throws InterruptedException InterruptedException
 	 */
 	public static String executeCommand(String host, String username,String password, String cmd) throws IOException, InterruptedException {
 		return executeCommand(host, SSH_PORT, username, password, cmd);
@@ -329,7 +328,8 @@ public class SSHUtils {
 	 * @param password the password required for authentication
 	 * @param cmd the commands you want to execute remotely
 	 * @return the string with the parameters you entered
-	 * @throws IOException, InterruptedException
+	 * @throws IOException IOException
+	 * @throws InterruptedException InterruptedException
 	 */
 	public static String executeCommand(String host, int port,String username,String password, String cmd) throws IOException, InterruptedException {
 		return executeCommands(host, port,username, password, new String[] { cmd });
@@ -343,7 +343,8 @@ public class SSHUtils {
 	 * @param password the password required for authentication
 	 * @param cmds the commands you want to execute remotely
 	 * @return the string with the parameters you entered 
-	 * @throws IOException, InterruptedException
+	 * @throws IOException IOException
+	 * @throws InterruptedException InterruptedException
 	 */
 	public static String executeCommands(String host, String username,String password, String[] cmds) throws IOException, InterruptedException {
 	  return executeCommands(host, SSH_PORT, username, password, cmds);
@@ -358,8 +359,8 @@ public class SSHUtils {
 	 * @param password the password required for authentication
 	 * @param cmds the commands you want to execute remotely
 	 * @return the string with the parameters you entered 
-	 * @throws InterruptedException 
-	 * @throws IOException, InterruptedException
+	 * @throws IOException  IOException
+	 * @throws InterruptedException InterruptedException
 	 */
 	public static String executeCommands(String host, int port,String username,String password, String[] cmds) throws IOException, InterruptedException {
 		String commandOutput = "";

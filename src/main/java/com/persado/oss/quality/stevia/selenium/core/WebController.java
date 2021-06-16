@@ -354,7 +354,7 @@ public interface WebController {
 	 * Gets the focus. Move the focus to the specified element
 	 *
 	 * @param locator the locator of the element to focus
-	 * @return the focus
+	 *
 	 */
 	void getFocus(String locator);
      

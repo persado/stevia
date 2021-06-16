@@ -81,8 +81,8 @@ public class SSHJUtils {
      * @param host
      * @param username
      * @param password
-     * @return
-     * @throws Exception
+     * @return SSHClient
+     * @throws Exception Exception
      */
     public static SSHClient connect(String host, String username, String password) throws Exception {
         SSHClient ssh = new SSHClient();

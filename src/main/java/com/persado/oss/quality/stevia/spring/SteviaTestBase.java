@@ -89,7 +89,7 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	
 	/**
 	 * Extends the TestNG method to prepare the Spring contexts for parallel tests.
-	 * As seen at {@link http://goo.gl/g8QT2}
+	 * As seen at @link http://goo.gl/g8QT2
 	 *
 	 * @throws Exception the exception
 	 */
@@ -280,13 +280,13 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 			SteviaContext.clean();
 		}
 	}
-	
+
 
 	/**
 	 * Initialize driver.
-	 * 
-	 * @param params
-	 * @throws Exception
+	 *
+	 * @param params Map
+	 * @throws Exception - IllegalStateException
 	 */
 	protected final void initializeStevia(Map<String,String> params) throws Exception {
 		if (applicationContext == null) {

@@ -72,8 +72,8 @@ public class ListenerCommon {
 
 	/**
 	 * from the method, try to proxify the object
-	 * @param method
-	 * @return
+	 * @param method - IInvokedMethod
+	 * @return proxy
 	 */
 	protected Object proxifyObject(IInvokedMethod method) {
 		Object instance = method.getTestMethod().getInstance();

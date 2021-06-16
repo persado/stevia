@@ -205,19 +205,23 @@ public class SteviaContext {
 	public static Map<String,String> getParams() {
 		return innerContext.get().paramsRegistry;
 	}
-	
+
 	/**
 	 * get the test state that is relevant to the running thread for this test script
-	 * @return <T extends TestState> T an object that implements TestState
+	 *
+	 * @param <T> generic
+	 * @return T an object that implements TestState
 	 */
 	@SuppressWarnings("unchecked")
 	public static <T extends TestState> T getTestState() {
 		return (T) innerContext.get().state;
 	}
-	
+
 	/**
-	 * set the test state at any given time for the running thread. 
-	 * @param state an object implementing the marker interface
+	 * set the test state at any given time for the running thread.
+	 *
+	 * @param state state an object implementing the marker interface
+	 * @param <T> Generic
 	 */
 	public static <T extends TestState> void setTestState(T state) {
 		innerContext.get().state = state;

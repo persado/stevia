@@ -126,17 +126,6 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 		this.driver = driver;
 	}
 
-	/**
-	 * Gets the selenium instance.
-	 * 
-	 * @param //baseUrl
-	 *            the base url
-	 * @return the selenium instance
-	 */
-	//public Selenium getSeleniumInstance(String baseUrl) {
-	//	return new WebDriverBackedSelenium(driver, baseUrl);
-	//}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -1062,7 +1051,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 * Gets the table header position by contains text
 	 * @param locator the locator
 	 * @param headerName the header name
-	 * @return
+	 * @return position
 	 */
 	public String getTableContainsTextHeaderPosition(String locator, String headerName) {
 		List<WebElement> columnHeaders = null;

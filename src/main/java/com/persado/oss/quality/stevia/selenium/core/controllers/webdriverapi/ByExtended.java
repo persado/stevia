@@ -62,12 +62,14 @@ import java.util.regex.Pattern;
 public abstract class ByExtended extends By {
 
 	private static final Logger LOG = LoggerFactory.getLogger(ByExtended.class);
-	
+
 	/**
 	 * Finds elements via the driver's underlying W3 Selector engine. If the
 	 * browser does not implement the Selector API, a best effort is made to
 	 * emulate the API. In this case, we strive for at least CSS2 support, but
 	 * offer no guarantees.
+	 * @param selector selector
+	 * @return css selector
 	 */
 	public static By cssSelector(final String selector) {
 		if (selector == null)
@@ -166,7 +168,7 @@ public abstract class ByExtended extends By {
 
 		/**
 		 * Find element by sizzle css.
-		 * @param context 
+		 * @param context context
 		 * 
 		 * @param cssLocator
 		 *            the cssLocator
@@ -209,8 +211,8 @@ public abstract class ByExtended extends By {
 		/**
 		 * Find elements by sizzle css.
 		 * 
-		 * @param cssLocator
-		 *            the cssLocator
+		 * @param cssLocator the cssLocator
+		 *@param context context
 		 * @return the list of the web elements that match this locator
 		 */
 		public List<WebElement> findElementsBySizzleCss(SearchContext context, String cssLocator) {

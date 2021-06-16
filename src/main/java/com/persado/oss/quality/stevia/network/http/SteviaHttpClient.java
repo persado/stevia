@@ -83,9 +83,8 @@ public class SteviaHttpClient implements HttpConstants {
 	 * @param url the URL the GET request is sent
 	 * @param numberOfTimes the number of GET requests
 	 * @return the a list of HTTP Responses
-	 * @throws IOException, InterruptedException 
 	 */
-	public List<HttpResponse> get(String url, int numberOfTimes) throws IOException, InterruptedException {
+	public List<HttpResponse> get(String url, int numberOfTimes) {
 		return get(url,numberOfTimes,null);
 	}
 	
@@ -96,9 +95,8 @@ public class SteviaHttpClient implements HttpConstants {
 	 * @param numberOfTimes the number of GET requests
 	 * @param cookies the cookies to set on the request, optional - null is a valid value
 	 * @return the a list of HTTP Responses
-	 * @throws IOException, InterruptedException 
 	 */
-	public List<HttpResponse> get(String url, int numberOfTimes, List<HttpCookie> cookies) throws IOException, InterruptedException {
+	public List<HttpResponse> get(String url, int numberOfTimes, List<HttpCookie> cookies){
 		Assert.hasLength(url, "URL cannot be null");
 		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");
 		
@@ -129,9 +127,8 @@ public class SteviaHttpClient implements HttpConstants {
 	 * @param postData list of input data for the POST requests
 	 * @param numberOfTimes the number of POST requests
 	 * @return the a list of HTTP Responses
-	 * @throws IOException, InterruptedException 
 	 */
-	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes) throws IOException, InterruptedException{
+	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes){
 		return post(url, postData, numberOfTimes, null);
 	}
 	
@@ -143,9 +140,8 @@ public class SteviaHttpClient implements HttpConstants {
 	 * @param numberOfTimes the number of POST requests
 	 * @param cookies the cookies to set on the request, optional - null is a valid value
 	 * @return the a list of HTTP Responses
-	 * @throws IOException, InterruptedException 
 	 */
-	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes, List<HttpCookie> cookies) throws IOException, InterruptedException{
+	public List<HttpResponse> post(String url, List<HttpPostData> postData, int numberOfTimes, List<HttpCookie> cookies){
 		Assert.hasLength(url, "URL cannot be null");
 		Assert.notEmpty(postData,"POST request cannot have empty post data");
 		Assert.isTrue(numberOfTimes > 0, "numberOfTimes cannot be 0");

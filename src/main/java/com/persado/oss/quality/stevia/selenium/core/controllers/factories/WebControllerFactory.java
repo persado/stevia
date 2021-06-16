@@ -46,15 +46,15 @@ public interface WebControllerFactory {
 	 * initializes a WebController using the spring context provided and the 
 	 * web controller bean.
 	 * 
-	 * @param context
-	 * @param controller
+	 * @param context context
+	 * @param controller controller
 	 * @return the returned bean is the provided, augmented with additional functionality
 	 */
 	public WebController initialize(ApplicationContext context, WebController controller);
 	
 	/**
-	 * returns the name of bean as registered in the @id attribute in the stevia context <bean .../> construct.
-	 * @return
+	 * returns the name of bean as registered in the @id attribute in the stevia context bean construct.
+	 * @return bean name
 	 */
 	public String getBeanName();
 	
