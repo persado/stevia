@@ -15,8 +15,12 @@ jobs:
           server-id: ossrh
           server-username: MAVEN_USERNAME
           server-password: MAVEN_PASSWORD
+          gpg-private-key: ${{ secrets.GPG_PRIVATE_KEY }}
+          git-user-signingkey: true
+          git-commit-gpgsign: true
       - name: Publish package
         run: mvn --batch-mode javadoc:jar source:jar deploy -DskipTests
         env:
+          gpg_private_key: ${{ secrets.gpg_private_key }}
           MAVEN_USERNAME: ${{ secrets.OSSRH_USERNAME }}
           MAVEN_PASSWORD: ${{ secrets.OSSRH_TOKEN }}
