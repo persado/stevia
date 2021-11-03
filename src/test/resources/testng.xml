@@ -4,15 +4,17 @@
 
 	<parameter name="rcHost" value="localhost" />
 	<parameter name="rcPort" value="4444" />
-	<parameter name="targetHostUrl" value="http://www.duckduckgo.com" />
+	<parameter name="targetHostUrl" value="https://qa-genopedia.atheksdev.persado.com/" />
 	<parameter name="debugging" value="true" />
-	<parameter name="browser" value="firefox" />
+	<parameter name="browser" value="chrome" />
 	<parameter name="profile" value="" />
 	<parameter name="driverType" value="webdriver" />
 	<parameter name="actionsLogging" value="true" />
 	<parameter name="tests.takeScreenshot" value="true" />
-	
+	<parameter name="suite.init.context" value="false"/>
 	<parameter name="dockerized" value="true"/>
+	<parameter name="waitForElement.Timeout" value="200"/>
+	<!--	<parameter name="loadStrategy" value="normal"/>-->
 
 	<listeners>
 		<listener class-name="org.uncommons.reportng.HTMLReporter" />

@@ -93,7 +93,7 @@ public interface WebController {
 	 * @param waitSeconds the number of seconds to wait for element visibility
 	 * @return the web element in case of WebDriver or null in case of Selenium
 	 */
-	WebElement waitForElement(String locator, long waitSeconds);
+	Object waitForElement(String locator, long waitSeconds);
 
 	
 	/**

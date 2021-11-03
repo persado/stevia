@@ -37,11 +37,16 @@ package com.persado.oss.quality.stevia.pageObjects;
  */
 
 
+import com.persado.oss.quality.stevia.selenium.core.WebComponent;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.text.MessageFormat;
 
-import com.persado.oss.quality.stevia.selenium.core.WebComponent;
-
 public class GoogleHomePage extends WebComponent{
+
+	private static Logger LOG = LoggerFactory.getLogger(GoogleHomePage.class);
+
 	/*
 	 * Declare page elements (Buttons, Input fields etc)
 	 * in the form of enumeration
@@ -49,6 +54,11 @@ public class GoogleHomePage extends WebComponent{
 	public enum GoogleHomePageLocators {
 		
 		INPUT_GOOGLE_SEARCH("search_form_input_homepage"),
+		INPUT_USER("css=input#user_email"),
+		INPUT_PWD("css=div.form-inputs inputnth(1)"),
+		BUTTON_SIGN_IN("name=commit"),
+		DASHBOARD("css=h1:contains('Dashboard')"),
+
 		BTN_GOOGLE_SEARCH("search_button_homepage"),
 		;
 		
@@ -71,6 +81,21 @@ public class GoogleHomePage extends WebComponent{
 	 */
 	public void inputSearchText(String desiredText){
 		controller().input(GoogleHomePageLocators.INPUT_GOOGLE_SEARCH.get(), desiredText);
+	}
+
+	public void inputUser(String desiredText){
+		LOG.info("Element Username is visible: "+(controller().isComponentVisible(GoogleHomePageLocators.INPUT_USER.get())));
+		controller().input(GoogleHomePageLocators.INPUT_USER.get(), desiredText);
+	}
+
+	public void inputPwd(String desiredText){
+		LOG.info("Element Username is visible: "+(controller().isComponentVisible(GoogleHomePageLocators.INPUT_USER.get())));
+		controller().input(GoogleHomePageLocators.INPUT_PWD.get(), desiredText);
+	}
+
+	public void pressSignIn(){
+		controller().isComponentVisible(GoogleHomePageLocators.BUTTON_SIGN_IN.get());
+		controller().pressAndWaitForElement(GoogleHomePageLocators.BUTTON_SIGN_IN.get(),GoogleHomePageLocators.DASHBOARD.get());
 	}
 	
 	/*

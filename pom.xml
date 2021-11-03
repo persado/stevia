@@ -276,7 +276,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>
-			<version>3.3.1</version>
+			<version>${selenium.version}</version>
 		</dependency>
 
 		<dependency>
@@ -445,7 +445,7 @@
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>5.2.6.RELEASE</org.springframework.version>
-		<selenium.version>3.8.1</selenium.version>
+		<selenium.version>4.0.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<profiles>

@@ -86,6 +86,9 @@ public interface Constants {
 	/** The parameter that determines Selenoid video */
 	public static final String SELENOID_VIDEO = "selenoidVideo";
 
+	/** The parameter that determines the webriver LOAD STRATEGY. */
+	public static final String LOAD_STRATEGY = "loadStrategy";
+
 	public static final String WRONG_BROWSER_PARAMETER = "Wrong value for 'browser' parameter was defined";
 	
 	public static final String TRUE = "true";
