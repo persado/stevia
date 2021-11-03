@@ -87,8 +87,8 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				LOG.info("Debug enabled, using Firefox Driver");
 				FirefoxOptions options = new FirefoxOptions();
 
-				options.setPageLoadStrategy(PageLoadStrategy.NONE);//Default None
-				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("none"))
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
+				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
 					options.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
 				//security testing - ZAP
@@ -158,8 +158,8 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			}
 
 
-			browserOptions.setPageLoadStrategy(PageLoadStrategy.NONE);//Default None
-			if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("none"))
+			browserOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
+			if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
 				browserOptions.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
 			if(proxy != null){browserOptions.setCapability("proxy",proxy);}
