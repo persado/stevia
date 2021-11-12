@@ -84,18 +84,18 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 		if (SteviaContext.getParam(SteviaWebControllerFactory.DEBUGGING).compareTo(SteviaWebControllerFactory.TRUE) == 0) { // debug=on
 			if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER) == null || SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("firefox") == 0
 					|| SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).isEmpty()) {
-				LOG.info("Debug enabled, using Firefox Driver");
 				FirefoxOptions options = new FirefoxOptions();
 
-				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default Normal
 				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
 					options.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
 				//security testing - ZAP
 				if(proxy != null){options.setCapability("proxy",proxy);}
+
+				LOG.info("Debug enabled, using Firefox and options : "+options);
 				driver = new FirefoxDriver(options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
-				LOG.info("Debug enabled, using ChromeDriver");
 				ChromeOptions options = new ChromeOptions();
 
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
@@ -105,21 +105,30 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("test-type");
 				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
 
-				options.setPageLoadStrategy(PageLoadStrategy.NONE);//Default None
-				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("none"))
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
+				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
 					options.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
 				//security testing - ZAP
 				if(proxy != null){options.setCapability("proxy",proxy);}
-				
+
+				LOG.info("Debug enabled, using ChromeDriver and options : "+options);
 				driver = new ChromeDriver(options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
-				LOG.info("Debug enabled, using InternetExplorerDriver");
 				InternetExplorerOptions options = new InternetExplorerOptions();
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default Normal
+				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
+					options.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
+
+				LOG.info("Debug enabled, using InternetExplorer and options : "+options);
 				driver = new InternetExplorerDriver(options);
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("safari") == 0) {
-				LOG.info("Debug enabled, using SafariDriver");
 				SafariOptions options = new SafariOptions();
+				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default Normal
+				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
+					options.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
+
+				LOG.info("Debug enabled, using Safari and options : "+options);
 				driver = new SafariDriver(options);
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
@@ -140,6 +149,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				((ChromeOptions) browserOptions).addArguments("--ignore-certificate-errors");
 				((ChromeOptions) browserOptions).addArguments("start-maximized");
 				((ChromeOptions) browserOptions).addArguments("test-type");
+				((ChromeOptions) browserOptions).addArguments("test-type");
 
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer options");
@@ -158,7 +168,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			}
 
 
-			browserOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
+			browserOptions.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default Normal
 			if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
 				browserOptions.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
@@ -177,7 +187,6 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 					"manual", "true"
 			));
 
-
 			Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default webdriver.
 			try {
 				driver = augmenter.augment(new RemoteWebDriver(new URL("http://" + SteviaContext.getParam(SteviaWebControllerFactory.RC_HOST) + ":" + SteviaContext.getParam(SteviaWebControllerFactory.RC_PORT)
@@ -185,13 +194,14 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			} catch (MalformedURLException e) {
 				throw new IllegalArgumentException(e.getMessage(), e);
 			}
-
+			LOG.info("Debug OFF, Remote Web Driver options are: "+browserOptions);
 		}
 
 		if (SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL) != null) {
 			driver.get(SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL));
 		}
-		// driver.manage().window().maximize();
+
+//		driver.manage().window().maximize();
 		wdController.setDriver(driver);
 		if (SteviaContext.getParam(SteviaWebControllerFactory.ACTIONS_LOGGING).compareTo(SteviaWebControllerFactory.TRUE) == 0) {
 			wdController.enableActionsLogging();

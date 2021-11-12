@@ -103,7 +103,7 @@ public abstract class BySizzle extends By {
 	
 
 		/**
-		 * Find element by sizzle css.
+		 * Find element by sizzle css, in case site does not allow to inject it , do findBy.css
 		 * @param context context
 		 * 
 		 * @param cssLocator
@@ -152,13 +152,18 @@ public abstract class BySizzle extends By {
 		 * @return the list of the web elements that match this locator
 		 */
 		public List<WebElement> findElementsBySizzleCss(SearchContext context, String cssLocator) {
-			injectSizzleIfNeeded();
-			String javascriptExpression = createSizzleSelectorExpression(cssLocator);
-			List<WebElement> elements = executeRemoteScript(javascriptExpression);
-			if (elements.size() > 0) {
-				for (WebElement el : elements) { 
-					fixLocator(context, cssLocator, el);
+			List<WebElement> elements;
+			try {
+				injectSizzleIfNeeded();
+				String javascriptExpression = createSizzleSelectorExpression(cssLocator);
+				elements = executeRemoteScript(javascriptExpression);
+				if (elements.size() > 0) {
+					for (WebElement el : elements) {
+						fixLocator(context, cssLocator, el);
+					}
 				}
+			}catch(RuntimeException e){//case site does not accept invoke sizzle
+				elements = getDriver().findElements(By.cssSelector(cssLocator));
 			}
 			return elements;
 		}
@@ -213,7 +218,7 @@ public abstract class BySizzle extends By {
 				return; // sizzle is ready
 			}
 			
-			for (int i = 0; i<40; i++ ) {
+			for (int i = 0; i < 10; i++ ) {
 				if(sizzleLoaded() ) {
 					return; // sizzle is loaded
 				}
@@ -231,7 +236,9 @@ public abstract class BySizzle extends By {
 			//Try on last time
 			if (!sizzleLoaded()) {
 				LOG.error("After so many tries, sizzle does not appear in DOM");
-			} 
+			}
+
+
 			// sizzle is not loaded yet 
 			throw new RuntimeException("Sizzle loading from ("+ getSizzleUrl() +") has failed - " +
 					"provide a better sizzle URL via -DsizzleUrl");

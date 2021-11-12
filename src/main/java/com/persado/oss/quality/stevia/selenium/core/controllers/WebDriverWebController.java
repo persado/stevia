@@ -55,6 +55,7 @@ import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -1647,5 +1648,88 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 			allCookies.add(new HttpCookie(c.getName(), c.getValue()));			
 		}
 		return allCookies;
+	}
+
+	/******************************************************************Relative Locators******************************************************************/
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findElementNearOfTag(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagNearElement(String tag,String nearOfElement) {
+		waitForElement(nearOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).near(driver.findElement(determineLocator(nearOfElement))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagToTheLeftOfElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagToTheLeftOfElement(String tag,String leftOfLocator) {
+		waitForElement(leftOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagToTheRightOfElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagToTheRightOfElement(String tag,String rightOfLocator) {
+		waitForElement(rightOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).toLeftOf(driver.findElement(determineLocator(rightOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElement(String tag,String aboveOfElement) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElementToTheLeftOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElementToTheLeftOfElement(String tag,String aboveOfElement,String leftOfLocator) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElementToTheRightOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElementToTheRightOfElement(String tag,String aboveOfElement,String rightOfLocator) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))).toRightOf(driver.findElement(determineLocator(rightOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElement(String tag,String belowOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElementToTheLeftOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElementToTheLeftOfElement(String tag,String belowOfLocator,String leftOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElementToTheRightOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElementToTheRightOfElement(String tag,String belowOfLocator,String rightOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))).toRightOf(driver.findElement(determineLocator(rightOfLocator))));
 	}
 }
