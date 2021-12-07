@@ -40,11 +40,13 @@ import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.SteviaWebControllerFactory;
 import com.persado.oss.quality.stevia.selenium.core.controllers.WebDriverWebController;
+import org.openqa.selenium.InvalidArgumentException;
 import org.openqa.selenium.PageLoadStrategy;
 import org.openqa.selenium.Proxy;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.devtools.DevTools;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
@@ -62,15 +64,18 @@ import org.springframework.context.ApplicationContext;
 
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.Map;
 
 public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
+
+	DevTools devTools;
 	private static final Logger LOG = LoggerFactory.getLogger(WebDriverWebControllerFactoryImpl.class);
 
 	@Override
 	public WebController initialize(ApplicationContext context, WebController controller) {
 		Proxy proxy = null;
-		WebDriver driver = null;
+		WebDriver driver;
 
 		if(SteviaContext.getParam(SteviaWebControllerFactory.PROXY) != null) {//security testing - ZAP
 			proxy = new Proxy();
@@ -114,6 +119,9 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 
 				LOG.info("Debug enabled, using ChromeDriver and options : "+options);
 				driver = new ChromeDriver(options);
+				mockingGeolocation((ChromeDriver) driver);
+				simulateDeviceDimension((ChromeDriver) driver);
+
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				InternetExplorerOptions options = new InternetExplorerOptions();
 				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default Normal
@@ -197,6 +205,11 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			LOG.info("Debug OFF, Remote Web Driver options are: "+browserOptions);
 		}
 
+		if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
+			mockingGeolocation((ChromeDriver) driver);
+			simulateDeviceDimension((ChromeDriver) driver);
+		}
+
 		if (SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL) != null) {
 			driver.get(SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL));
 		}
@@ -215,4 +228,63 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 		return "webDriverController";
 	}
 
+
+
+	/*
+		Use for Testing the location-based functionality of applications such as different offers, currencies, taxation rules,
+		freight charges and date/time format for various geolocations.
+
+		Optional keys -> need values if key is specified
+	 */
+	private void mockingGeolocation(ChromeDriver driver) {
+		if (SteviaContext.getParam(SteviaWebControllerFactory.LATITUDE) != null) {
+			Map location = new HashMap();
+			location.put("latitude",Double.parseDouble(SteviaContext.getParam(SteviaWebControllerFactory.LATITUDE)));
+			if (SteviaContext.getParam(SteviaWebControllerFactory.LONGITUDE) != null)
+				location.put("longitude",Double.parseDouble(SteviaContext.getParam(SteviaWebControllerFactory.LONGITUDE)));
+			if (SteviaContext.getParam(SteviaWebControllerFactory.ACCURACY) != null)
+				location.put("accuracy",Double.parseDouble(SteviaContext.getParam(SteviaWebControllerFactory.ACCURACY)));
+
+			DevTools devTools = driver.getDevTools();
+			devTools.createSession();
+
+			try {
+				driver.executeCdpCommand("Emulation.setGeolocationOverride", location);
+				LOG.info("MOCKING GEOLOCATION BY DEV TOOL:  with params -> latitude: {},longitude: {},accuracy: {}", SteviaContext.getParam(SteviaWebControllerFactory.LATITUDE), SteviaContext.getParam(SteviaWebControllerFactory.LONGITUDE), SteviaContext.getParam(SteviaWebControllerFactory.ACCURACY));
+			}catch (InvalidArgumentException e){
+				LOG.error("SIMULATE DEVICE BY DEV TOOL NOT SET:  Invalid parameters values for -> latitude: {},longitude: {},accuracy: {}", SteviaContext.getParam(SteviaWebControllerFactory.LATITUDE), SteviaContext.getParam(SteviaWebControllerFactory.LONGITUDE), SteviaContext.getParam(SteviaWebControllerFactory.ACCURACY));
+			}
+		}
+	}
+
+	/*
+		Overrides the values of device screen dimensions (window.screen.width, window.screen.height,
+		window.innerWidth, window.innerHeight, and "device-width"/"device-height"-related CSS media query results).
+
+		Mandatory keys - pass 0 to disable override
+ 	*/
+	private void simulateDeviceDimension(ChromeDriver driver){
+		if(SteviaContext.getParam(SteviaWebControllerFactory.WIDTH) != null) {
+			Map metrics = new HashMap();
+			metrics.put("width", Integer.parseInt(SteviaContext.getParam(SteviaWebControllerFactory.WIDTH)));
+			if(SteviaContext.getParam(SteviaWebControllerFactory.HEIGHT) != null)
+				metrics.put("height", Integer.parseInt(SteviaContext.getParam(SteviaWebControllerFactory.HEIGHT)));
+			if(SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_TYPE) != null)
+				metrics.put("mobile", Boolean.parseBoolean(SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_TYPE)));
+			if(SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_SCALE_FACTOR) != null)
+				metrics.put("deviceScaleFactor", Integer.parseInt(SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_SCALE_FACTOR)));
+
+			if (devTools == null) {
+				devTools = driver.getDevTools();
+				devTools.createSession();
+			}
+
+			try {
+				driver.executeCdpCommand("Emulation.setDeviceMetricsOverride", metrics);
+				LOG.info("SIMULATE DEVICE BY DEV TOOL:  with params : {},{},{},{}", SteviaContext.getParam(SteviaWebControllerFactory.WIDTH), SteviaContext.getParam(SteviaWebControllerFactory.HEIGHT), SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_TYPE),SteviaContext.getParam(SteviaWebControllerFactory.DEVICE_SCALE_FACTOR));
+			} catch (InvalidArgumentException e) {
+				LOG.error("SIMULATE DEVICE BY DEV TOOL NOT SET:  Invalid parameters for simulate DEVICE, you need the mandatory ones: {},{},{},{}", "width", "height", "mobile", "deviceScaleFactor");
+			}
+		}
+	}
 }

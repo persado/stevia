@@ -1,5 +1,5 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
@@ -13,10 +13,10 @@
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
-		a common uniform API that handles all differences. Using Stevia allows the QA Engineer
-		to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
-		and other artifacts. By design both drivers play under Selenium Grid and support extended
-		reporting functionality via ReportNG, including remote screenshots.</description>
+	a common uniform API that handles all differences. Using Stevia allows the QA Engineer
+	to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
+	and other artifacts. By design both drivers play under Selenium Grid and support extended
+	reporting functionality via ReportNG, including remote screenshots.</description>
 
 	<url>http://www.persado.com</url>
 	<inceptionYear>2013</inceptionYear>
@@ -51,7 +51,7 @@
 			<email>ioannis.chitiris@persado.com</email>
 			<organization>Persado</organization>
 			<roles>
-				<role>QA Engineer</role>
+				<role>Lead QA Automation Engineer</role>
 			</roles>
 		</developer>
 	</developers>
@@ -269,8 +269,8 @@
 
 		<!-- Selenium Server Standalone -->
 		<dependency>
-			<groupId>org.seleniumhq.selenium</groupId>
-			<artifactId>selenium-java</artifactId>
+        	<groupId>org.seleniumhq.selenium</groupId>
+        	<artifactId>selenium-java</artifactId>
 			<version>${selenium.version}</version>
 		</dependency>
 		<dependency>
@@ -441,7 +441,6 @@
 		</dependency>
 	</dependencies>
 
-
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>5.2.6.RELEASE</org.springframework.version>
@@ -449,14 +448,14 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<profiles>
-		<profile>
-			<id>disable-java8-doclint</id>
-			<activation>
-				<jdk>[1.8,)</jdk>
-			</activation>
-			<properties>
-				<additionalparam>-Xdoclint:none</additionalparam>
-			</properties>
-		</profile>
+    		<profile>
+        		<id>disable-java8-doclint</id>
+        		<activation>
+            			<jdk>[1.8,)</jdk>
+        		</activation>
+        		<properties>
+            			<additionalparam>-Xdoclint:none</additionalparam>
+        		</properties>
+    		</profile>
 	</profiles>
 </project>

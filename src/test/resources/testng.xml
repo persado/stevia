@@ -2,9 +2,9 @@
 
 <suite name="Stevia-Test-Suite">
 
-	<parameter name="rcHost" value="localhost" />
+	<parameter name="rcHost" value="localhost" /> <!--selenoid.ath.persado.com-->
 	<parameter name="rcPort" value="4444" />
-	<parameter name="targetHostUrl" value="https://qa-genopedia.atheksdev.persado.com/" />
+	<parameter name="targetHostUrl" value="https://qa-genopedia.atheksdev.persado.com/" /> <!--https://mycurrentlocation.net/-->
 	<parameter name="debugging" value="true" />
 	<parameter name="browser" value="chrome" />
 	<parameter name="profile" value="" />
@@ -14,6 +14,16 @@
 	<parameter name="suite.init.context" value="false"/>
 	<parameter name="dockerized" value="true"/>
 	<parameter name="waitForElement.Timeout" value="200"/>
+	<parameter name="location.latitude" value="35.8235"/>
+	<parameter name="location.longitude" value="-78.8256"/>
+	<parameter name="location.accuracy" value="100"/>
+	<parameter name="device.width" value="400"/>
+	<parameter name="device.height" value="800"/>
+	<parameter name="device.scale.factor" value="50"/>
+	<parameter name="device.mobile" value="false"/>
+
+
+
 	<!--	<parameter name="loadStrategy" value="normal"/>-->
 
 	<listeners>
