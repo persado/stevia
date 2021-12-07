@@ -2,9 +2,9 @@
 
 <suite name="Stevia-Test-Suite">
 
-	<parameter name="rcHost" value="localhost" /> <!--selenoid.ath.persado.com-->
+	<parameter name="rcHost" value="localhost" />
 	<parameter name="rcPort" value="4444" />
-	<parameter name="targetHostUrl" value="https://qa-genopedia.atheksdev.persado.com/" /> <!--https://mycurrentlocation.net/-->
+	<parameter name="targetHostUrl" value="http://www.google.com" />
 	<parameter name="debugging" value="true" />
 	<parameter name="browser" value="chrome" />
 	<parameter name="profile" value="" />
