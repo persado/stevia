@@ -15,7 +15,7 @@
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
 	a common uniform API that handles all differences. Using Stevia allows the QA Engineer
 	to seamlessly switch between Selenium-RC and Webdriver, enhance by adding custom webdrivers
-	and other artifacts. By design both drivers play under Selenium Grid and support extended 
+	and other artifacts. By design both drivers play under Selenium Grid and support extended
 	reporting functionality via ReportNG, including remote screenshots.</description>
 
 	<url>http://www.persado.com</url>
@@ -51,7 +51,7 @@
 			<email>ioannis.chitiris@persado.com</email>
 			<organization>Persado</organization>
 			<roles>
-				<role>QA Engineer</role>
+				<role>Lead QA Automation Engineer</role>
 			</roles>
 		</developer>
 	</developers>
@@ -208,7 +208,7 @@
 		<dependency>
 			<groupId>org.jsoup</groupId>
 			<artifactId>jsoup</artifactId>
-			<version>1.7.3</version>
+			<version>1.14.2</version>
 		</dependency>
 		<dependency>
 			<groupId>us.codecraft</groupId>
@@ -216,7 +216,7 @@
 			<version>0.3.0</version>
 		</dependency>
 
-	
+
 
 		<!-- Suite of Java SSH applications providing a Java SSH API, SSH Terminal, 
 			SSH secured VNC client, SFTP client and SSH Daemon -->
@@ -276,7 +276,7 @@
 		<dependency>
 			<groupId>org.seleniumhq.selenium</groupId>
 			<artifactId>selenium-support</artifactId>
-			<version>3.3.1</version>
+			<version>${selenium.version}</version>
 		</dependency>
 
 		<dependency>
@@ -296,7 +296,7 @@
 
 		<!-- Core utilities used by other modules. -->
 		<dependency>
-                <groupId>org.springframework</groupId>
+			<groupId>org.springframework</groupId>
 			<artifactId>spring-core</artifactId>
 			<version>${org.springframework.version}</version>
 		</dependency>
@@ -441,11 +441,10 @@
 		</dependency>
 	</dependencies>
 
-
 	<!-- Shared version number properties -->
 	<properties>
 		<org.springframework.version>5.2.6.RELEASE</org.springframework.version>
-		<selenium.version>3.8.1</selenium.version>
+		<selenium.version>4.0.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<profiles>

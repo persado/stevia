@@ -7,21 +7,21 @@ package com.persado.oss.quality.stevia.tests;
  * Copyright (C) 2013 - 2014 Persado
  * %%
  * Copyright (c) Persado Intellectual Property Limited. All rights reserved.
- *  
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- *  
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  
+ *
  * * Neither the name of the Persado Intellectual Property Limited nor the names
  * of its contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -59,7 +59,7 @@ public class TestGoogleSearch extends SteviaTestBase {
 
 	@Autowired
 	PersadoHomePage persadoHome;
-	
+
 //	@BeforeTest
 //	public void failBefore() {
 //		throw new RuntimeException("failed");
@@ -73,9 +73,9 @@ public class TestGoogleSearch extends SteviaTestBase {
 		commonControllerTest();
 	}
 
-	
-	
-//	@RunsWithController(SeleniumWebController.class)
+
+
+	//	@RunsWithController(SeleniumWebController.class)
 	@Preconditions(controller=WebDriverWebController.class, value = {"precondition2" })
 	@Test
 	public void testWithBothAnnotations() {
@@ -88,11 +88,11 @@ public class TestGoogleSearch extends SteviaTestBase {
 	}
 
 	private String pre1, pre2, post1;
-	
+
 	@Preconditions( { "precondition1", "precondition2" })
 	@Postconditions( { "postCondition1", "postCondition2" } )
 	@Test(dependsOnMethods= {"testWithBothAnnotations"})
-	public void testExecutionOfPreconditions() {	
+	public void testExecutionOfPreconditions() {
 		//this test should run with webdriver
 //		Assert.isTrue(SteviaContext.isWebDriver() == true, "this controller is not WebDriver");
 //		LOG.info("TEST METHOD CODE");
@@ -104,14 +104,14 @@ public class TestGoogleSearch extends SteviaTestBase {
 //
 //		Assert.isNull(post1);
 	}
-	
+
 	public void precondition1() {
 		LOG.info("TEST precondition1 CODE");
 		if (pre1 == null) {
 			pre1 = "1";
 		}
 	}
-	
+
 	public void precondition2() {
 		LOG.info("TEST precondition2 CODE");
 		commonControllerTest();
@@ -129,12 +129,12 @@ public class TestGoogleSearch extends SteviaTestBase {
 			post1 = "3";
 		}
 	}
-	
+
 	private void postCondition2() {
 		Assert.state(false,"postCondition2 SHOULD NEVER BE CALLED, IT IS PRIVATE");
 	}
-	
-//	@Preconditions(controller=SeleniumWebController.class, value = {"precondition2" })
+
+	//	@Preconditions(controller=SeleniumWebController.class, value = {"precondition2" })
 	@Test(dependsOnMethods= {"searchPersadoInGoogle","testExecutionOfPreconditions"})
 	public void lastTestWithOtherController() {
 //		LOG.info("Should run in WEB DRIVER, precondition in SELENIUM mode");
@@ -143,9 +143,9 @@ public class TestGoogleSearch extends SteviaTestBase {
 //		Assert.hasText(pre2,"variable should have 22");
 //		Assert.isTrue(pre2.equals("22"),"variable should have 22");
 	}
-	
 
-//	@RunsWithController(SeleniumWebController.class)
+
+	//	@RunsWithController(SeleniumWebController.class)
 	@Test(dependsOnMethods= {"lastTestWithOtherController"})
 	public void lastMethodWithDifferentController() {
 		LOG.info("Should run with SELENIUM");
@@ -156,7 +156,7 @@ public class TestGoogleSearch extends SteviaTestBase {
 
 	/**
 	 * this method contains Stevia - API code that runs with any controller;
-	 * in this test it runs with WebDriver in {@link TestGoogleSearch##searchPersadoInGoogle()} 
+	 * in this test it runs with WebDriver in {@link TestGoogleSearch##searchPersadoInGoogle()}
 	 * and Selenium {@link TestGoogleSearch#lastMethodWithDifferentController()}
 	 */
 	private void commonControllerTest() {
@@ -167,24 +167,24 @@ public class TestGoogleSearch extends SteviaTestBase {
 		// disabled for now
 		// persadoHome.checkPersadoTitle();
 	}
-	
-// these tests are commented out - used to verify the screenshot on pre/post conditions failure	
+
+// these tests are commented out - used to verify the screenshot on pre/post conditions failure
 //	@Postconditions({"failingCondition"})
 //	@Test
 //	public void testFailingPostCondition() {
 //		LOG.info("this test has a failing postcondition");
-//		
+//
 //	}
-//	
+//
 //	@Preconditions({"failingCondition"})
 //	@Test
 //	public void testFailingPreCondition() {
 //		LOG.info("this test has a failing precondition");
-//		
+//
 //	}
-	
+
 	public void failingCondition() {
 		throw new IllegalStateException("Should create a screenshot");
 	}
-	
+
 }

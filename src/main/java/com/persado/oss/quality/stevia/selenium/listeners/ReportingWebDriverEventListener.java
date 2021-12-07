@@ -38,6 +38,7 @@ package com.persado.oss.quality.stevia.selenium.listeners;
 
 
 import org.openqa.selenium.By;
+import org.openqa.selenium.OutputType;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.events.WebDriverEventListener;
@@ -231,6 +232,16 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
 		
 	}
 
+	@Override
+	public void beforeSwitchToWindow(String windowName, WebDriver driver) {
+
+	}
+
+	@Override
+	public void afterSwitchToWindow(String windowName, WebDriver driver) {
+
+	}
+
 
 	/* (non-Javadoc)
 	 * @see org.openqa.selenium.support.events.WebDriverEventListener#onException(java.lang.Throwable, org.openqa.selenium.WebDriver)
@@ -238,6 +249,26 @@ public class ReportingWebDriverEventListener implements WebDriverEventListener{
 	public void onException(Throwable throwable, WebDriver driver) {
 	   
 	}
-	
+
+	@Override
+	public <X> void beforeGetScreenshotAs(OutputType<X> target) {
+
+	}
+
+	@Override
+	public <X> void afterGetScreenshotAs(OutputType<X> target, X screenshot) {
+
+	}
+
+	@Override
+	public void beforeGetText(WebElement element, WebDriver driver) {
+
+	}
+
+	@Override
+	public void afterGetText(WebElement element, WebDriver driver, String text) {
+
+	}
+
 
 }

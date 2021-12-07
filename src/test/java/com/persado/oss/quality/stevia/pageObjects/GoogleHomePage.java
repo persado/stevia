@@ -7,21 +7,21 @@ package com.persado.oss.quality.stevia.pageObjects;
  * Copyright (C) 2013 - 2014 Persado
  * %%
  * Copyright (c) Persado Intellectual Property Limited. All rights reserved.
- *  
+ *
  * Redistribution and use in source and binary forms, with or without
  * modification, are permitted provided that the following conditions are met:
- *  
+ *
  * * Redistributions of source code must retain the above copyright notice, this
  * list of conditions and the following disclaimer.
- *  
+ *
  * * Redistributions in binary form must reproduce the above copyright notice,
  * this list of conditions and the following disclaimer in the documentation
  * and/or other materials provided with the distribution.
- *  
+ *
  * * Neither the name of the Persado Intellectual Property Limited nor the names
  * of its contributors may be used to endorse or promote products derived from
  * this software without specific prior written permission.
- *  
+ *
  * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
  * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
  * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
@@ -47,38 +47,36 @@ public class GoogleHomePage extends WebComponent{
 	 * in the form of enumeration
 	 */
 	public enum GoogleHomePageLocators {
-		
+
 		INPUT_GOOGLE_SEARCH("search_form_input_homepage"),
 		BTN_GOOGLE_SEARCH("search_button_homepage"),
 		;
-		
-	private String myLocator;
 
-	GoogleHomePageLocators(String locator) {
-		myLocator = locator;
-	}
+		private String myLocator;
 
-	public String get() {
-		return myLocator;
-	}
+		GoogleHomePageLocators(String locator) {
+			myLocator = locator;
+		}
 
-	public String getWithParams(Object... params) {
-		return MessageFormat.format(myLocator, params);
+		public String get() {
+			return myLocator;
+		}
+
+		public String getWithParams(Object... params) {
+			return MessageFormat.format(myLocator, params);
+		}
 	}
-}	
 	/*
 	 * Input text to search for on Google home page
 	 */
 	public void inputSearchText(String desiredText){
 		controller().input(GoogleHomePageLocators.INPUT_GOOGLE_SEARCH.get(), desiredText);
 	}
-	
+
 	/*
 	 * Press button Search on Google home page
 	 */
 	public void pressGoogleSearchButton(){
 		controller().press(GoogleHomePageLocators.BTN_GOOGLE_SEARCH.get());
 	}
-	
-	
 }

@@ -41,8 +41,7 @@ import com.persado.oss.quality.stevia.network.http.HttpCookie;
 import com.persado.oss.quality.stevia.selenium.core.SteviaContext;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
-import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.ByExtended;
-import com.persado.oss.quality.stevia.selenium.listeners.ReportingWebDriverEventListener;
+import com.persado.oss.quality.stevia.selenium.core.controllers.webdriverapi.BySizzle;
 import org.apache.commons.io.FileUtils;
 import org.openqa.selenium.Alert;
 import org.openqa.selenium.By;
@@ -55,24 +54,21 @@ import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebDriverException;
 import org.openqa.selenium.WebElement;
-//import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.locators.RelativeLocator;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.Select;
 import org.openqa.selenium.support.ui.WebDriverWait;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.Assert;
-
 import java.io.File;
 import java.io.IOException;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-//import com.thoughtworks.selenium.Selenium;
-//import com.thoughtworks.selenium.webdriven.WebDriverBackedSelenium;
-
 
 // TODO: Auto-generated Javadoc
 /**
@@ -211,7 +207,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 		} else if (locator.startsWith("//")) {
 			return By.xpath(locator);
 		} else if (locator.startsWith(CSS)) {
-			return ByExtended.cssSelector(findLocatorSubstring(locator));
+			return BySizzle.css(findLocatorSubstring(locator));
 		} else if (locator.startsWith(NAME)) {
 			return By.name(findLocatorSubstring(locator));
 		} else if (locator.startsWith(LINK)) {
@@ -245,7 +241,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public WebElement waitForElement(String locator, long waitSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, waitSeconds,THREAD_SLEEP);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitSeconds), Duration.ofMillis(THREAD_SLEEP));
 		return wait.until(ExpectedConditions.visibilityOfElementLocated(determineLocator(locator)));
 	}
 
@@ -268,7 +264,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void waitForElementInvisibility(String locator, long waitSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, waitSeconds);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitSeconds));
 		wait.until(ExpectedConditions.invisibilityOfElementLocated(determineLocator(locator)));
 
 	}
@@ -292,7 +288,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 
 	public WebElement waitForElementPresence(String locator, long waitSeconds) {
-		WebDriverWait wait = new WebDriverWait(driver, waitSeconds,THREAD_SLEEP);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(waitSeconds), Duration.ofMillis(THREAD_SLEEP));
 		return wait.until(ExpectedConditions.presenceOfElementLocated(determineLocator(locator)));
 	}
 
@@ -305,7 +301,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public List<WebElement> findElements(String locator) {
-		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement(),THREAD_SLEEP);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(SteviaContext.getWaitForElement()), Duration.ofMillis(THREAD_SLEEP));
 		return wait.until(ExpectedConditions.presenceOfAllElementsLocatedBy(determineLocator(locator)));
 	}
 
@@ -763,7 +759,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public boolean isAlertPresent() {
-		WebDriverWait wait = new WebDriverWait(driver, 0);
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(0));
 		try {
 			wait.until(ExpectedConditions.alertIsPresent());
 			return true;
@@ -861,7 +857,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	@Override
 	public boolean isComponentPresent(String locator, long seconds) {
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, seconds);
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 			wait.until(ExpectedConditions.presenceOfElementLocated(determineLocator(locator)));
 			return true;
 		} catch (Exception e) {
@@ -901,7 +897,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	@Override
 	public boolean isComponentVisible(String locator, long seconds) {
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, seconds);
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 			wait.until(ExpectedConditions.visibilityOfElementLocated(determineLocator(locator)));
 			return true;
 		} catch (TimeoutException e) {
@@ -930,7 +926,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	@Override
 	public boolean isComponentNotVisible(String locator, long seconds) {
 		try {
-			WebDriverWait wait = new WebDriverWait(driver, seconds);
+			WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(seconds));
 			wait.until(ExpectedConditions.invisibilityOfElementLocated(determineLocator(locator)));
 			return true;
 		} catch (TimeoutException e) {
@@ -967,7 +963,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 * @return the alert
 	 */
 	public Alert waitForAlert() {
-		WebDriverWait wait = new WebDriverWait(driver, SteviaContext.getWaitForElement());
+		WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(SteviaContext.getWaitForElement()));
 		return wait.until(ExpectedConditions.alertIsPresent());
 	}
 
@@ -1306,7 +1302,7 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 	 */
 	@Override
 	public void pressLinkName(String linkName) {
-		(new WebDriverWait(driver, SteviaContext.getWaitForElement())).until(ExpectedConditions.visibilityOfElementLocated((By.linkText(linkName)))).click();
+		(new WebDriverWait(driver, Duration.ofSeconds(SteviaContext.getWaitForElement()))).until(ExpectedConditions.visibilityOfElementLocated((By.linkText(linkName)))).click();
 
 	}
 
@@ -1652,5 +1648,88 @@ public class WebDriverWebController extends WebControllerBase implements WebCont
 			allCookies.add(new HttpCookie(c.getName(), c.getValue()));			
 		}
 		return allCookies;
+	}
+
+	/******************************************************************Relative Locators******************************************************************/
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findElementNearOfTag(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagNearElement(String tag,String nearOfElement) {
+		waitForElement(nearOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).near(driver.findElement(determineLocator(nearOfElement))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagToTheLeftOfElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagToTheLeftOfElement(String tag,String leftOfLocator) {
+		waitForElement(leftOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagToTheRightOfElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagToTheRightOfElement(String tag,String rightOfLocator) {
+		waitForElement(rightOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).toLeftOf(driver.findElement(determineLocator(rightOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElement(String tag,String aboveOfElement) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElementToTheLeftOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElementToTheLeftOfElement(String tag,String aboveOfElement,String leftOfLocator) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagAboveElementToTheRightOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagAboveElementToTheRightOfElement(String tag,String aboveOfElement,String rightOfLocator) {
+		waitForElement(aboveOfElement);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).above(driver.findElement(determineLocator(aboveOfElement))).toRightOf(driver.findElement(determineLocator(rightOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElement(String tag,String belowOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElementToTheLeftOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElementToTheLeftOfElement(String tag,String belowOfLocator,String leftOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))).toLeftOf(driver.findElement(determineLocator(leftOfLocator))));
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagBelowElementToTheRightOfElement(java.lang.String,java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagBelowElementToTheRightOfElement(String tag,String belowOfLocator,String rightOfLocator) {
+		waitForElement(belowOfLocator);
+		return driver.findElement(RelativeLocator.with(By.tagName(tag)).below(driver.findElement(determineLocator(belowOfLocator))).toRightOf(driver.findElement(determineLocator(rightOfLocator))));
 	}
 }

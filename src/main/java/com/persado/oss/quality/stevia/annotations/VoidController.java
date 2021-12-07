@@ -36,17 +36,18 @@ package com.persado.oss.quality.stevia.annotations;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
-
-import org.openqa.selenium.Point;
-import org.openqa.selenium.WebElement;
-import org.openqa.selenium.interactions.Actions;
-
 import com.persado.oss.quality.stevia.network.http.HttpCookie;
 import com.persado.oss.quality.stevia.selenium.core.WebController;
 import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
+import org.openqa.selenium.By;
+import org.openqa.selenium.Point;
+import org.openqa.selenium.WebElement;
+import org.openqa.selenium.interactions.Actions;
+import org.openqa.selenium.support.locators.RelativeLocator;
+
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 class VoidController implements WebController {
 
@@ -695,5 +696,61 @@ class VoidController implements WebController {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
+	@Override
+	public WebElement findTagNearElement(String tag,String nearOfElement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagToTheLeftOfElement(String tag,String leftOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.persado.oss.quality.stevia.selenium.core.WebController#findTagToTheRightOfElement(java.lang.String,java.lang.String)
+	 */
+	@Override
+	public WebElement findTagToTheRightOfElement(String tag,String rightOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagAboveElement(String tag,String aboveOfElement) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagAboveElementToTheLeftOfElement(String tag,String aboveOfElement,String leftOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagAboveElementToTheRightOfElement(String tag,String aboveOfElement,String rightOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagBelowElement(String tag,String belowOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagBelowElementToTheLeftOfElement(String tag,String belowOfLocator,String leftOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public WebElement findTagBelowElementToTheRightOfElement(String tag,String belowOfLocator,String rightOfLocator) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

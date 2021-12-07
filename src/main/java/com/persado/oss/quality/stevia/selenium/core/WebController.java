@@ -36,16 +36,14 @@ package com.persado.oss.quality.stevia.selenium.core;
  * #L%
  */
 
-import java.io.IOException;
-import java.util.List;
-import java.util.Map;
+import com.persado.oss.quality.stevia.network.http.HttpCookie;
+import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
 import org.openqa.selenium.Point;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.interactions.Actions;
-
-import com.persado.oss.quality.stevia.network.http.HttpCookie;
-import com.persado.oss.quality.stevia.selenium.core.controllers.commonapi.KeyInfo;
-
+import java.io.IOException;
+import java.util.List;
+import java.util.Map;
 
 
 // TODO: Auto-generated Javadoc
@@ -93,7 +91,7 @@ public interface WebController {
 	 * @param waitSeconds the number of seconds to wait for element visibility
 	 * @return the web element in case of WebDriver or null in case of Selenium
 	 */
-	WebElement waitForElement(String locator, long waitSeconds);
+	Object waitForElement(String locator, long waitSeconds);
 
 	
 	/**
@@ -940,5 +938,97 @@ public interface WebController {
 	 * @return the page source
 	 */
 	String getPageSource() ;
-	
+
+	/**
+	 * Relative locators
+	 * Find an element that is at most 50px away from the specified element.
+	 *
+	 * @param tag
+	 * @param nearOfElement
+	 * @return
+	 */
+	public WebElement findTagNearElement(String tag,String nearOfElement);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is left of specific locator
+	 *
+	 * @param tag
+	 * @param leftOfLocator
+	 * @return
+	 */
+	public WebElement findTagToTheLeftOfElement(String tag,String leftOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is right of specific locator
+	 *
+	 * @param tag
+	 * @param rightOfLocator
+	 * @return
+	 */
+	public WebElement findTagToTheRightOfElement(String tag,String rightOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is above specific locator
+	 *
+	 * @param tag
+	 * @param aboveOfElement
+	 * @return
+	 */
+	public WebElement findTagAboveElement(String tag,String aboveOfElement);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is above specific locator and to the left of other locator
+	 *
+	 * @param tag
+	 * @param aboveOfElement
+	 * @return
+	 */
+	public WebElement findTagAboveElementToTheLeftOfElement(String tag,String aboveOfElement,String leftOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is above specific locator and to the right of other locator
+	 *
+	 * @param tag
+	 * @param aboveOfElement
+	 * @return
+	 */
+	public WebElement findTagAboveElementToTheRightOfElement(String tag,String aboveOfElement,String rightOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is below specific locator
+	 *
+	 * @param tag
+	 * @param belowOfLocator
+	 * @return
+	 */
+	public WebElement findTagBelowElement(String tag,String belowOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is below specific locator and to the left of other locator
+	 *
+	 * @param tag
+	 * @param belowOfLocator
+	 * @return
+	 */
+	public WebElement findTagBelowElementToTheLeftOfElement(String tag,String belowOfLocator,String leftOfLocator);
+
+	/**
+	 * Relative locators
+	 * Finds WebElement with specific tag which is below specific locator and to the right of other locator
+	 *
+	 * @param tag
+	 * @param belowOfLocator
+	 * @return
+	 */
+	public WebElement findTagBelowElementToTheRightOfElement(String tag,String belowOfLocator,String rightOfLocator);
+
+
+
 }

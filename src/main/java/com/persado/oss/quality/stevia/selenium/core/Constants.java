@@ -86,6 +86,34 @@ public interface Constants {
 	/** The parameter that determines Selenoid video */
 	public static final String SELENOID_VIDEO = "selenoidVideo";
 
+	/** The parameter that determines the webriver LOAD STRATEGY. */
+	public static final String LOAD_STRATEGY = "loadStrategy";
+
+	/********************************************GEOLOCATION********************************************/
+
+	/** The parameter that determines the location latitude */
+	public static final String LATITUDE = "location.latitude";
+
+	/** The parameter that determines the location longitude */
+	public static final String LONGITUDE = "location.longitude";
+
+	/** The parameter that determines the location accuracy */
+	public static final String ACCURACY = "location.accuracy";
+
+
+	/********************************************DEVICE METRICS********************************************/
+	/** The parameter that determines the device width */
+	public static final String WIDTH = "device.width";
+
+	/** The parameter that determines the device height */
+	public static final String HEIGHT = "device.height";
+
+	/** The parameter that determines the device scale factor */
+	public static final String DEVICE_SCALE_FACTOR = "device.scale.factor";
+
+	/** The parameter that determines the device scale factor */
+	public static final String DEVICE_TYPE = "device.mobile";
+
 	public static final String WRONG_BROWSER_PARAMETER = "Wrong value for 'browser' parameter was defined";
 	
 	public static final String TRUE = "true";
