@@ -11,6 +11,11 @@ Thank you all for this wonderful trip to the world of Testing Automation with St
 
 Our 10-minutes guide for using Stevia is in our [wiki](https://github.com/persado/stevia/wiki/Stevia-10-minute-Quick-Start). Read on and start coding!
 
+## Stevia supports Selenium 4
+
+Our guide for Stevia implementation for Selenium 4 [wiki](https://github.com/persado/stevia/wiki/Support-Selenium-4-new-features). Read on and start coding!
+
+
 ## Stevia Help and Javadoc
 
 You can browse our javadoc via this [link](http://persado.github.io/stevia/).
@@ -19,7 +24,7 @@ Our [wiki](https://github.com/persado/stevia/wiki) contains topics of interest, 
 ## Features
 
 The following features are supported in the current Stevia build (new features have a version next to them):
-* Works with latest Selenium libraries (3.3+) and Spring 3.2.x (4.0 coming soon)
+* Works with latest Selenium libraries 4 and Spring 5
 * Works with stable TestNG tested for parallel running
 * Supports both Webdriver ONLY, standalone or Grid via easy configuration
 * Supports TestNG with parallel test execution (each thread has its own browser/session)
@@ -48,26 +53,8 @@ The following features are supported in the current Stevia build (new features h
 <dependency>
   <groupId>com.persado.oss.quality.stevia</groupId>
   <artifactId>stevia-core</artifactId>
-  <version>0.9.51</version>
+  <version>1.0.0</version>
 </dependency>
-```
-#### Cutting edge
-```
-<dependency>
-  <groupId>com.persado.oss.quality.stevia</groupId>
-  <artifactId>stevia-core</artifactId>
-  <version>0.9.20-SNAPSHOT</version>
-</dependency>
-```
-To work with the cutting-edge version, don't forget to add the following to your pom.xml:
-```
-<repositories>
-  <repository>
-    <id>sonatype-nexus-snapshots</id>
-    <name>OSS Sonatype Snapshot Repository</name>
-    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
-  </repository>
-</repositories>	
 ```
 
 * * *
