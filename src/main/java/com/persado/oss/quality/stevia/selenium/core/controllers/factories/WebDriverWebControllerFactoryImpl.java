@@ -204,15 +204,15 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			}
 			LOG.info("Debug OFF, Remote Web Driver options are: "+browserOptions);
 		}
-
-		if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
-			mockingGeolocation((ChromeDriver) driver);
-			simulateDeviceDimension((ChromeDriver) driver);
-		}
-
-		if (SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL) != null) {
-			driver.get(SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL));
-		}
+//
+//		if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
+//			mockingGeolocation((ChromeDriver) driver);
+//			simulateDeviceDimension((ChromeDriver) driver);
+//		}
+//
+//		if (SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL) != null) {
+//			driver.get(SteviaContext.getParam(SteviaWebControllerFactory.TARGET_HOST_URL));
+//		}
 
 //		driver.manage().window().maximize();
 		wdController.setDriver(driver);
