@@ -443,7 +443,7 @@
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>5.2.6.RELEASE</org.springframework.version>
+		<org.springframework.version>6.0.0</org.springframework.version>
 		<selenium.version>4.0.0</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
