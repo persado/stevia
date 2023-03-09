@@ -3,13 +3,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.3-SNAPSHOT</version>
 	<packaging>jar</packaging>
-	<parent>
-		<groupId>org.sonatype.oss</groupId>
-		<artifactId>oss-parent</artifactId>
-		<version>7</version>
-	</parent>
+<!--	<parent>-->
+<!--		<groupId>org.sonatype.oss</groupId>-->
+<!--		<artifactId>oss-parent</artifactId>-->
+<!--		<version>7</version>-->
+<!--	</parent>-->
 
 	<name>Stevia QA Framework - Core</name>
 	<description>Stevia is a QA Framework unifying the Selenium-RC and Webdriver APIs under
@@ -51,7 +51,7 @@
 			<email>ioannis.chitiris@persado.com</email>
 			<organization>Persado</organization>
 			<roles>
-				<role>Lead QA Automation Engineer</role>
+				<role>Lead Software Engineer in Test</role>
 			</roles>
 		</developer>
 	</developers>
@@ -66,19 +66,27 @@
 		<tag>HEAD</tag>
 	</scm>
 	<!-- -->
+<!--	<distributionManagement>-->
+<!--		<repository>-->
+<!--			<id>ossrh</id>-->
+<!--			<name>Central Repository OSSRH</name>-->
+<!--			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>-->
+<!--		</repository>-->
+
+<!--		<snapshotRepository>-->
+<!--			<id>sonatype-nexus-snapshots</id>-->
+<!--			<name>OSS Sonatype Snapshot Repository</name>-->
+<!--			<url>https://oss.sonatype.org/content/repositories/snapshots</url>-->
+<!--			<uniqueVersion>false</uniqueVersion>-->
+<!--		</snapshotRepository>-->
+	<!--	</distributionManagement>-->
+
 	<distributionManagement>
 		<repository>
-			<id>ossrh</id>
-			<name>Central Repository OSSRH</name>
-			<url>https://oss.sonatype.org/service/local/staging/deploy/maven2</url>
+			<id>persado</id>
+			<name>artifactory-snapshot</name>
+			<url>https://artifactory.persado.com/artifactory/libs-snapshot-local/</url>
 		</repository>
-
-		<snapshotRepository>
-			<id>sonatype-nexus-snapshots</id>
-			<name>OSS Sonatype Snapshot Repository</name>
-			<url>https://oss.sonatype.org/content/repositories/snapshots</url>
-			<uniqueVersion>false</uniqueVersion>
-		</snapshotRepository>
 	</distributionManagement>
 
 	<build>
@@ -133,7 +141,6 @@
 						<id>default-test</id>
 						<phase>test</phase>
 						<configuration>
-							<!-- <argLine>-Dwebdriver.chrome.driver=/Users/tangelatos/Downloads/chromedriver</argLine> -->
 							<suiteXmlFiles>
 								<suiteXmlFile>src/test/resources/testng.xml</suiteXmlFile>
 							</suiteXmlFiles>
@@ -180,20 +187,20 @@
 					</execution>
 				</executions>
 			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-gpg-plugin</artifactId>
-				<version>3.0.1</version>
-				<executions>
-					<execution>
-						<id>sign-artifacts</id>
-						<phase>verify</phase>
-						<goals>
-							<goal>sign</goal>
-						</goals>
-					</execution>
-				</executions>
-			</plugin>
+<!--			<plugin>-->
+<!--				<groupId>org.apache.maven.plugins</groupId>-->
+<!--				<artifactId>maven-gpg-plugin</artifactId>-->
+<!--				<version>3.0.1</version>-->
+<!--				<executions>-->
+<!--					<execution>-->
+<!--						<id>sign-artifacts</id>-->
+<!--						<phase>verify</phase>-->
+<!--						<goals>-->
+<!--							<goal>sign</goal>-->
+<!--						</goals>-->
+<!--					</execution>-->
+<!--				</executions>-->
+<!--			</plugin>-->
 		</plugins>
 	</build>
 
@@ -214,6 +221,12 @@
 			<groupId>us.codecraft</groupId>
 			<artifactId>xsoup</artifactId>
 			<version>0.3.0</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/net.bytebuddy/byte-buddy -->
+		<dependency>
+			<groupId>net.bytebuddy</groupId>
+			<artifactId>byte-buddy</artifactId>
+			<version>1.12.3</version>
 		</dependency>
 
 

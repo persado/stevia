@@ -86,6 +86,10 @@ public interface Constants {
 	/** The parameter that determines Selenoid video */
 	public static final String SELENOID_VIDEO = "selenoidVideo";
 
+	/** The parameter that determines Selenoid node name by suite name */
+	public static final String SUITE_NAME = "suite_name";
+
+
 	/** The parameter that determines the webriver LOAD STRATEGY. */
 	public static final String LOAD_STRATEGY = "loadStrategy";
 

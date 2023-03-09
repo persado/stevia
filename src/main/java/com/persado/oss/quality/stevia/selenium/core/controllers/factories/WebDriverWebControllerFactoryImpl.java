@@ -106,9 +106,11 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				//Ignore certifications - insecure for zap
 				options.addArguments("--ignore-certificate-errors");
+				options.addArguments("--disable-blink-features=CSSPseudoHas");
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
 				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
+				options.addArguments("--remote-allow-origins=*");//chrome 111 https://stackoverflow.com/a/75682422
 
 				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
 				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
@@ -155,9 +157,11 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				// possible fix for https://code.google.com/p/chromedriver/issues/detail?id=799
 				browserOptions = new ChromeOptions();
 				((ChromeOptions) browserOptions).addArguments("--ignore-certificate-errors");
+				((ChromeOptions) browserOptions).addArguments("--disable-blink-features=CSSPseudoHas");
 				((ChromeOptions) browserOptions).addArguments("start-maximized");
 				((ChromeOptions) browserOptions).addArguments("test-type");
 				((ChromeOptions) browserOptions).addArguments("test-type");
+				((ChromeOptions) browserOptions).addArguments("--remote-allow-origins=*");//chrome 111 https://stackoverflow.com/a/75682422
 
 			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("iexplorer") == 0) {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Internet Explorer options");
@@ -186,6 +190,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			if(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION) != null){
 				browserOptions.setBrowserVersion(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION));
 			}
+			//Selenoid capabilities
 			browserOptions.setCapability("enableVideo", true); //By default enabed Selenoid video
 			if(SteviaContext.getParam(SteviaWebControllerFactory.SELENOID_VIDEO) != null){
 				browserOptions.setCapability("enableVideo", Boolean.parseBoolean(SteviaContext.getParam(SteviaWebControllerFactory.SELENOID_VIDEO))); //Selenoid video
@@ -194,6 +199,9 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			browserOptions.setCapability("labels", Map.<String, Object>of( //Selenoid manual session so that we can delete it
 					"manual", "true"
 			));
+			if(SteviaContext.getParam(SteviaWebControllerFactory.SUITE_NAME) != null)
+				browserOptions.setCapability("name", SteviaContext.getParam(SteviaWebControllerFactory.SUITE_NAME));
+
 
 			Augmenter augmenter = new Augmenter(); // adds screenshot capability to a default webdriver.
 			try {
@@ -205,7 +213,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 			LOG.info("Debug OFF, Remote Web Driver options are: "+browserOptions);
 		}
 
-		//Comment out due to bug: https://github.com/SeleniumHQ/selenium/issues/9803
+		//Comment out due to bug: https://github.com/SeleniumHQ/selenium/issues/10132
 //		if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("chrome") == 0) {
 //			mockingGeolocation((ChromeDriver) driver);
 //			simulateDeviceDimension((ChromeDriver) driver);

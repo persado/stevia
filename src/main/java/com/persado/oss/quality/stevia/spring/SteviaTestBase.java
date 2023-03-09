@@ -111,7 +111,8 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	@BeforeSuite(alwaysRun = true)
 	protected final void configureSuiteSettings(ITestContext testContext) throws Exception {	
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
-		
+		parameters.put(Constants.SUITE_NAME, testContext.getSuite().getXmlSuite().getName());//Add suite name - display on selenoid
+
 		//if the suite needs RC server, we start it here 
 		if (parameters.get("driverType").compareTo("webdriver") != 0 && parameters.get("debugging").compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
@@ -173,7 +174,9 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	protected final void contextInitBeforeTest(ITestContext testContext) throws Exception {
 		
 		Map<String,String> parameters = testContext.getCurrentXmlTest().getParameters();
-		
+		parameters.put(Constants.SUITE_NAME, testContext.getSuite().getXmlSuite().getName());//Add suite name - display on selenoid
+
+
 		// we check here **again** if the test needs the RC server and start it.
 		if (parameters.get("driverType").compareTo("webdriver") != 0 && parameters.get("debugging").compareTo(TRUE)==0 && !isRCStarted){
 			startRCServer();
@@ -199,7 +202,8 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	protected final void contextInitBeforeClass(ITestContext testContext) throws Exception {
 		
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
-		
+		parameters.put(Constants.SUITE_NAME, testContext.getSuite().getXmlSuite().getName());//Add suite name - display on selenoid
+
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("classes")) {
 
 			STEVIA_TEST_BASE_LOG.warn("*************************************************************************************");
@@ -219,7 +223,8 @@ public class SteviaTestBase extends AbstractTestNGSpringContextTests implements 
 	@BeforeMethod(alwaysRun = true)
 	protected final void contextInitBeforeMethod(ITestContext testContext) throws Exception {
 		Map<String,String> parameters = testContext.getSuite().getXmlSuite().getAllParameters();
-		
+		parameters.put(Constants.SUITE_NAME, testContext.getSuite().getXmlSuite().getName());//Add suite name - display on selenoid
+
 		if (testContext.getSuite().getParallel().equalsIgnoreCase("methods")) {
 
 			STEVIA_TEST_BASE_LOG.warn("***************************************************************************************");
