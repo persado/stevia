@@ -51,7 +51,6 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
-import org.openqa.selenium.opera.OperaOptions;
 import org.openqa.selenium.remote.AbstractDriverOptions;
 import org.openqa.selenium.remote.Augmenter;
 import org.openqa.selenium.remote.CapabilityType;
@@ -109,6 +108,7 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				options.addArguments("start-maximized");
 				options.addArguments("test-type");
 				options.addArguments("--disable-backgrounding-occluded-windows"); //chrome 87 freeze offscreen automation / https://support.google.com/chrome/thread/83911899?hl=en
+				options.addArguments("--remote-allow-origins=*");//Chrome 101 -https://stackoverflow.com/questions/75678572/java-io-ioexception-invalid-status-code-403-text-forbidden
 
 				options.setPageLoadStrategy(PageLoadStrategy.NORMAL);//Default None
 				if(SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY) != null && !SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY).equals("normal"))
@@ -167,10 +167,6 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				LOG.info("Debug OFF, using a RemoteWebDriver with Safari options");
 				browserOptions = new SafariOptions();
 
-			} else if (SteviaContext.getParam(SteviaWebControllerFactory.BROWSER).compareTo("opera") == 0) {
-				LOG.info("Debug OFF, using a RemoteWebDriver with Opera options");
-				browserOptions = new OperaOptions();
-
 			} else {
 				throw new IllegalArgumentException(SteviaWebControllerFactory.WRONG_BROWSER_PARAMETER);
 			}
@@ -181,7 +177,6 @@ public class WebDriverWebControllerFactoryImpl implements WebControllerFactory {
 				browserOptions.setCapability(CapabilityType.PAGE_LOAD_STRATEGY,SteviaContext.getParam(SteviaWebControllerFactory.LOAD_STRATEGY));
 
 			if(proxy != null){browserOptions.setCapability("proxy",proxy);}
-			browserOptions.setCapability(CapabilityType.ACCEPT_SSL_CERTS, true);
 			browserOptions.setCapability(CapabilityType.ACCEPT_INSECURE_CERTS,true);
 			if(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION) != null){
 				browserOptions.setBrowserVersion(SteviaContext.getParam(SteviaWebControllerFactory.BROWSER_VERSION));

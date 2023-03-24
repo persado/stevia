@@ -41,10 +41,7 @@ package com.persado.oss.quality.stevia.network.http;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.util.Assert;
 import org.springframework.web.client.RestTemplate;
 
@@ -114,7 +111,7 @@ public class SteviaHttpClient implements HttpConstants {
 		for (int i = 0; i < numberOfTimes; i++) {
 
             ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.GET, new HttpEntity<String>(headers), String.class);
-            HttpResponse httpResponse = new HttpResponse(response.getStatusCode(),response.getBody(),response.getHeaders());
+            HttpResponse httpResponse = new HttpResponse((HttpStatus) response.getStatusCode(),response.getBody(),response.getHeaders());
 			responses.add(httpResponse);
 		}
 		return responses;
@@ -162,7 +159,7 @@ public class SteviaHttpClient implements HttpConstants {
             ResponseEntity<String> response = restTemplate.exchange(url,
                     HttpMethod.POST, entity, String.class);
 
-            HttpResponse httpResponse = new HttpResponse(response.getStatusCode(),response.getBody(),response.getHeaders());
+            HttpResponse httpResponse = new HttpResponse((HttpStatus) response.getStatusCode(),response.getBody(),response.getHeaders());
             responses.add(httpResponse);
         }
 
@@ -173,7 +170,7 @@ public class SteviaHttpClient implements HttpConstants {
 	/**
 	 * Adds the parameters.
 	 *
-     * @param  list of input data for the POST requests
+     * @param  data of input data for the POST requests
      */
 	private String addParameters(List<HttpPostData> data) {
 		StringBuffer content = new StringBuffer();

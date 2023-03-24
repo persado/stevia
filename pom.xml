@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.persado.oss.quality.stevia</groupId>
 	<artifactId>stevia-core</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2</version>
 	<packaging>jar</packaging>
 	<parent>
 		<groupId>org.sonatype.oss</groupId>
@@ -98,8 +98,8 @@
 					<version>3.6.1</version>
 					<inherited>true</inherited>
 					<configuration>
-						<source>11</source>
-						<target>11</target>
+						<source>19</source>
+						<target>19</target>
 					</configuration>
 				</plugin>
 
@@ -443,8 +443,8 @@
 
 	<!-- Shared version number properties -->
 	<properties>
-		<org.springframework.version>5.2.6.RELEASE</org.springframework.version>
-		<selenium.version>4.0.0</selenium.version>
+		<org.springframework.version>6.0.7</org.springframework.version>
+		<selenium.version>4.8.1</selenium.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 	</properties>
 	<profiles>
